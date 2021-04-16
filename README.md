@@ -56,6 +56,3 @@ Check the repository:
 <h2>Contacts</h2>
 
 If you have any question or want to help contact me on davide.basile@isti.cnr.it.
-
-
-<h2>Documentation</h2>
