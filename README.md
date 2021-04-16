@@ -21,7 +21,7 @@ A precompiled App.jar file is available in the root of the project.
 
 <h2>License</h2>
 The tool is available under Creative Common License 4.0,
- https://github.com/davidebasile/ContractAutomataTool/blob/code-cleaning/license.html.
+https://github.com/davidebasile/CAT_App/blob/master/license.html
 
 
 <h2>Tutorials</h2>
