@@ -1,7 +1,7 @@
 <h1>Contract Automata App</h1>
 
 This is the GUI application of CAT, and represents an example of usage of the CAT API.
-The contract automata API has been imported as a Jar, under the lib folder  (check  https://github.com/davidebasile/ContractAutomataTool for the source code).
+The contract automata library has been imported as a Jar, under the lib folder  (check  https://github.com/davidebasile/ContractAutomataTool for the source code).
 The App allows to visualize the automata, edit them, and use the main operations.
 
 The main application is in the file App.java, under com.mxgraph.examples.swing.editor package. 
