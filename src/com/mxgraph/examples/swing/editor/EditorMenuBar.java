@@ -23,6 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.TransferHandler;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Document;
 
@@ -46,6 +48,7 @@ import com.mxgraph.view.mxGraph;
 import contractAutomata.FMCA;
 import contractAutomata.MSCA;
 import contractAutomata.MSCAIO;
+import contractAutomata.MSCATransition;
 import family.Family;
 import family.Product;
 
@@ -59,7 +62,7 @@ import family.Product;
  */
 public class EditorMenuBar extends JMenuBar 
 {
-	String lastDir;
+	static String lastDir;
 
 
 	final static String errorMsg = "States or transitions contain syntax errors.\n "
@@ -106,7 +109,7 @@ public class EditorMenuBar extends JMenuBar
 		menu.addSeparator();
 
 		JMenuItem item = menu.add(new JMenuItem("Import .data"));//mxResources.get("aboutGraphEditor")));
-		
+
 		item.setIcon(new ImageIcon(getClass().getResource("/com/mxgraph/examples/swing/images/import.gif")));
 		item.addActionListener(e->
 		{
@@ -132,7 +135,7 @@ public class EditorMenuBar extends JMenuBar
 					File file=MSCAIO.convertMSCAintoXML(fc.getSelectedFile().toString(),aut);
 					editor.lastaut=aut;
 					loadMorphStore(file.getName(), editor, file);
-				} catch (IOException | NumberFormatException e1) {
+				} catch (IOException | NumberFormatException | TransformerException | ParserConfigurationException e1) {
 					JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.toString(),mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -140,7 +143,7 @@ public class EditorMenuBar extends JMenuBar
 
 		item = menu.add(new JMenuItem("Export .data"));//mxResources.get("aboutGraphEditor")));
 		item.setIcon(new ImageIcon(getClass().getResource("/com/mxgraph/examples/swing/images/export.gif")));
-		
+
 		item.addActionListener(e->
 		{
 			String filename =editor.getCurrentFile().getAbsolutePath();
@@ -193,8 +196,8 @@ public class EditorMenuBar extends JMenuBar
 		menu.add(editor.bind(mxResources.get("selectNone"), mxGraphActions.getSelectNoneAction()));
 
 		menu.addSeparator();
-		
-		
+
+
 		item = menu.add(new JMenuItem("Add handles to edges"));//mxResources.get("aboutGraphEditor")));
 		item.setIcon(new ImageIcon(getClass().getResource("/com/mxgraph/examples/swing/images/straight.gif")));
 		item.addActionListener(e->
@@ -317,14 +320,14 @@ public class EditorMenuBar extends JMenuBar
 					null, 
 					new String[]{"Open", "Close for Agreement","Close for Strong Agreement"}, 
 					"default");
-//			if (pruningOption== JOptionPane.CANCEL_OPTION)
-//				return;
-			
+			//			if (pruningOption== JOptionPane.CANCEL_OPTION)
+			//				return;
+
 			long start = System.currentTimeMillis();
 			MSCA composition = (MSCA) MSCA.composition(aut, 
 					(pruningOption==JOptionPane.YES_OPTION)?null:
-					(pruningOption==JOptionPane.NO_OPTION)?t->t.getLabel().isRequest():
-						t->!t.getLabel().isMatch(),100); 
+						(pruningOption==JOptionPane.NO_OPTION)?t->t.getLabel().isRequest():
+							t->!t.getLabel().isMatch(),100); 
 			long elapsedTime = System.currentTimeMillis() - start;
 
 			if (composition==null)
@@ -334,17 +337,27 @@ public class EditorMenuBar extends JMenuBar
 				return;
 			}
 
-			editor.lastaut=composition;
 			String compositionname="("+	names.stream().reduce((x,y)->x+"x"+y).orElse("")+")";
 
-			File file = MSCAIO.convertMSCAintoXML(lastDir+"\\"+compositionname,composition);
+			File file;
+			try {
+				file = MSCAIO.convertMSCAintoXML(lastDir+"\\"+compositionname,composition);
+			} catch (ParserConfigurationException | TransformerException e1) {
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),
+						"Error in saving the file "+e1.getMessage(),
+						"Error",JOptionPane.ERROR_MESSAGE);
+
+				return;			
+			}
+
+			editor.lastaut=composition;
 			String message = "The composition has been stored with filename "+lastDir+"\\"+compositionname
 					+"\n Elapsed time : "+elapsedTime + " milliseconds"
 					+"\n Number of states : "+composition.getNumStates();
 			;
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.PLAIN_MESSAGE);
 
-			this.loadMorphStore(compositionname, editor, file);
+			loadMorphStore(compositionname, editor, file);
 
 		});
 
@@ -387,7 +400,18 @@ public class EditorMenuBar extends JMenuBar
 				return;
 			}
 			String K="Kmpc_"+filename;
-			File file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+
+			File file;
+			try {
+				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+			} catch (ParserConfigurationException | TransformerException e1) {
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),
+						"Error in saving the file "+e1.getMessage(),
+						"Error",JOptionPane.ERROR_MESSAGE);
+
+				return;			
+			}
+
 			String message = "The mpc has been stored with filename "+lastDir+"//"+K
 					+"\n Elapsed time : "+elapsedTime + " milliseconds"
 					+"\n Number of states : "+controller.getNumStates();
@@ -438,7 +462,17 @@ public class EditorMenuBar extends JMenuBar
 				return;
 			}
 			String K="Orc_"+filename;
-			File file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+
+			File file;
+			try {
+				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+			} catch (ParserConfigurationException | TransformerException e1) {
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),
+						"Error in saving the file "+e1.getMessage(),
+						"Error",JOptionPane.ERROR_MESSAGE);
+
+				return;			
+			}
 			String message = "The orchestration has been stored with filename "+lastDir+"//"+K
 					+"\n Elapsed time : "+elapsedTime + " milliseconds"
 					+"\n Number of states : "+controller.getNumStates();
@@ -487,7 +521,16 @@ public class EditorMenuBar extends JMenuBar
 			}
 			String K="Chor_"+//"(R"+Arrays.toString(R)+"_F"+Arrays.toString(F)+")_"+
 					filename;
-			File file= MSCAIO.convertMSCAintoXML(lastDir+"//"+K,controller);
+			File file;
+			try {
+				file=MSCAIO.convertMSCAintoXML(lastDir+"//"+K,controller);
+			} catch (ParserConfigurationException | TransformerException e1) {
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),
+						"Error in saving the file "+e1.getMessage(),
+						"Error",JOptionPane.ERROR_MESSAGE);
+
+				return;			
+			};
 			String message = "The choreography has been stored with filename "+lastDir+"//"+K
 					+"\n Elapsed time : "+elapsedTime + " milliseconds"
 					+"\n Number of states : "+controller.getNumStates();
@@ -508,7 +551,18 @@ public class EditorMenuBar extends JMenuBar
 			lastDir=editor.getCurrentFile().getParent();
 			MSCA aut=editor.lastaut;
 
-			JOptionPane.showMessageDialog(editor.getGraphComponent(),aut.infoExpressivenessLazyTransitions(),"Result",JOptionPane.WARNING_MESSAGE);
+			long l=aut.getTransition()
+					.parallelStream()
+					.filter(MSCATransition::isLazy)
+					.count();
+
+			long ns = aut.getNumStates()+1;
+
+			JOptionPane.showMessageDialog(editor.getGraphComponent(), 
+					"The automaton contains the following number of lazy transitions : "+l+" \n"
+							+"An encoding into an automaton with only urgent transitions in the worst case could have the following "
+							+ "number of states ("+ns+") * (2^"+l+"-1)",
+							"Result",JOptionPane.WARNING_MESSAGE);
 		});
 
 
@@ -1079,7 +1133,17 @@ public class EditorMenuBar extends JMenuBar
 			}
 
 			String K="Orc_family_"+filename;
-			File file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+
+			File file;
+			try {
+				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+			} catch (ParserConfigurationException | TransformerException e1) {
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),
+						"Error in saving the file "+e1.getMessage(),
+						"Error",JOptionPane.ERROR_MESSAGE);
+
+				return;			
+			}
 
 			String message = "The orchestration has been stored with filename "+lastDir+"\\"
 					+ K
@@ -1140,7 +1204,16 @@ public class EditorMenuBar extends JMenuBar
 			}
 
 			String K="Orc_familyWithoutPO_"+filename;
-			File file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+			File file;
+			try {
+				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+			} catch (ParserConfigurationException | TransformerException e1) {
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),
+						"Error in saving the file "+e1.getMessage(),
+						"Error",JOptionPane.ERROR_MESSAGE);
+
+				return;			
+			}
 
 			String message = "The orchestration has been stored with filename "+lastDir+"\\"+K;
 
@@ -1203,7 +1276,16 @@ public class EditorMenuBar extends JMenuBar
 			}
 
 			String K="Orc_"+"(R"+Arrays.toString(R)+"_F"+Arrays.toString(F)+")_"+filename;
-			File file=MSCAIO.convertMSCAintoXML(lastDir+"//"+K,controller);
+			File file;
+			try {
+				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+			} catch (ParserConfigurationException | TransformerException e1) {
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),
+						"Error in saving the file "+e1.getMessage(),
+						"Error",JOptionPane.ERROR_MESSAGE);
+
+				return;			
+			}
 			String message = "The orchestration has been stored with filename "+lastDir+"//"+K
 					+"\n Elapsed time : "+elapsedTime + " milliseconds"
 					+"\n Number of states : "+controller.getNumStates();
@@ -1253,7 +1335,17 @@ public class EditorMenuBar extends JMenuBar
 				return;
 			}
 			String K="Orc_"+"(R"+Arrays.toString(p.getRequired())+"_F"+Arrays.toString(p.getForbidden())+")_"+filename;
-			File file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+			File file;
+			try {
+				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+			} catch (ParserConfigurationException | TransformerException e1) {
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),
+						"Error in saving the file "+e1.getMessage(),
+						"Error",JOptionPane.ERROR_MESSAGE);
+
+				return;			
+			}
+
 			String message = "The orchestration has been stored with filename "+lastDir+"//"+K
 					+"\n Elapsed time : "+elapsedTime + " milliseconds"
 					+"\n Number of states : "+controller.getNumStates();
@@ -1278,35 +1370,33 @@ public class EditorMenuBar extends JMenuBar
 		});
 	}
 
-	private void loadMorphStore(String name, App editor, File file)
+	public static void loadMorphStore(String name, BasicGraphEditor editor, File file)
 	{
 		if (!name.endsWith(".mxe")&&!name.endsWith(".data"))
 			name=name+".mxe";
-		if (!name.startsWith(lastDir))
+		if (lastDir!=null && !name.startsWith(lastDir))
 			name=lastDir+"\\"+name;
 		try
 		{	
 			mxGraph graph = editor.getGraphComponent().getGraph();
 
-			//TODO I store, load, morph and store the file again, there should be a better method
+			//TODO 
+			//MSCAIO methods are used to convert and parse an MSCA, to update the GUI
+			// I store, load, morph and store the file again, there should be a better method
 			// I do this way because I use Document to update the window
 			Document document = mxXmlUtils
 					.parseXml(mxUtils.readFile(name));									
 
-			mxCodec codec = new mxCodec(document);
-			mxGraphModel mgm = (mxGraphModel) codec.decode(
+			mxGraphComponent mgc = new mxGraphComponent(new mxGraph((mxGraphModel) 
+					new mxCodec(document).decode(
 					document.getDocumentElement(),
-					graph.getModel());
-
-			mxGraph mg=new mxGraph(mgm);
-			mxGraphComponent mgc = new mxGraphComponent(mg);
+					graph.getModel())));
 
 			App.morphGraph(mgc.getGraph(), mgc);
 
-			codec = new mxCodec();
-			String xml = mxXmlUtils.getXml(codec.encode(mgc.getGraph().getModel()));
-
+			String xml = mxXmlUtils.getXml(new mxCodec().encode(mgc.getGraph().getModel()));
 			mxUtils.writeFile(xml, name);
+
 
 			parseAndSet(name, editor, file);
 		}
@@ -1322,7 +1412,7 @@ public class EditorMenuBar extends JMenuBar
 
 	}
 
-	private void parseAndSet(String absfilename, App editor, File file)
+	private static void parseAndSet(String absfilename, BasicGraphEditor editor, File file)
 	{
 		//TODO there should be no need in parsing the xml and then converting to xml anymore
 		try

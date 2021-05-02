@@ -42,8 +42,6 @@ import org.w3c.dom.Document;
 
 import com.mxgraph.analysis.mxDistanceCostFunction;
 import com.mxgraph.analysis.mxGraphAnalysis;
-import com.mxgraph.canvas.mxICanvas;
-import com.mxgraph.canvas.mxSvgCanvas;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.io.mxGdCodec;
 import com.mxgraph.model.mxCell;
@@ -55,9 +53,7 @@ import com.mxgraph.swing.handler.mxConnectionHandler;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.swing.view.mxCellEditor;
 import com.mxgraph.util.mxCellRenderer;
-import com.mxgraph.util.mxCellRenderer.CanvasFactory;
 import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxDomUtils;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxXmlUtils;
@@ -594,14 +590,14 @@ public class EditorActions
 			if (editor != null)
 			{
 				mxGraphComponent graphComponent = editor.getGraphComponent();
-				mxGraph graph = graphComponent.getGraph();
+//				mxGraph graph = graphComponent.getGraph();
 				FileFilter selectedFilter = null;
 				DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
 						"PNG+XML " + mxResources.get("file") + " (.png)");
-				FileFilter vmlFileFilter = new DefaultFileFilter(".html",
-						"VML " + mxResources.get("file") + " (.html)");
+//				FileFilter vmlFileFilter = new DefaultFileFilter(".html",
+//						"VML " + mxResources.get("file") + " (.html)");
 				String filename = null;
-				boolean dialogShown = false;
+//				boolean dialogShown = false;
 
 				if (showDialog || editor.getCurrentFile() == null)
 				{
@@ -630,14 +626,14 @@ public class EditorActions
 					fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
 							"mxGraph Editor " + mxResources.get("file")
 									+ " (.mxe)"));
-					fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
-							"Graph Drawing " + mxResources.get("file")
-									+ " (.txt)"));
-					fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
-							"SVG " + mxResources.get("file") + " (.svg)"));
-					fc.addChoosableFileFilter(vmlFileFilter);
-					fc.addChoosableFileFilter(new DefaultFileFilter(".html",
-							"HTML " + mxResources.get("file") + " (.html)"));
+//					fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
+//							"Graph Drawing " + mxResources.get("file")
+//									+ " (.txt)"));
+//					fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
+//							"SVG " + mxResources.get("file") + " (.svg)"));
+//					fc.addChoosableFileFilter(vmlFileFilter);
+//					fc.addChoosableFileFilter(new DefaultFileFilter(".html",
+//							"HTML " + mxResources.get("file") + " (.html)"));
 
 					// Adds a filter for each supported image format
 					Object[] imageFormats = ImageIO.getReaderFormatNames();
@@ -666,7 +662,7 @@ public class EditorActions
 							mxResources.get("allImages")));
 					fc.setFileFilter(defaultFilter);
 					int rc = fc.showDialog(null, mxResources.get("save"));
-					dialogShown = true;
+				//	dialogShown = true;
 
 					if (rc != JFileChooser.APPROVE_OPTION)
 					{
@@ -708,96 +704,102 @@ public class EditorActions
 					String ext = filename
 							.substring(filename.lastIndexOf('.') + 1);
 
-					if (ext.equalsIgnoreCase("svg"))
-					{
-						mxSvgCanvas canvas = (mxSvgCanvas) mxCellRenderer
-								.drawCells(graph, null, 1, null,
-										new CanvasFactory()
-										{
-											public mxICanvas createCanvas(
-													int width, int height)
-											{
-												mxSvgCanvas canvas = new mxSvgCanvas(
-														mxDomUtils.createSvgDocument(
-																width, height));
-												canvas.setEmbedded(true);
-
-												return canvas;
-											}
-
-										});
-
-						mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
-								filename);
-					}
-					else if (selectedFilter == vmlFileFilter)
-					{
-						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
-								.createVmlDocument(graph, null, 1, null, null)
-								.getDocumentElement()), filename);
-					}
-					else if (ext.equalsIgnoreCase("html"))
-					{
-						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
-								.createHtmlDocument(graph, null, 1, null, null)
-								.getDocumentElement()), filename);
-					}
-					else if (ext.equalsIgnoreCase("mxe")
+//					if (ext.equalsIgnoreCase("svg"))
+//					{
+//						mxSvgCanvas canvas = (mxSvgCanvas) mxCellRenderer
+//								.drawCells(graph, null, 1, null,
+//										new CanvasFactory()
+//										{
+//											public mxICanvas createCanvas(
+//													int width, int height)
+//											{
+//												mxSvgCanvas canvas = new mxSvgCanvas(
+//														mxDomUtils.createSvgDocument(
+//																width, height));
+//												canvas.setEmbedded(true);
+//
+//												return canvas;
+//											}
+//
+//										});
+//
+//						mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
+//								filename);
+//					}
+//					else if (selectedFilter == vmlFileFilter)
+//					{
+//						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
+//								.createVmlDocument(graph, null, 1, null, null)
+//								.getDocumentElement()), filename);
+//					}
+//					else if (ext.equalsIgnoreCase("html"))
+//					{
+//						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
+//								.createHtmlDocument(graph, null, 1, null, null)
+//								.getDocumentElement()), filename);
+//					}
+//					else 
+						if (ext.equalsIgnoreCase("mxe")
 							|| ext.equalsIgnoreCase("xml"))
 					{
+	//					EditorMenuBar.loadMorphStore(filename, editor, new File(filename));	
 						mxCodec codec = new mxCodec();
+						mxGraph graph = editor.getGraphComponent().getGraph();
 						String xml = mxXmlUtils.getXml(codec.encode(graph
 								.getModel()));
 
 						mxUtils.writeFile(xml, filename);
 
+						if (editor instanceof App)
+							((App)editor).lastaut=MSCAIO.parseXMLintoMSCA(filename);
+						
 						editor.setModified(false);
 						editor.setCurrentFile(new File(filename));
 					}
-					else if (ext.equalsIgnoreCase("txt"))
-					{
-						String content = mxGdCodec.encode(graph);
-
-						mxUtils.writeFile(content, filename);
-					}
-					else
-					{
-						Color bg = null;
-
-						if ((!ext.equalsIgnoreCase("gif") && !ext
-								.equalsIgnoreCase("png"))
-								|| JOptionPane.showConfirmDialog(
-										graphComponent, mxResources
-												.get("transparentBackground")) != JOptionPane.YES_OPTION)
-						{
-							bg = graphComponent.getBackground();
-						}
-
-						if (selectedFilter == xmlPngFilter
-								|| (editor.getCurrentFile() != null
-										&& ext.equalsIgnoreCase("png") && !dialogShown))
-						{
-							saveXmlPng(editor, filename, bg);
-						}
-						else
-						{
-							BufferedImage image = mxCellRenderer
-									.createBufferedImage(graph, null, 1, bg,
-											false, null, //TODO:check
-											//graphComponent.isAntiAlias(), null,
-											graphComponent.getCanvas());
-
-							if (image != null)
-							{
-								ImageIO.write(image, ext, new File(filename));
-							}
-							else
-							{
-								JOptionPane.showMessageDialog(graphComponent,
-										mxResources.get("noImageData"));
-							}
-						}
-					}
+//					else if (ext.equalsIgnoreCase("txt"))
+//					{
+//						String content = mxGdCodec.encode(graph);
+//
+//						mxUtils.writeFile(content, filename);
+//					}
+//					else
+//					{
+//						Color bg = null;
+//
+//						if ((!ext.equalsIgnoreCase("gif") && !ext
+//								.equalsIgnoreCase("png"))
+//								|| JOptionPane.showConfirmDialog(
+//										graphComponent, mxResources
+//												.get("transparentBackground")) != JOptionPane.YES_OPTION)
+//						{
+//							bg = graphComponent.getBackground();
+//						}
+//
+//						if (selectedFilter == xmlPngFilter
+//								|| (editor.getCurrentFile() != null
+//										&& ext.equalsIgnoreCase("png") && !dialogShown))
+//						{
+//							saveXmlPng(editor, filename, bg);
+//						}
+//						else
+//						{
+//							BufferedImage image = mxCellRenderer
+//									.createBufferedImage(graph, null, 1, bg,
+//											false, null, //TODO:check
+//											//graphComponent.isAntiAlias(), null,
+//											graphComponent.getCanvas());
+//
+//							if (image != null)
+//							{
+//								ImageIO.write(image, ext, new File(filename));
+//							}
+//							else
+//							{
+//								JOptionPane.showMessageDialog(graphComponent,
+//										mxResources.get("noImageData"));
+//							}
+//						}
+//					}
 				}
 				catch (Throwable ex)
 				{
@@ -1741,19 +1743,19 @@ public class EditorActions
 									editor.setCurrentFile(fc
 											.getSelectedFile());
 									
-									if (editor instanceof App) //TODO import .data could be swapped to open, as well as export to save
-									{
-										try {
-											((App) editor).lastaut = MSCAIO.parseXMLintoMSCA(fc
-													.getSelectedFile()
-													.getAbsolutePath());
-										} catch (Exception e1) {
-											JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+
-													"\n "+EditorMenuBar.errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-											return;
-										}
-									}
-									resetEditor(editor);
+//									if (editor instanceof App) //TODO import .data could be swapped to open, as well as export to save
+//									{
+//										try {
+//											((App) editor).lastaut = MSCAIO.parseXMLintoMSCA(fc
+//													.getSelectedFile()
+//													.getAbsolutePath());
+//										} catch (Exception e1) {
+//											JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+
+//													"\n "+EditorMenuBar.errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+//											return;
+//										}
+//									}
+//									resetEditor(editor);
 								}
 							}
 							catch (IOException ex)
