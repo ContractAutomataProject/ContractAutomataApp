@@ -208,15 +208,15 @@ public class EditorActions
 								if (outline.isVisible())
 								{
 									((JSplitPane) outline.getParent())
-											.setDividerLocation(editor
-													.getHeight() - 300);
+									.setDividerLocation(editor
+											.getHeight() - 300);
 									((JSplitPane) outline.getParent())
-											.setDividerSize(6);
+									.setDividerSize(6);
 								}
 								else
 								{
 									((JSplitPane) outline.getParent())
-											.setDividerSize(0);
+									.setDividerSize(0);
 								}
 							}
 						}
@@ -225,8 +225,8 @@ public class EditorActions
 			});
 		}
 	}
-	
-	
+
+
 
 	/**
 	 *
@@ -470,7 +470,7 @@ public class EditorActions
 	 *
 	 */
 	@SuppressWarnings("serial")
-	
+
 	public static class PrintAction extends AbstractAction
 	{
 		/**
@@ -590,14 +590,14 @@ public class EditorActions
 			if (editor != null)
 			{
 				mxGraphComponent graphComponent = editor.getGraphComponent();
-//				mxGraph graph = graphComponent.getGraph();
+				//				mxGraph graph = graphComponent.getGraph();
 				FileFilter selectedFilter = null;
 				DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
 						"PNG+XML " + mxResources.get("file") + " (.png)");
-//				FileFilter vmlFileFilter = new DefaultFileFilter(".html",
-//						"VML " + mxResources.get("file") + " (.html)");
+				//				FileFilter vmlFileFilter = new DefaultFileFilter(".html",
+				//						"VML " + mxResources.get("file") + " (.html)");
 				String filename = null;
-//				boolean dialogShown = false;
+				//				boolean dialogShown = false;
 
 				if (showDialog || editor.getCurrentFile() == null)
 				{
@@ -625,15 +625,15 @@ public class EditorActions
 					// Adds special vector graphics formats and HTML
 					fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
 							"mxGraph Editor " + mxResources.get("file")
-									+ " (.mxe)"));
-//					fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
-//							"Graph Drawing " + mxResources.get("file")
-//									+ " (.txt)"));
-//					fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
-//							"SVG " + mxResources.get("file") + " (.svg)"));
-//					fc.addChoosableFileFilter(vmlFileFilter);
-//					fc.addChoosableFileFilter(new DefaultFileFilter(".html",
-//							"HTML " + mxResources.get("file") + " (.html)"));
+							+ " (.mxe)"));
+					//					fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
+					//							"Graph Drawing " + mxResources.get("file")
+					//									+ " (.txt)"));
+					//					fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
+					//							"SVG " + mxResources.get("file") + " (.svg)"));
+					//					fc.addChoosableFileFilter(vmlFileFilter);
+					//					fc.addChoosableFileFilter(new DefaultFileFilter(".html",
+					//							"HTML " + mxResources.get("file") + " (.html)"));
 
 					// Adds a filter for each supported image format
 					Object[] imageFormats = ImageIO.getReaderFormatNames();
@@ -654,7 +654,7 @@ public class EditorActions
 						String ext = imageFormats[i].toString();
 						fc.addChoosableFileFilter(new DefaultFileFilter("."
 								+ ext, ext.toUpperCase() + " "
-								+ mxResources.get("file") + " (." + ext + ")"));
+										+ mxResources.get("file") + " (." + ext + ")"));
 					}
 
 					// Adds filter that accepts all supported image formats
@@ -662,7 +662,7 @@ public class EditorActions
 							mxResources.get("allImages")));
 					fc.setFileFilter(defaultFilter);
 					int rc = fc.showDialog(null, mxResources.get("save"));
-				//	dialogShown = true;
+					//	dialogShown = true;
 
 					if (rc != JFileChooser.APPROVE_OPTION)
 					{
@@ -704,102 +704,133 @@ public class EditorActions
 					String ext = filename
 							.substring(filename.lastIndexOf('.') + 1);
 
-//					if (ext.equalsIgnoreCase("svg"))
-//					{
-//						mxSvgCanvas canvas = (mxSvgCanvas) mxCellRenderer
-//								.drawCells(graph, null, 1, null,
-//										new CanvasFactory()
-//										{
-//											public mxICanvas createCanvas(
-//													int width, int height)
-//											{
-//												mxSvgCanvas canvas = new mxSvgCanvas(
-//														mxDomUtils.createSvgDocument(
-//																width, height));
-//												canvas.setEmbedded(true);
-//
-//												return canvas;
-//											}
-//
-//										});
-//
-//						mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
-//								filename);
-//					}
-//					else if (selectedFilter == vmlFileFilter)
-//					{
-//						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
-//								.createVmlDocument(graph, null, 1, null, null)
-//								.getDocumentElement()), filename);
-//					}
-//					else if (ext.equalsIgnoreCase("html"))
-//					{
-//						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
-//								.createHtmlDocument(graph, null, 1, null, null)
-//								.getDocumentElement()), filename);
-//					}
-//					else 
-						if (ext.equalsIgnoreCase("mxe")
+					//					if (ext.equalsIgnoreCase("svg"))
+					//					{
+					//						mxSvgCanvas canvas = (mxSvgCanvas) mxCellRenderer
+					//								.drawCells(graph, null, 1, null,
+					//										new CanvasFactory()
+					//										{
+					//											public mxICanvas createCanvas(
+					//													int width, int height)
+					//											{
+					//												mxSvgCanvas canvas = new mxSvgCanvas(
+					//														mxDomUtils.createSvgDocument(
+					//																width, height));
+					//												canvas.setEmbedded(true);
+					//
+					//												return canvas;
+					//											}
+					//
+					//										});
+					//
+					//						mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
+					//								filename);
+					//					}
+					//					else if (selectedFilter == vmlFileFilter)
+					//					{
+					//						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
+					//								.createVmlDocument(graph, null, 1, null, null)
+					//								.getDocumentElement()), filename);
+					//					}
+					//					else if (ext.equalsIgnoreCase("html"))
+					//					{
+					//						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
+					//								.createHtmlDocument(graph, null, 1, null, null)
+					//								.getDocumentElement()), filename);
+					//					}
+					//					else 
+					if (ext.equalsIgnoreCase("mxe")
 							|| ext.equalsIgnoreCase("xml"))
 					{
-	//					EditorMenuBar.loadMorphStore(filename, editor, new File(filename));	
+						//		EditorMenuBar.loadMorphStore(filename, editor, new File(filename));	
 						mxCodec codec = new mxCodec();
 						mxGraph graph = editor.getGraphComponent().getGraph();
+
 						String xml = mxXmlUtils.getXml(codec.encode(graph
 								.getModel()));
 
 						mxUtils.writeFile(xml, filename);
 
 						if (editor instanceof App)
+						{
 							((App)editor).lastaut=MSCAIO.parseXMLintoMSCA(filename);
-						
+						}
+
 						editor.setModified(false);
 						editor.setCurrentFile(new File(filename));
+//
+//						mxGraphComponent mgc = new mxGraphComponent(graph); 
+//						App.morphGraph(mgc.getGraph(), mgc);
+//
+//						final String filenamefinal = filename;
+//						mgc.getGraph().addListener(mxEvent.END_UPDATE, 
+//								(Object arg0, mxEventObject arg1) -> 
+//						{
+//							try {
+//								String newxml = mxXmlUtils.getXml(codec.encode(mgc.getGraph().getModel()));
+//
+//								mxUtils.writeFile(newxml, filenamefinal);
+//
+//								if (editor instanceof App)
+//								{
+//									((App)editor).lastaut=MSCAIO.parseXMLintoMSCA(filenamefinal);
+//								}
+//
+//								editor.setModified(false);
+//								editor.setCurrentFile(new File(filenamefinal));
+//
+//							} catch(Exception ee) {
+//								RuntimeException re= new RuntimeException(); 
+//								re.addSuppressed(ee);
+//								throw re;
+//							}
+//						});
+
 					}
-//					else if (ext.equalsIgnoreCase("txt"))
-//					{
-//						String content = mxGdCodec.encode(graph);
-//
-//						mxUtils.writeFile(content, filename);
-//					}
-//					else
-//					{
-//						Color bg = null;
-//
-//						if ((!ext.equalsIgnoreCase("gif") && !ext
-//								.equalsIgnoreCase("png"))
-//								|| JOptionPane.showConfirmDialog(
-//										graphComponent, mxResources
-//												.get("transparentBackground")) != JOptionPane.YES_OPTION)
-//						{
-//							bg = graphComponent.getBackground();
-//						}
-//
-//						if (selectedFilter == xmlPngFilter
-//								|| (editor.getCurrentFile() != null
-//										&& ext.equalsIgnoreCase("png") && !dialogShown))
-//						{
-//							saveXmlPng(editor, filename, bg);
-//						}
-//						else
-//						{
-//							BufferedImage image = mxCellRenderer
-//									.createBufferedImage(graph, null, 1, bg,
-//											false, null, //TODO:check
-//											//graphComponent.isAntiAlias(), null,
-//											graphComponent.getCanvas());
-//
-//							if (image != null)
-//							{
-//								ImageIO.write(image, ext, new File(filename));
-//							}
-//							else
-//							{
-//								JOptionPane.showMessageDialog(graphComponent,
-//										mxResources.get("noImageData"));
-//							}
-//						}
-//					}
+					//					else if (ext.equalsIgnoreCase("txt"))
+					//					{
+					//						String content = mxGdCodec.encode(graph);
+					//
+					//						mxUtils.writeFile(content, filename);
+					//					}
+					//					else
+					//					{
+					//						Color bg = null;
+					//
+					//						if ((!ext.equalsIgnoreCase("gif") && !ext
+					//								.equalsIgnoreCase("png"))
+					//								|| JOptionPane.showConfirmDialog(
+					//										graphComponent, mxResources
+					//												.get("transparentBackground")) != JOptionPane.YES_OPTION)
+					//						{
+					//							bg = graphComponent.getBackground();
+					//						}
+					//
+					//						if (selectedFilter == xmlPngFilter
+					//								|| (editor.getCurrentFile() != null
+					//										&& ext.equalsIgnoreCase("png") && !dialogShown))
+					//						{
+					//							saveXmlPng(editor, filename, bg);
+					//						}
+					//						else
+					//						{
+					//							BufferedImage image = mxCellRenderer
+					//									.createBufferedImage(graph, null, 1, bg,
+					//											false, null, //TODO:check
+					//											//graphComponent.isAntiAlias(), null,
+					//											graphComponent.getCanvas());
+					//
+					//							if (image != null)
+					//							{
+					//								ImageIO.write(image, ext, new File(filename));
+					//							}
+					//							else
+					//							{
+					//								JOptionPane.showMessageDialog(graphComponent,
+					//										mxResources.get("noImageData"));
+					//							}
+					//						}
+					//					}
 				}
 				catch (Throwable ex)
 				{
@@ -811,8 +842,8 @@ public class EditorActions
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 *
 	 */
@@ -1167,12 +1198,12 @@ public class EditorActions
 			if (target instanceof mxGraphComponent)
 			{
 				((mxGraphComponent) target)
-						.addPropertyChangeListener(propertyChangeListener);
+				.addPropertyChangeListener(propertyChangeListener);
 			}
 			else if (target instanceof mxGraph)
 			{
 				((mxGraph) target)
-						.addPropertyChangeListener(propertyChangeListener);
+				.addPropertyChangeListener(propertyChangeListener);
 			}
 
 			update(target, fieldname);
@@ -1418,7 +1449,7 @@ public class EditorActions
 	}
 
 
-	
+
 	/**
 	 *
 	 */
@@ -1452,121 +1483,121 @@ public class EditorActions
 			}
 		}
 	}
-//
-//	/**
-//	 * import automaton
-//	 */
-//	@SuppressWarnings("serial")
-//	public static class ImportAction extends AbstractAction
-//	{
-//		/**		
-//		 * 
-//		 */
-//		protected String lastDir;
-//
-//		/**
-//		 * 
-//		 */
-//		protected void resetEditor(BasicGraphEditor editor)
-//		{
-//			editor.setModified(false);
-//			editor.getUndoManager().clear();
-//			editor.getGraphComponent().zoomAndCenter();
-//		}
-//
-//
-//		/**
-//		 * 
-//		 */
-//		public void actionPerformed(ActionEvent e)
-//		{
-//			BasicGraphEditor editor = getEditor(e);
-//
-//			if (editor != null)
-//			{
-//				if (!editor.isModified()
-//						|| JOptionPane.showConfirmDialog(editor,
-//								mxResources.get("loseChanges")) == JOptionPane.YES_OPTION)
-//				{
-//					mxGraph graph = editor.getGraphComponent().getGraph();
-//
-//					if (graph != null)
-//					{
-//						String wd = (lastDir != null) ? lastDir : System
-//								.getProperty("user.dir");
-//
-//						JFileChooser fc = new JFileChooser(wd);
-//
-//						// Adds file filter for supported file format
-//						DefaultFileFilter defaultFilter = new DefaultFileFilter(
-//								".data", "")//mxResources.get("allSupportedFormats")
-//										//+ " (.mxe, .png, .vdx)")
-//						{
-//
-//							public boolean accept(File file)
-//							{
-//								String lcase = file.getName().toLowerCase();
-//
-//								return super.accept(file)
-//										|| lcase.endsWith(".data");
-//							}
-//						};
-//						fc.addChoosableFileFilter(defaultFilter);
-//
-//						fc.addChoosableFileFilter(new DefaultFileFilter(".data",
-//								"FMCA description " + mxResources.get("file")
-//										+ " (.data)"));
-//
-//						fc.setFileFilter(defaultFilter);
-//
-//						int rc = fc.showDialog(null,
-//								mxResources.get("openFile"));
-//
-//						if (rc == JFileChooser.APPROVE_OPTION)
-//						{
-//							lastDir = fc.getSelectedFile().getParent();
-//
-//							try
-//							{
-//
-//								String fileName =fc.getSelectedFile().toString();
-//								
-//								File file=MSCAIO.loadMSCAAndWriteIntoXML(fileName);
-//								
-//								fileName=file.getAbsolutePath();
-//								
-//									Document document = mxXmlUtils
-//											.parseXml(mxUtils.readFile(fileName));
-//													/*mxUtils.readFile(fc
-//													.getSelectedFile()
-//													.getAbsolutePath()));
-//*/
-//									mxCodec codec = new mxCodec(document);
-//									codec.decode(
-//											document.getDocumentElement(),
-//											graph.getModel());
-//									editor.setCurrentFile(file);
-//
-//									resetEditor(editor);
-//							
-//							}
-//							catch (IOException ex)
-//							{
-//								ex.printStackTrace();
-//								JOptionPane.showMessageDialog(
-//										editor.getGraphComponent(),
-//										ex.toString(),
-//										mxResources.get("error"),
-//										JOptionPane.ERROR_MESSAGE);
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
-//	
-	
+	//
+	//	/**
+	//	 * import automaton
+	//	 */
+	//	@SuppressWarnings("serial")
+	//	public static class ImportAction extends AbstractAction
+	//	{
+	//		/**		
+	//		 * 
+	//		 */
+	//		protected String lastDir;
+	//
+	//		/**
+	//		 * 
+	//		 */
+	//		protected void resetEditor(BasicGraphEditor editor)
+	//		{
+	//			editor.setModified(false);
+	//			editor.getUndoManager().clear();
+	//			editor.getGraphComponent().zoomAndCenter();
+	//		}
+	//
+	//
+	//		/**
+	//		 * 
+	//		 */
+	//		public void actionPerformed(ActionEvent e)
+	//		{
+	//			BasicGraphEditor editor = getEditor(e);
+	//
+	//			if (editor != null)
+	//			{
+	//				if (!editor.isModified()
+	//						|| JOptionPane.showConfirmDialog(editor,
+	//								mxResources.get("loseChanges")) == JOptionPane.YES_OPTION)
+	//				{
+	//					mxGraph graph = editor.getGraphComponent().getGraph();
+	//
+	//					if (graph != null)
+	//					{
+	//						String wd = (lastDir != null) ? lastDir : System
+	//								.getProperty("user.dir");
+	//
+	//						JFileChooser fc = new JFileChooser(wd);
+	//
+	//						// Adds file filter for supported file format
+	//						DefaultFileFilter defaultFilter = new DefaultFileFilter(
+	//								".data", "")//mxResources.get("allSupportedFormats")
+	//										//+ " (.mxe, .png, .vdx)")
+	//						{
+	//
+	//							public boolean accept(File file)
+	//							{
+	//								String lcase = file.getName().toLowerCase();
+	//
+	//								return super.accept(file)
+	//										|| lcase.endsWith(".data");
+	//							}
+	//						};
+	//						fc.addChoosableFileFilter(defaultFilter);
+	//
+	//						fc.addChoosableFileFilter(new DefaultFileFilter(".data",
+	//								"FMCA description " + mxResources.get("file")
+	//										+ " (.data)"));
+	//
+	//						fc.setFileFilter(defaultFilter);
+	//
+	//						int rc = fc.showDialog(null,
+	//								mxResources.get("openFile"));
+	//
+	//						if (rc == JFileChooser.APPROVE_OPTION)
+	//						{
+	//							lastDir = fc.getSelectedFile().getParent();
+	//
+	//							try
+	//							{
+	//
+	//								String fileName =fc.getSelectedFile().toString();
+	//								
+	//								File file=MSCAIO.loadMSCAAndWriteIntoXML(fileName);
+	//								
+	//								fileName=file.getAbsolutePath();
+	//								
+	//									Document document = mxXmlUtils
+	//											.parseXml(mxUtils.readFile(fileName));
+	//													/*mxUtils.readFile(fc
+	//													.getSelectedFile()
+	//													.getAbsolutePath()));
+	//*/
+	//									mxCodec codec = new mxCodec(document);
+	//									codec.decode(
+	//											document.getDocumentElement(),
+	//											graph.getModel());
+	//									editor.setCurrentFile(file);
+	//
+	//									resetEditor(editor);
+	//							
+	//							}
+	//							catch (IOException ex)
+	//							{
+	//								ex.printStackTrace();
+	//								JOptionPane.showMessageDialog(
+	//										editor.getGraphComponent(),
+	//										ex.toString(),
+	//										mxResources.get("error"),
+	//										JOptionPane.ERROR_MESSAGE);
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	
+
 
 	/**
 	 *
@@ -1579,8 +1610,8 @@ public class EditorActions
 		 */
 		protected String lastDir;
 		//protected FMCA lastaut;
-		
-		
+
+
 		/**
 		 * 
 		 */
@@ -1674,7 +1705,7 @@ public class EditorActions
 						// Adds file filter for supported file format
 						DefaultFileFilter defaultFilter = new DefaultFileFilter(
 								".mxe", mxResources.get("allSupportedFormats")
-										+ " (.mxe, .png, .vdx)")
+								+ " (.mxe, .png, .vdx)")
 						{
 
 							public boolean accept(File file)
@@ -1690,20 +1721,20 @@ public class EditorActions
 
 						fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
 								"mxGraph Editor " + mxResources.get("file")
-										+ " (.mxe)"));
+								+ " (.mxe)"));
 						fc.addChoosableFileFilter(new DefaultFileFilter(".png",
 								"PNG+XML  " + mxResources.get("file")
-										+ " (.png)"));
+								+ " (.png)"));
 
 						// Adds file filter for VDX import
 						fc.addChoosableFileFilter(new DefaultFileFilter(".vdx",
 								"XML Drawing  " + mxResources.get("file")
-										+ " (.vdx)"));
+								+ " (.vdx)"));
 
 						// Adds file filter for GD import
 						fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
 								"Graph Drawing  " + mxResources.get("file")
-										+ " (.txt)"));
+								+ " (.txt)"));
 
 						fc.setFileFilter(defaultFilter);
 
@@ -1742,20 +1773,20 @@ public class EditorActions
 											graph.getModel());
 									editor.setCurrentFile(fc
 											.getSelectedFile());
-									
-//									if (editor instanceof App) //TODO import .data could be swapped to open, as well as export to save
-//									{
-//										try {
-//											((App) editor).lastaut = MSCAIO.parseXMLintoMSCA(fc
-//													.getSelectedFile()
-//													.getAbsolutePath());
-//										} catch (Exception e1) {
-//											JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+
-//													"\n "+EditorMenuBar.errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-//											return;
-//										}
-//									}
-//									resetEditor(editor);
+
+									//									if (editor instanceof App) //TODO import .data could be swapped to open, as well as export to save
+									//									{
+									//										try {
+									//											((App) editor).lastaut = MSCAIO.parseXMLintoMSCA(fc
+									//													.getSelectedFile()
+									//													.getAbsolutePath());
+									//										} catch (Exception e1) {
+									//											JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+
+									//													"\n "+EditorMenuBar.errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+									//											return;
+									//										}
+									//									}
+									//									resetEditor(editor);
 								}
 							}
 							catch (IOException ex)
@@ -1773,11 +1804,11 @@ public class EditorActions
 			}
 		}
 	}
-	
+
 	/**
 	 *
 	 */
-	
+
 	/**
 	 *
 	 */
@@ -2127,8 +2158,8 @@ public class EditorActions
 				}
 			}
 		}
-		
-		
+
+
 	}
 
 	/**
@@ -2183,10 +2214,10 @@ public class EditorActions
 				}
 			}
 		}
-		
-		
+
+
 	}
-	
+
 	/**
 	 *
 	 */
