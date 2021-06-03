@@ -753,7 +753,12 @@ public class EditorActions
 
 						if (editor instanceof App)
 						{
+							try {
 							((App)editor).lastaut=MSCAIO.parseXMLintoMSCA(filename);
+							} catch (Exception ex) {
+								JOptionPane.showMessageDialog(editor.getGraphComponent(),EditorMenuBar.errorMsg, mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+								
+							}
 						}
 
 						editor.setModified(false);
@@ -1761,7 +1766,21 @@ public class EditorActions
 													.getAbsolutePath()));
 								}
 								else
+
 								{
+									// TODO check why it resets x,y
+//									if (editor instanceof App)
+//									{
+//										try {
+//										((App)editor).lastaut=MSCAIO.parseXMLintoMSCA(fc
+//												.getSelectedFile()
+//												.getAbsolutePath());
+//										} catch (Exception ex) {
+//											JOptionPane.showMessageDialog(editor.getGraphComponent(),EditorMenuBar.errorMsg, mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+//											
+//										}
+//									}
+
 									Document document = mxXmlUtils
 											.parseXml(mxUtils.readFile(fc
 													.getSelectedFile()
@@ -1773,20 +1792,9 @@ public class EditorActions
 											graph.getModel());
 									editor.setCurrentFile(fc
 											.getSelectedFile());
+									
 
-									//									if (editor instanceof App) //TODO import .data could be swapped to open, as well as export to save
-									//									{
-									//										try {
-									//											((App) editor).lastaut = MSCAIO.parseXMLintoMSCA(fc
-									//													.getSelectedFile()
-									//													.getAbsolutePath());
-									//										} catch (Exception e1) {
-									//											JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+
-									//													"\n "+EditorMenuBar.errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-									//											return;
-									//										}
-									//									}
-									//									resetEditor(editor);
+									//		//TODO import .data could be swapped to open, as well as export to save
 								}
 							}
 							catch (IOException ex)

@@ -64,7 +64,7 @@ public class EditorMenuBar extends JMenuBar
 
 	final static String errorMsg = "States or transitions contain syntax errors.\n "
 			+ 		"Please, check that each state has the following format:\n"
-			+		"[INTEGER, ..., INTEGER]\n" 
+			+		"[STRING, ..., STRING]\n" 
 			+		"and that each transition label has the following format:\n"
 			+		"[(TYPE)STRING, ...,(TYPE)STRING]\n where (TYPE) is either ! or ?";
 
