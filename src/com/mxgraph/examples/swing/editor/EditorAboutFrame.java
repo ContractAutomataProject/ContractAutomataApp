@@ -78,7 +78,7 @@ public class EditorAboutFrame extends JDialog
 		// Adds optional subtitle
 		JLabel subtitleLabel = new JLabel(
 				"<html> Contract Automata Tool (2021),  <br />"
-				+ "info at https://github.com/davidebasile/FMCAT,  <br />"
+				+ "info at https://github.com/davidebasile/ContractAutomataLib,  <br />"
 				+ "developed by Davide Basile (https://github.com/davidebasile),  <br />"
 				+ "GUI adapted from mxGraph BasicGraphEditor (https://jgraph.github.io/mxgraph/) </html>");
 		subtitleLabel.setBorder(BorderFactory.createEmptyBorder(4, 18, 0, 0));

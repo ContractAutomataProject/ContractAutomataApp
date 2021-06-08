@@ -69,7 +69,7 @@ public class App extends BasicGraphEditor
 
 	public App()
 	{
-		this("Contract Automata Tool (2021)", new CustomGraphComponent(new CustomGraph()));
+		this("Contract Automata Tool (June 2021)", new CustomGraphComponent(new CustomGraph()));
 	}
 
 	/**
