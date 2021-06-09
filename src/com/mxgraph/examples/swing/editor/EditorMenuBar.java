@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -371,7 +370,7 @@ public class EditorMenuBar extends JMenuBar
 			lastDir=editor.getCurrentFile().getParent();
 
 			MSCA aut=editor.lastaut;
-			MSCA backup = aut.clone();
+			//		MSCA backup = aut.clone();
 
 
 
@@ -388,7 +387,7 @@ public class EditorMenuBar extends JMenuBar
 					JOptionPane.showMessageDialog(editor.getGraphComponent(),
 							exc.getMessage()+"\n Elapsed time : "+elapsedTime + " milliseconds",
 							"Error",JOptionPane.ERROR_MESSAGE);
-					editor.lastaut=backup;
+					//		editor.lastaut=backup;
 					return;
 				} else throw exc;
 			}
@@ -396,7 +395,7 @@ public class EditorMenuBar extends JMenuBar
 			if (controller==null)
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The mpc is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
-				editor.lastaut=backup;
+				//	editor.lastaut=backup;
 				return;
 			}
 			String K="Kmpc_"+filename;
@@ -434,7 +433,7 @@ public class EditorMenuBar extends JMenuBar
 			lastDir=editor.getCurrentFile().getParent();
 
 			MSCA aut=editor.lastaut;
-			MSCA backup = aut.clone();
+			//		MSCA backup = aut.clone();
 
 			MSCA controller=null;
 			long elapsedTime;
@@ -449,7 +448,7 @@ public class EditorMenuBar extends JMenuBar
 					JOptionPane.showMessageDialog(editor.getGraphComponent(),
 							exc.getMessage()+"\n Elapsed time : "+elapsedTime + " milliseconds",
 							"Error",JOptionPane.ERROR_MESSAGE);
-					editor.lastaut=backup;
+					//	editor.lastaut=backup;
 					return;
 				} else throw exc;
 			}
@@ -458,7 +457,7 @@ public class EditorMenuBar extends JMenuBar
 			if (controller==null)
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
-				editor.lastaut=backup;
+				//editor.lastaut=backup;
 				return;
 			}
 			String K="Orc_"+filename;
@@ -494,7 +493,7 @@ public class EditorMenuBar extends JMenuBar
 
 			lastDir=editor.getCurrentFile().getParent();
 			MSCA aut=editor.lastaut;
-			MSCA backup = aut.clone();
+			//	MSCA backup = aut.clone();
 
 			MSCA controller=null;
 			long start = System.currentTimeMillis();
@@ -507,7 +506,7 @@ public class EditorMenuBar extends JMenuBar
 					JOptionPane.showMessageDialog(editor.getGraphComponent(),
 							exc.getMessage()+"\n Elapsed time : "+elapsedTime + " milliseconds",
 							"Error",JOptionPane.ERROR_MESSAGE);
-					editor.lastaut=backup;
+					//	editor.lastaut=backup;
 					return;
 				} else throw exc;
 			}
@@ -516,7 +515,7 @@ public class EditorMenuBar extends JMenuBar
 			if (controller==null)
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The choreography is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
-				editor.lastaut=backup;
+				//	editor.lastaut=backup;
 				return;
 			}
 			String K="Chor_"+//"(R"+Arrays.toString(R)+"_F"+Arrays.toString(F)+")_"+
@@ -541,29 +540,29 @@ public class EditorMenuBar extends JMenuBar
 			loadMorphStore(lastDir+"//"+K,editor,file);
 		});
 
-//		menu.addSeparator();
-//
-//		item = menu.add(new JMenuItem("Info about converting in MSCA without Lazy Transitions"));//mxResources.get("aboutGraphEditor")));
-//		item.addActionListener(e->
-//		{
-//			if (checkAut(editor)) return;
-//
-//			lastDir=editor.getCurrentFile().getParent();
-//			MSCA aut=editor.lastaut;
-//
-//			long l=aut.getTransition()
-//					.parallelStream()
-//					.filter(MSCATransition::isLazy)
-//					.count();
-//
-//			long ns = aut.getNumStates()+1;
-//
-//			JOptionPane.showMessageDialog(editor.getGraphComponent(), 
-//					"The automaton contains the following number of lazy transitions : "+l+" \n"
-//							+"An encoding into an automaton with only urgent transitions in the worst case could have the following "
-//							+ "number of states ("+ns+") * (2^"+l+"-1)",
-//							"Result",JOptionPane.WARNING_MESSAGE);
-//		});
+		//		menu.addSeparator();
+		//
+		//		item = menu.add(new JMenuItem("Info about converting in MSCA without Lazy Transitions"));//mxResources.get("aboutGraphEditor")));
+		//		item.addActionListener(e->
+		//		{
+		//			if (checkAut(editor)) return;
+		//
+		//			lastDir=editor.getCurrentFile().getParent();
+		//			MSCA aut=editor.lastaut;
+		//
+		//			long l=aut.getTransition()
+		//					.parallelStream()
+		//					.filter(MSCATransition::isLazy)
+		//					.count();
+		//
+		//			long ns = aut.getNumStates()+1;
+		//
+		//			JOptionPane.showMessageDialog(editor.getGraphComponent(), 
+		//					"The automaton contains the following number of lazy transitions : "+l+" \n"
+		//							+"An encoding into an automaton with only urgent transitions in the worst case could have the following "
+		//							+ "number of states ("+ns+") * (2^"+l+"-1)",
+		//							"Result",JOptionPane.WARNING_MESSAGE);
+		//		});
 
 
 		menu = add(new JMenu("FMCA"));
@@ -725,8 +724,8 @@ public class EditorMenuBar extends JMenuBar
 				try
 				{
 					String fileName =fc.getSelectedFile().toString();
-					Product[] pr=Family.importFamily(fc.getSelectedFile().getPath(),fileName);
-					Family fam=new Family(new HashSet<Product>(Arrays.asList(pr)));
+					Set<Product> pr=Family.importFeatureIDEmodel(fc.getSelectedFile().getPath(),fileName);
+					Family fam=new Family(pr);
 					pf= new ProductFrame(fam, (JPanel)editor);
 					editor.setProductFrame(pf);
 					pf.setExtendedState(JFrame.MAXIMIZED_BOTH); 
@@ -765,7 +764,7 @@ public class EditorMenuBar extends JMenuBar
 			//int[] pid = fam.getMaximalProducts();
 			Set<Product> cp= fam.getMaximalProducts(); //fam.subsetOfProductsFromIndex(pid);
 			long elapsedTime = System.currentTimeMillis() - start;
-			
+
 			if (cp==null)
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Maximal Products",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
@@ -793,9 +792,9 @@ public class EditorMenuBar extends JMenuBar
 			jd.setLocationRelativeTo(null);
 
 		});
-		
 
-		
+
+
 		item = menu.add(new JMenuItem("Sub-Products of Product"));//mxResources.get("aboutGraphEditor")));
 		item.addActionListener(e->
 		{
@@ -817,8 +816,8 @@ public class EditorMenuBar extends JMenuBar
 			int pindex=Integer.parseInt(S);
 			//Product p=f.getElements()[pindex];
 			Product p = pf.getProductAt(pindex);
-//			int[] subind = f.getSubProductsofProduct(pindex);
-//			Product[] subprod = f.subsetOfProductsFromIndex(subind);
+			//			int[] subind = f.getSubProductsofProduct(pindex);
+			//			Product[] subprod = f.subsetOfProductsFromIndex(subind);
 			Set<Product> subprod = f.getSubProductsofProduct(p);
 			pf.setColorButtonProducts(subprod, Color.RED);
 
@@ -860,13 +859,13 @@ public class EditorMenuBar extends JMenuBar
 				return;
 
 			int pindex=Integer.parseInt(S);
-//			Product p=f.getElements()[pindex];
+			//			Product p=f.getElements()[pindex];
 			Product p =pf.getProductAt(pindex);
-			
-//			int[] supind = f.getSuperProductsofProduct(pindex);
-//			Product[] subprod = f.subsetOfProductsFromIndex(supind);
+
+			//			int[] supind = f.getSuperProductsofProduct(pindex);
+			//			Product[] subprod = f.subsetOfProductsFromIndex(supind);
 			Set<Product> supind =f.getSuperProductsofProduct(p);
-			
+
 			pf.setColorButtonProducts(supind, Color.RED);
 
 			String message=supind.size()+ " Super-Products of Product "+pindex+"\n"+p.toString()+"\n";
@@ -909,17 +908,20 @@ public class EditorMenuBar extends JMenuBar
 
 			long start = System.currentTimeMillis();
 			//int[] vp= pf.getFamily().validProducts(aut);
-			
+
 			Set<Product> vpp;
-			
+
 			if (!aut.getForwardStar(aut.getInitial()).stream()
 					.map(MSCATransition::getLabel)
 					.allMatch(l->CALabel.getUnsignedAction(l.getAction()).equals("dummy")))
 				vpp= new FMCA(aut,pf.getFamily()).productsRespectingValidity();
 			else
-				vpp=new FMCA(aut,pf.getFamily()).respectingValidityFamily();
+			{
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"Operation not supported for an orchestration of a family","",JOptionPane.WARNING_MESSAGE);
+				return;
+				//vpp=new FMCA(aut,pf.getFamily()).respectingValidityFamily();
+			}
 
-			
 			long elapsedTime= System.currentTimeMillis() - start;
 
 			if (vpp==null)
@@ -950,39 +952,39 @@ public class EditorMenuBar extends JMenuBar
 
 		});
 
-//		item = menu.add(new JMenuItem("Valid Products (Only)"));//mxResources.get("aboutGraphEditor")));
-//		item.addActionListener(e->
-//		{
-//
-//			if (checkAut(editor)) return;
-//
-//			ProductFrame pf=editor.getProductFrame();
-//
-//			if (pf==null)
-//			{
-//				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Family loaded!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-//				return;
-//			}
-//
-//			lastDir=editor.getCurrentFile().getParent();
-//
-//			MSCA aut=editor.lastaut;
-//
-//			//int[] vp= pf.getFamily().validProductsNew(aut);
-//			Set<Product> vpp=pf.getFamily().validProductsNew(aut); //subsetOfProductsFromIndex(vp);
-//			
-//			if (vpp==null || vpp.size()==0)
-//			{
-//				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No valid products!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-//				return;
-//			}
-//			pf=editor.getProductFrame();
-//			if (pf!=null)
-//				pf.dispose();
-//
-//			pf= new ProductFrame(new Family(vpp), (JPanel)editor);
-//			editor.setProductFrame(pf);  
-//		});
+		//		item = menu.add(new JMenuItem("Valid Products (Only)"));//mxResources.get("aboutGraphEditor")));
+		//		item.addActionListener(e->
+		//		{
+		//
+		//			if (checkAut(editor)) return;
+		//
+		//			ProductFrame pf=editor.getProductFrame();
+		//
+		//			if (pf==null)
+		//			{
+		//				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Family loaded!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+		//				return;
+		//			}
+		//
+		//			lastDir=editor.getCurrentFile().getParent();
+		//
+		//			MSCA aut=editor.lastaut;
+		//
+		//			//int[] vp= pf.getFamily().validProductsNew(aut);
+		//			Set<Product> vpp=pf.getFamily().validProductsNew(aut); //subsetOfProductsFromIndex(vp);
+		//			
+		//			if (vpp==null || vpp.size()==0)
+		//			{
+		//				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No valid products!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+		//				return;
+		//			}
+		//			pf=editor.getProductFrame();
+		//			if (pf!=null)
+		//				pf.dispose();
+		//
+		//			pf= new ProductFrame(new Family(vpp), (JPanel)editor);
+		//			editor.setProductFrame(pf);  
+		//		});
 
 		item = menu.add(new JMenuItem("Canonical Products"));
 		item.addActionListener(e->
@@ -999,10 +1001,10 @@ public class EditorMenuBar extends JMenuBar
 			lastDir=editor.getCurrentFile().getParent();
 
 			MSCA aut=editor.lastaut;
-			
-			
-		//	int[][] ind=new int[1][];
-			
+
+
+			//	int[][] ind=new int[1][];
+
 			Map<Product,MSCA> cp;
 			long start;
 			if (!aut.getForwardStar(aut.getInitial()).stream()
@@ -1017,9 +1019,9 @@ public class EditorMenuBar extends JMenuBar
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"Operation not supported for an orchestration of a family","",JOptionPane.WARNING_MESSAGE);
 				return;
 			}	
-		//	Product[] cp=fam.getCanonicalProducts(aut,null,false,ind);
+			//	Product[] cp=fam.getCanonicalProducts(aut,null,false,ind);
 
-					
+
 			long elapsedTime= System.currentTimeMillis() - start;
 
 			if (cp==null)
@@ -1027,8 +1029,8 @@ public class EditorMenuBar extends JMenuBar
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Canonical Products"+"\n Elapsed time : "+elapsedTime+ " milliseconds",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			
-			
+
+
 
 			pf.setColorButtonProducts(cp.keySet(), Color.ORANGE);
 			String message="Canonical Products:\n";
@@ -1069,16 +1071,19 @@ public class EditorMenuBar extends JMenuBar
 
 			long start = System.currentTimeMillis();
 			//int[] vp= pf.getFamily().productsWithNonEmptyMPC(aut);
-			
-			
+
+
 			Set<Product>  vpp;
 			if (!aut.getForwardStar(aut.getInitial()).stream()
 					.map(MSCATransition::getLabel)
 					.allMatch(l->CALabel.getUnsignedAction(l.getAction()).equals("dummy")))
 				vpp=new FMCA(aut,pf.getFamily()).productsWithNonEmptyOrchestration();
 			else
-				vpp=new FMCA(aut,pf.getFamily()).productsWithNonEmptyOrchestrationFamily();
-			//.subsetOfProductsFromIndex(vp);
+			{
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"Operation not supported for an orchestration of a family","",JOptionPane.WARNING_MESSAGE);
+				return;
+			//				vpp=new FMCA(aut,pf.getFamily()).productsWithNonEmptyOrchestrationFamily();
+			}
 			long elapsedTime = System.currentTimeMillis() - start;
 
 			if (vpp==null)
@@ -1111,37 +1116,37 @@ public class EditorMenuBar extends JMenuBar
 
 		});
 
-//		item = menu.add(new JMenuItem("Products with non-empty orchestration (Only)"));//mxResources.get("aboutGraphEditor")));
-//		item.addActionListener(e->
-//		{		
-//
-//			if (checkAut(editor)) return;
-//
-//			ProductFrame pf=editor.getProductFrame();
-//			if (pf==null)
-//			{
-//				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Family loaded!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-//				return;
-//			}
-//
-//			lastDir=editor.getCurrentFile().getParent();
-//
-//			MSCA aut=editor.lastaut;
-//
-////			int[] vp= pf.getFamily().productsWithNonEmptyMPC(aut);
-////			Product[] vpp=pf.getFamily().subsetOfProductsFromIndex(vp);
-//			
-//			Set<Product> vpp = pf.getFamily().productsWithNonEmptyOrchestrationNew(aut);
-//			pf=editor.getProductFrame();
-//			if (pf!=null)
-//			{
-//				editor.setProductFrame(null);
-//				pf.dispose();
-//			}
-//
-//			pf= new ProductFrame(new Family(vpp), (JPanel)editor);
-//			editor.setProductFrame(pf);	
-//		});
+		//		item = menu.add(new JMenuItem("Products with non-empty orchestration (Only)"));//mxResources.get("aboutGraphEditor")));
+		//		item.addActionListener(e->
+		//		{		
+		//
+		//			if (checkAut(editor)) return;
+		//
+		//			ProductFrame pf=editor.getProductFrame();
+		//			if (pf==null)
+		//			{
+		//				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Family loaded!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+		//				return;
+		//			}
+		//
+		//			lastDir=editor.getCurrentFile().getParent();
+		//
+		//			MSCA aut=editor.lastaut;
+		//
+		////			int[] vp= pf.getFamily().productsWithNonEmptyMPC(aut);
+		////			Product[] vpp=pf.getFamily().subsetOfProductsFromIndex(vp);
+		//			
+		//			Set<Product> vpp = pf.getFamily().productsWithNonEmptyOrchestrationNew(aut);
+		//			pf=editor.getProductFrame();
+		//			if (pf!=null)
+		//			{
+		//				editor.setProductFrame(null);
+		//				pf.dispose();
+		//			}
+		//
+		//			pf= new ProductFrame(new Family(vpp), (JPanel)editor);
+		//			editor.setProductFrame(pf);	
+		//		});
 
 
 		item = menu.add(new JMenuItem("Total Products with non-empty orchestration"));//mxResources.get("aboutGraphEditor")));
@@ -1162,7 +1167,7 @@ public class EditorMenuBar extends JMenuBar
 
 			long start;
 			//int[] vp= pf.getFamily().productsWithNonEmptyMPC(aut);
-			
+
 			Map<Product,MSCA> vpp;
 			if (!aut.getForwardStar(aut.getInitial()).stream()
 					.map(MSCATransition::getLabel)
@@ -1225,7 +1230,7 @@ public class EditorMenuBar extends JMenuBar
 			lastDir=editor.getCurrentFile().getParent();
 
 			MSCA aut=editor.lastaut;
-			MSCA backup = aut.clone();
+			//	MSCA backup = aut.clone();
 
 			Family f=pf.getFamily();
 
@@ -1238,7 +1243,7 @@ public class EditorMenuBar extends JMenuBar
 			if (controller==null)
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","",JOptionPane.WARNING_MESSAGE);
-				editor.lastaut=backup;
+				//	editor.lastaut=backup;
 				return;
 			}
 
@@ -1283,7 +1288,7 @@ public class EditorMenuBar extends JMenuBar
 
 			lastDir=editor.getCurrentFile().getParent();
 			MSCA aut=editor.lastaut;
-			MSCA backup = aut.clone();
+			//		MSCA backup = aut.clone();
 			//			
 			//			String absfilename =editor.getCurrentFile().getAbsolutePath();
 			//			MSCA aut;
@@ -1306,11 +1311,11 @@ public class EditorMenuBar extends JMenuBar
 
 			//			File file=null;
 			//Product[] vpp=pf.getFamily().subsetOfProductsFromIndex(vp);
-			
+
 			if (controller==null)
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
-				editor.lastaut=backup;
+				//editor.lastaut=backup;
 				return;
 			}
 
@@ -1334,7 +1339,7 @@ public class EditorMenuBar extends JMenuBar
 			loadMorphStore(K,editor,file);
 
 		});
-		
+
 
 		item = menu.add(new JMenuItem("Orchestration of a Product (type id)"));//mxResources.get("aboutGraphEditor")));
 		item.addActionListener(e->
@@ -1345,7 +1350,7 @@ public class EditorMenuBar extends JMenuBar
 			lastDir=editor.getCurrentFile().getParent();
 
 			MSCA aut=editor.lastaut;
-			MSCA backup = aut.clone();
+			//	MSCA backup = aut.clone();
 
 			ProductFrame pf=editor.getProductFrame();
 			if (pf==null)
@@ -1364,7 +1369,7 @@ public class EditorMenuBar extends JMenuBar
 
 			//Product p=f.getElements()[Integer.parseInt(S)];
 			Product p=pf.getProductAt(Integer.parseInt(S));
-					
+
 			long start = System.currentTimeMillis();
 			MSCA controller = faut.orchestration(p);
 			long elapsedTime = System.currentTimeMillis() - start;
@@ -1372,10 +1377,10 @@ public class EditorMenuBar extends JMenuBar
 			if (controller==null)
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
-				editor.lastaut=backup;
+				//		editor.lastaut=backup;
 				return;
 			}
-			String K="Orc_"+"(R"+Arrays.toString(p.getRequired())+"_F"+Arrays.toString(p.getForbidden())+")_"+filename;
+			String K="Orc_"+"(R"+p.getRequired().toString()+"_F"+p.getForbidden().toString()+")_"+filename;
 			File file;
 			try {
 				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
@@ -1398,7 +1403,7 @@ public class EditorMenuBar extends JMenuBar
 
 		});
 
-		
+
 		item = menu.add(new JMenuItem("Orchestration of a Product (type product)"));//mxResources.get("aboutGraphEditor")));
 		item.addActionListener(e->
 		{
@@ -1407,7 +1412,7 @@ public class EditorMenuBar extends JMenuBar
 
 			lastDir=editor.getCurrentFile().getParent();
 			MSCA aut=editor.lastaut;
-			MSCA backup = aut.clone();//in case aut becomes null
+			//	MSCA backup = aut.clone();//in case aut becomes null
 
 			String S= (String) JOptionPane.showInputDialog(null, 
 					"Insert Required features separated by colon",
@@ -1440,7 +1445,7 @@ public class EditorMenuBar extends JMenuBar
 			if (controller==null)
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","",JOptionPane.WARNING_MESSAGE);
-				editor.lastaut=backup;
+				//	editor.lastaut=backup;
 				return;
 			}
 
