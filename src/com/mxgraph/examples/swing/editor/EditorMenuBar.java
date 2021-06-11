@@ -43,9 +43,10 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxGraph;
 
+import contractAutomata.BasicDataConverter;
+import contractAutomata.BasicMxeConverter;
 import contractAutomata.CALabel;
 import contractAutomata.MSCA;
-import contractAutomata.MSCAIO;
 import contractAutomata.MSCATransition;
 import family.FMCA;
 import family.Family;
@@ -130,8 +131,8 @@ public class EditorMenuBar extends JMenuBar
 				lastDir = fc.getSelectedFile().getParent();	
 				MSCA aut;
 				try {
-					aut = MSCAIO.load(fc.getSelectedFile().toString());
-					File file=MSCAIO.convertMSCAintoXML(fc.getSelectedFile().toString(),aut);
+					aut = new BasicDataConverter().importDATA(fc.getSelectedFile().toString());
+					File file=new BasicMxeConverter().exportMxe(fc.getSelectedFile().toString(),aut);
 					editor.lastaut=aut;
 					loadMorphStore(file.getName(), editor, file);
 				} catch (Exception e1) {
@@ -148,7 +149,7 @@ public class EditorMenuBar extends JMenuBar
 			String filename =editor.getCurrentFile().getAbsolutePath();
 			MSCA aut=editor.lastaut;
 			//			try {
-			//				aut = MSCAIO.parseXMLintoMSCA(filename);
+			//				aut = new BasicMxeConverter().importMxe(filename);
 			//				editor.lastaut=aut;
 			//			} catch (ParserConfigurationException|SAXException|IOException e1) {
 			//				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+"\n"+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
@@ -156,7 +157,7 @@ public class EditorMenuBar extends JMenuBar
 			//			}
 
 			try {
-				MSCAIO.printToFile(filename,aut);
+				new BasicDataConverter().exportDATA(filename,aut);
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The automaton has been stored with filename "+filename+".data","Success!",JOptionPane.PLAIN_MESSAGE);
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"File not found"+e1.toString(),mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
@@ -213,8 +214,8 @@ public class EditorMenuBar extends JMenuBar
 			MSCA aut=editor.lastaut;
 
 			try {
-				aut=MSCAIO.parseXMLintoMSCA(absfilename);
-				File file = MSCAIO.convertMSCAintoXML(absfilename,aut);
+				aut=new BasicMxeConverter().importMxe(absfilename);
+				File file = new BasicMxeConverter().exportMxe(absfilename,aut);
 				parseAndSet(absfilename, editor,file);
 			} 
 			catch(Exception e1)
@@ -281,7 +282,7 @@ public class EditorMenuBar extends JMenuBar
 				{
 					String fileName =fc.getSelectedFile().toString();
 					names.add(fileName.substring(fileName.lastIndexOf("\\")+1, fileName.indexOf(".")));
-					aut.add(MSCAIO.parseXMLintoMSCA(fileName));
+					aut.add(new BasicMxeConverter().importMxe(fileName));
 				}
 				catch (Exception e1) {
 					JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+"\n"+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
@@ -340,7 +341,7 @@ public class EditorMenuBar extends JMenuBar
 
 			File file;
 			try {
-				file = MSCAIO.convertMSCAintoXML(lastDir+"\\"+compositionname,composition);
+				file = new BasicMxeConverter().exportMxe(lastDir+"\\"+compositionname,composition);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -402,7 +403,7 @@ public class EditorMenuBar extends JMenuBar
 
 			File file;
 			try {
-				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -464,7 +465,7 @@ public class EditorMenuBar extends JMenuBar
 
 			File file;
 			try {
-				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -522,7 +523,7 @@ public class EditorMenuBar extends JMenuBar
 					filename;
 			File file;
 			try {
-				file=MSCAIO.convertMSCAintoXML(lastDir+"//"+K,controller);
+				file=new BasicMxeConverter().exportMxe(lastDir+"//"+K,controller);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -1251,7 +1252,7 @@ public class EditorMenuBar extends JMenuBar
 
 			File file;
 			try {
-				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -1293,7 +1294,7 @@ public class EditorMenuBar extends JMenuBar
 			//			String absfilename =editor.getCurrentFile().getAbsolutePath();
 			//			MSCA aut;
 			//			try {
-			//				aut = MSCAIO.parseXMLintoMSCA(absfilename);
+			//				aut = new BasicMxeConverter().importMxe(absfilename);
 			//			} catch (ParserConfigurationException|SAXException|IOException e1) {
 			//				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+"\n"+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 			//				return;
@@ -1322,7 +1323,7 @@ public class EditorMenuBar extends JMenuBar
 			String K="Orc_familyWithoutPO_"+filename;
 			File file;
 			try {
-				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -1383,7 +1384,7 @@ public class EditorMenuBar extends JMenuBar
 			String K="Orc_"+"(R"+p.getRequired().toString()+"_F"+p.getForbidden().toString()+")_"+filename;
 			File file;
 			try {
-				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -1452,7 +1453,7 @@ public class EditorMenuBar extends JMenuBar
 			String K="Orc_"+"(R"+Arrays.toString(R)+"_F"+Arrays.toString(F)+")_"+filename;
 			File file;
 			try {
-				file=MSCAIO.convertMSCAintoXML(lastDir+"\\"+K,controller);
+				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
