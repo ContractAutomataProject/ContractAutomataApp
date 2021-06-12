@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import javax.swing.ImageIcon;
@@ -43,14 +44,21 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxGraph;
 
-import contractAutomata.BasicDataConverter;
-import contractAutomata.BasicMxeConverter;
+import contractAutomata.DataConverter;
+import contractAutomata.MxeConverter;
 import contractAutomata.CALabel;
+import contractAutomata.ChoreographySynthesisOperator;
+import contractAutomata.CompositionFunction;
 import contractAutomata.MSCA;
 import contractAutomata.MSCATransition;
+import contractAutomata.MpcSynthesisOperator;
+import contractAutomata.OrchestrationSynthesisOperator;
 import family.FMCA;
 import family.Family;
+import family.FeatureIDEfamilyConverter;
+import family.ProdFamilyConverter;
 import family.Product;
+import family.ProductOrchestrationSynthesisFunction;
 
 /**
  * 
@@ -65,11 +73,11 @@ public class EditorMenuBar extends JMenuBar
 	static String lastDir;
 
 
-	final static String errorMsg = "States or transitions contain syntax errors.\n "
-			+ 		"Please, check that each state has the following format:\n"
-			+		"[STRING, ..., STRING]\n" 
-			+		"and that each transition label has the following format:\n"
-			+		"[(TYPE)STRING, ...,(TYPE)STRING]\n where (TYPE) is either ! or ?";
+	final static String errorMsg = "States or transitions contain syntax errors."+System.lineSeparator()+" "
+			+ 		"Please, check that each state has the following format:"+System.lineSeparator()
+			+		"[STRING, ..., STRING]"+System.lineSeparator() 
+			+		"and that each transition label has the following format:"+System.lineSeparator()
+			+		"[(TYPE)STRING, ...,(TYPE)STRING]"+System.lineSeparator()+" where (TYPE) is either ! or ?";
 
 	Predicate<App> loseChanges = x->((x != null)&&(!x.isModified()
 			|| JOptionPane.showConfirmDialog(x,	mxResources.get("loseChanges")) == JOptionPane.YES_OPTION));
@@ -131,8 +139,9 @@ public class EditorMenuBar extends JMenuBar
 				lastDir = fc.getSelectedFile().getParent();	
 				MSCA aut;
 				try {
-					aut = new BasicDataConverter().importDATA(fc.getSelectedFile().toString());
-					File file=new BasicMxeConverter().exportMxe(fc.getSelectedFile().toString(),aut);
+					aut = new DataConverter().importMSCA(fc.getSelectedFile().toString());
+					new MxeConverter().exportMSCA(fc.getSelectedFile().toString(),aut);
+					File file = new File(fc.getSelectedFile().toString());
 					editor.lastaut=aut;
 					loadMorphStore(file.getName(), editor, file);
 				} catch (Exception e1) {
@@ -152,12 +161,12 @@ public class EditorMenuBar extends JMenuBar
 			//				aut = new BasicMxeConverter().importMxe(filename);
 			//				editor.lastaut=aut;
 			//			} catch (ParserConfigurationException|SAXException|IOException e1) {
-			//				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+"\n"+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+			//				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+System.lineSeparator()+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 			//				return;
 			//			}
 
 			try {
-				new BasicDataConverter().exportDATA(filename,aut);
+				new DataConverter().exportMSCA(filename,aut);
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The automaton has been stored with filename "+filename+".data","Success!",JOptionPane.PLAIN_MESSAGE);
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"File not found"+e1.toString(),mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
@@ -214,13 +223,14 @@ public class EditorMenuBar extends JMenuBar
 			MSCA aut=editor.lastaut;
 
 			try {
-				aut=new BasicMxeConverter().importMxe(absfilename);
-				File file = new BasicMxeConverter().exportMxe(absfilename,aut);
+				aut=new MxeConverter().importMSCA(absfilename);
+				new MxeConverter().exportMSCA(absfilename,aut);
+				File file = new File(absfilename);
 				parseAndSet(absfilename, editor,file);
 			} 
 			catch(Exception e1)
 			{
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+"\n "+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+System.lineSeparator()+" "+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 			}
 		});
 
@@ -281,11 +291,11 @@ public class EditorMenuBar extends JMenuBar
 				try
 				{
 					String fileName =fc.getSelectedFile().toString();
-					names.add(fileName.substring(fileName.lastIndexOf("\\")+1, fileName.indexOf(".")));
-					aut.add(new BasicMxeConverter().importMxe(fileName));
+					names.add(fileName.substring(fileName.lastIndexOf(File.separator)+1, fileName.indexOf(".")));
+					aut.add(new MxeConverter().importMSCA(fileName));
 				}
 				catch (Exception e1) {
-					JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+"\n"+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+System.lineSeparator()+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				if (lastIteration)
@@ -298,7 +308,7 @@ public class EditorMenuBar extends JMenuBar
 					String fileName =fc.getSelectedFile().toString();
 					reply=JOptionPane.showOptionDialog(editor.getGraphComponent(), 
 							"You have selected: "+names.toString().substring(0, names.toString().length()-1)
-							+","+fileName.substring(fileName.lastIndexOf("\\")+1, fileName.indexOf("."))+"]", 
+							+","+fileName.substring(fileName.lastIndexOf(File.separator)+1, fileName.indexOf("."))+"]", 
 							"Composition", 
 							JOptionPane.YES_NO_CANCEL_OPTION, 
 							JOptionPane.INFORMATION_MESSAGE, 
@@ -324,7 +334,7 @@ public class EditorMenuBar extends JMenuBar
 			//				return;
 
 			long start = System.currentTimeMillis();
-			MSCA composition = (MSCA) MSCA.composition(aut, 
+			MSCA composition = (MSCA) new CompositionFunction().apply(aut, 
 					(pruningOption==JOptionPane.YES_OPTION)?null:
 						(pruningOption==JOptionPane.NO_OPTION)?t->t.getLabel().isRequest():
 							t->!t.getLabel().isMatch(),100); 
@@ -333,7 +343,7 @@ public class EditorMenuBar extends JMenuBar
 			if (composition==null)
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"Empty composition",mxResources.get("Empty composition")
-						+"\n Elapsed time : "+elapsedTime + " milliseconds",JOptionPane.PLAIN_MESSAGE);
+						+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds",JOptionPane.PLAIN_MESSAGE);
 				return;
 			}
 
@@ -341,7 +351,8 @@ public class EditorMenuBar extends JMenuBar
 
 			File file;
 			try {
-				file = new BasicMxeConverter().exportMxe(lastDir+"\\"+compositionname,composition);
+				new MxeConverter().exportMSCA(lastDir+File.separator+compositionname,composition);
+				file = new File(lastDir+File.separator+compositionname+".mxe");
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -351,9 +362,9 @@ public class EditorMenuBar extends JMenuBar
 			}
 
 			editor.lastaut=composition;
-			String message = "The composition has been stored with filename "+lastDir+"\\"+compositionname
-					+"\n Elapsed time : "+elapsedTime + " milliseconds"
-					+"\n Number of states : "+composition.getNumStates();
+			String message = "The composition has been stored with filename "+lastDir+File.separator+compositionname
+					+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
+					+System.lineSeparator()+" Number of states : "+composition.getNumStates();
 			;
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.PLAIN_MESSAGE);
 
@@ -379,14 +390,14 @@ public class EditorMenuBar extends JMenuBar
 			long elapsedTime;
 			long start= System.currentTimeMillis();
 			try {
-				controller = aut.mpc();
+				controller = new MpcSynthesisOperator().apply(aut);
 				elapsedTime = System.currentTimeMillis() - start;
 			} catch(UnsupportedOperationException exc) {
 				if (exc.getMessage()=="The automaton contains semi-controllable transitions")
 				{
 					elapsedTime = System.currentTimeMillis() - start;
 					JOptionPane.showMessageDialog(editor.getGraphComponent(),
-							exc.getMessage()+"\n Elapsed time : "+elapsedTime + " milliseconds",
+							exc.getMessage()+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds",
 							"Error",JOptionPane.ERROR_MESSAGE);
 					//		editor.lastaut=backup;
 					return;
@@ -395,7 +406,7 @@ public class EditorMenuBar extends JMenuBar
 
 			if (controller==null)
 			{
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The mpc is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The mpc is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
 				//	editor.lastaut=backup;
 				return;
 			}
@@ -403,7 +414,8 @@ public class EditorMenuBar extends JMenuBar
 
 			File file;
 			try {
-				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
+				new MxeConverter().exportMSCA(lastDir+File.separator+K,controller);
+				file = new File(lastDir+File.separator+K);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -412,14 +424,14 @@ public class EditorMenuBar extends JMenuBar
 				return;			
 			}
 
-			String message = "The mpc has been stored with filename "+lastDir+"//"+K
-					+"\n Elapsed time : "+elapsedTime + " milliseconds"
-					+"\n Number of states : "+controller.getNumStates();
+			String message = "The mpc has been stored with filename "+lastDir+File.separator+K
+					+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
+					+System.lineSeparator()+" Number of states : "+controller.getNumStates();
 
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.PLAIN_MESSAGE);
 
 			editor.lastaut=controller;
-			loadMorphStore(lastDir+"//"+K,editor,file);
+			loadMorphStore(lastDir+File.separator+K,editor,file);
 
 		});
 
@@ -440,14 +452,14 @@ public class EditorMenuBar extends JMenuBar
 			long elapsedTime;
 			long start = System.currentTimeMillis();
 			try {
-				controller = aut.orchestration();
+				controller = new OrchestrationSynthesisOperator().apply(aut);
 				elapsedTime = System.currentTimeMillis() - start;
 			} catch(UnsupportedOperationException exc) {
 				elapsedTime = System.currentTimeMillis() - start;
 				if (exc.getMessage()=="The automaton contains necessary offers that are not allowed in the orchestration synthesis")
 				{
 					JOptionPane.showMessageDialog(editor.getGraphComponent(),
-							exc.getMessage()+"\n Elapsed time : "+elapsedTime + " milliseconds",
+							exc.getMessage()+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds",
 							"Error",JOptionPane.ERROR_MESSAGE);
 					//	editor.lastaut=backup;
 					return;
@@ -457,7 +469,7 @@ public class EditorMenuBar extends JMenuBar
 
 			if (controller==null)
 			{
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
 				//editor.lastaut=backup;
 				return;
 			}
@@ -465,7 +477,8 @@ public class EditorMenuBar extends JMenuBar
 
 			File file;
 			try {
-				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
+				new MxeConverter().exportMSCA(lastDir+File.separator+K,controller);
+				file = new File(lastDir+File.separator+K);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -473,14 +486,14 @@ public class EditorMenuBar extends JMenuBar
 
 				return;			
 			}
-			String message = "The orchestration has been stored with filename "+lastDir+"//"+K
-					+"\n Elapsed time : "+elapsedTime + " milliseconds"
-					+"\n Number of states : "+controller.getNumStates();
+			String message = "The orchestration has been stored with filename "+lastDir+File.separator+K
+					+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
+					+System.lineSeparator()+" Number of states : "+controller.getNumStates();
 
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.PLAIN_MESSAGE);
 
 			editor.lastaut=controller;
-			loadMorphStore(lastDir+"//"+K,editor,file);
+			loadMorphStore(lastDir+File.separator+K,editor,file);
 
 		});
 
@@ -499,13 +512,13 @@ public class EditorMenuBar extends JMenuBar
 			MSCA controller=null;
 			long start = System.currentTimeMillis();
 			try {
-				controller = aut.choreography();
+				controller = new ChoreographySynthesisOperator().apply(aut);
 			} catch(UnsupportedOperationException exc) {
 				long elapsedTime = System.currentTimeMillis() - start;
 				if (exc.getMessage()=="The automaton contains necessary requests that are not allowed in the choreography synthesis")
 				{
 					JOptionPane.showMessageDialog(editor.getGraphComponent(),
-							exc.getMessage()+"\n Elapsed time : "+elapsedTime + " milliseconds",
+							exc.getMessage()+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds",
 							"Error",JOptionPane.ERROR_MESSAGE);
 					//	editor.lastaut=backup;
 					return;
@@ -515,7 +528,7 @@ public class EditorMenuBar extends JMenuBar
 
 			if (controller==null)
 			{
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The choreography is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The choreography is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
 				//	editor.lastaut=backup;
 				return;
 			}
@@ -523,7 +536,8 @@ public class EditorMenuBar extends JMenuBar
 					filename;
 			File file;
 			try {
-				file=new BasicMxeConverter().exportMxe(lastDir+"//"+K,controller);
+				new MxeConverter().exportMSCA(lastDir+File.separator+K,controller);
+				file = new File(lastDir+File.separator+K);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -531,14 +545,14 @@ public class EditorMenuBar extends JMenuBar
 
 				return;			
 			};
-			String message = "The choreography has been stored with filename "+lastDir+"//"+K
-					+"\n Elapsed time : "+elapsedTime + " milliseconds"
-					+"\n Number of states : "+controller.getNumStates();
+			String message = "The choreography has been stored with filename "+lastDir+File.separator+K
+					+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
+					+System.lineSeparator()+" Number of states : "+controller.getNumStates();
 
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.PLAIN_MESSAGE);
 
 			editor.lastaut=controller;
-			loadMorphStore(lastDir+"//"+K,editor,file);
+			loadMorphStore(lastDir+File.separator+K,editor,file);
 		});
 
 		//		menu.addSeparator();
@@ -559,7 +573,7 @@ public class EditorMenuBar extends JMenuBar
 		//			long ns = aut.getNumStates()+1;
 		//
 		//			JOptionPane.showMessageDialog(editor.getGraphComponent(), 
-		//					"The automaton contains the following number of lazy transitions : "+l+" \n"
+		//					"The automaton contains the following number of lazy transitions : "+l+" "+System.lineSeparator()
 		//							+"An encoding into an automaton with only urgent transitions in the worst case could have the following "
 		//							+ "number of states ("+ns+") * (2^"+l+"-1)",
 		//							"Result",JOptionPane.WARNING_MESSAGE);
@@ -622,7 +636,7 @@ public class EditorMenuBar extends JMenuBar
 				lastDir = fc.getSelectedFile().getParent();
 				String fileName =fc.getSelectedFile().toString();
 				try {
-					Family fam=new Family(fileName);
+					Family fam=new ProdFamilyConverter().importFamily(fileName);
 					pf= new ProductFrame(fam, (JPanel)editor);
 					editor.setProductFrame(pf);
 				} catch (IOException ex) {
@@ -683,7 +697,7 @@ public class EditorMenuBar extends JMenuBar
 
 				try
 				{
-					Family.writeFile(filename, pf.getFamily().getProducts());
+					new ProdFamilyConverter().exportFamily(filename, pf.getFamily());
 				}
 				catch (IOException ex)
 				{
@@ -724,9 +738,9 @@ public class EditorMenuBar extends JMenuBar
 				lastDir = fc.getSelectedFile().getParent();
 				try
 				{
-					String fileName =fc.getSelectedFile().toString();
-					Set<Product> pr=Family.importFeatureIDEmodel(fc.getSelectedFile().getPath(),fileName);
-					Family fam=new Family(pr);
+					String fileName =fc.getSelectedFile().getAbsolutePath();
+					System.out.println(fileName);
+					Family fam = new FeatureIDEfamilyConverter().importFamily(fileName); //(fc.getSelectedFile().getPath(),fileName);
 					pf= new ProductFrame(fam, (JPanel)editor);
 					editor.setProductFrame(pf);
 					pf.setExtendedState(JFrame.MAXIMIZED_BOTH); 
@@ -771,11 +785,11 @@ public class EditorMenuBar extends JMenuBar
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Maximal Products",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-
+			
 			pf.setColorButtonProducts(cp, Color.GREEN);
-			String message=cp.size() + " Maximal Products Found:\n";
+			String message=cp.size() + " Maximal Products Found:"+System.lineSeparator()+"";
 			for (Product p : cp)
-				message+= pf.indexOf(p)+" : \n"+p.toString()+"\n";
+				message+= pf.indexOf(p)+" : "+System.lineSeparator()+""+p.toString()+""+System.lineSeparator()+"";
 
 			message += "Elapsed time : "+elapsedTime+ " milliseconds";
 
@@ -822,9 +836,9 @@ public class EditorMenuBar extends JMenuBar
 			Set<Product> subprod = f.getSubProductsofProduct(p);
 			pf.setColorButtonProducts(subprod, Color.RED);
 
-			String message=subprod.size() + " Sub-Products of Product "+pindex+"\n"+p.toString()+"\n";
+			String message=subprod.size() + " Sub-Products of Product "+pindex+System.lineSeparator()+p.toString()+System.lineSeparator();
 			for (Product p2 : subprod)
-				message+= pf.indexOf(p2)+" : \n"+p2.toString()+"\n";
+				message+= pf.indexOf(p2)+" : "+System.lineSeparator()+p2.toString()+System.lineSeparator();
 			JTextArea textArea = new JTextArea(200,200);
 			textArea.setText(message);
 			textArea.setEditable(true);
@@ -869,9 +883,9 @@ public class EditorMenuBar extends JMenuBar
 
 			pf.setColorButtonProducts(supind, Color.RED);
 
-			String message=supind.size()+ " Super-Products of Product "+pindex+"\n"+p.toString()+"\n";
+			String message=supind.size()+ " Super-Products of Product "+pindex+System.lineSeparator()+p.toString()+System.lineSeparator();
 			for (Product p2 : supind)
-				message+= pf.indexOf(p2)+" : \n"+p2.toString()+"\n";
+				message+= pf.indexOf(p2)+" : "+System.lineSeparator()+p2.toString()+System.lineSeparator();
 			JTextArea textArea = new JTextArea(200,200);
 			textArea.setText(message);
 			textArea.setEditable(true);
@@ -932,10 +946,10 @@ public class EditorMenuBar extends JMenuBar
 			}
 
 			pf.setColorButtonProducts(vpp, Color.BLUE);
-			String message=vpp.size()+ " Products Respecting Validity Found:\n";
+			String message=vpp.size()+ " Products Respecting Validity Found:"+System.lineSeparator();
 
 			for (Product p : vpp)
-				message+= pf.indexOf(p)+" : \n"+p.toString()+"\n";
+				message+= pf.indexOf(p)+" : "+System.lineSeparator()+p.toString()+System.lineSeparator();
 
 			message += "Elapsed Time " + elapsedTime + " milliseconds";
 			JTextArea textArea = new JTextArea(200,200);
@@ -1027,16 +1041,16 @@ public class EditorMenuBar extends JMenuBar
 
 			if (cp==null)
 			{
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Canonical Products"+"\n Elapsed time : "+elapsedTime+ " milliseconds",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Canonical Products"+System.lineSeparator()+" Elapsed time : "+elapsedTime+ " milliseconds",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 
 
 
 			pf.setColorButtonProducts(cp.keySet(), Color.ORANGE);
-			String message="Canonical Products:\n";
+			String message="Canonical Products:"+System.lineSeparator();
 			for (Product p : cp.keySet())
-				message+= pf.indexOf(p)+" : \n"+p.toString()+"\n";
+				message+= pf.indexOf(p)+" : "+System.lineSeparator()+p.toString()+System.lineSeparator();
 
 			message += "Elapsed time : "+elapsedTime+ " milliseconds";
 			JTextArea textArea = new JTextArea(200,200);
@@ -1089,14 +1103,14 @@ public class EditorMenuBar extends JMenuBar
 
 			if (vpp==null)
 			{			
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Products With non-empty orchestration"+ "\nElapsed time : "+elapsedTime+ " milliseconds","",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Products With non-empty orchestration"+ System.lineSeparator()+"Elapsed time : "+elapsedTime+ " milliseconds","",JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 
 			pf.setColorButtonProducts(vpp, Color.BLUE);
-			String message=vpp.size( )+ " Products With non-empty orchestration Found:\n";
+			String message=vpp.size( )+ " Products With non-empty orchestration Found:"+System.lineSeparator();
 			for (Product p : vpp)
-				message+= pf.indexOf(p)+" : \n"+p.toString()+"\n";
+				message+= pf.indexOf(p)+" : "+System.lineSeparator()+p.toString()+System.lineSeparator();
 
 			message += "Elapsed time : " + elapsedTime+ " milliseconds";
 			JTextArea textArea = new JTextArea(200,200);
@@ -1186,14 +1200,14 @@ public class EditorMenuBar extends JMenuBar
 
 			if (vpp==null)
 			{			
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Total Products With non-empty orchestration"+ "\nElapsed time : "+elapsedTime+ " milliseconds","",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Total Products With non-empty orchestration"+ System.lineSeparator()+"Elapsed time : "+elapsedTime+ " milliseconds","",JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 
 			pf.setColorButtonProducts(vpp.keySet(), Color.BLUE);
-			String message=vpp.size( )+ " Total Products With non-empty orchestration Found:\n";
+			String message=vpp.size( )+ " Total Products With non-empty orchestration Found:"+System.lineSeparator();
 			for (Product p : vpp.keySet())
-				message+= pf.indexOf(p)+" : \n"+p.toString()+"\n";
+				message+= pf.indexOf(p)+" : "+System.lineSeparator()+p.toString()+System.lineSeparator();
 
 			message += "Elapsed time : " + elapsedTime+ " milliseconds";
 			JTextArea textArea = new JTextArea(200,200);
@@ -1243,7 +1257,7 @@ public class EditorMenuBar extends JMenuBar
 
 			if (controller==null)
 			{
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","",JOptionPane.WARNING_MESSAGE);
 				//	editor.lastaut=backup;
 				return;
 			}
@@ -1252,7 +1266,8 @@ public class EditorMenuBar extends JMenuBar
 
 			File file;
 			try {
-				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
+				new MxeConverter().exportMSCA(lastDir+File.separator+K,controller);
+				file = new File(lastDir+File.separator+K);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -1261,10 +1276,10 @@ public class EditorMenuBar extends JMenuBar
 				return;			
 			}
 
-			String message = "The orchestration has been stored with filename "+lastDir+"\\"
+			String message = "The orchestration has been stored with filename "+lastDir+File.separator
 					+ K
-					+ "\n Elapsed time : "+elapsedTime + " milliseconds"
-					+ "\n Number of states : "+controller.getNumStates();
+					+ System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
+					+ System.lineSeparator()+" Number of states : "+controller.getNumStates();
 			;
 
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.WARNING_MESSAGE);
@@ -1296,7 +1311,7 @@ public class EditorMenuBar extends JMenuBar
 			//			try {
 			//				aut = new BasicMxeConverter().importMxe(absfilename);
 			//			} catch (ParserConfigurationException|SAXException|IOException e1) {
-			//				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+"\n"+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+			//				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+System.lineSeparator()+errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 			//				return;
 			//			}
 			Family f=pf.getFamily();
@@ -1315,7 +1330,7 @@ public class EditorMenuBar extends JMenuBar
 
 			if (controller==null)
 			{
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
 				//editor.lastaut=backup;
 				return;
 			}
@@ -1323,7 +1338,8 @@ public class EditorMenuBar extends JMenuBar
 			String K="Orc_familyWithoutPO_"+filename;
 			File file;
 			try {
-				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
+				new MxeConverter().exportMSCA(lastDir+File.separator+K,controller);
+				file = new File(lastDir+File.separator+K);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -1332,7 +1348,7 @@ public class EditorMenuBar extends JMenuBar
 				return;			
 			}
 
-			String message = "The orchestration has been stored with filename "+lastDir+"\\"+K;
+			String message = "The orchestration has been stored with filename "+lastDir+File.separator+K;
 
 
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.WARNING_MESSAGE);
@@ -1372,19 +1388,20 @@ public class EditorMenuBar extends JMenuBar
 			Product p=pf.getProductAt(Integer.parseInt(S));
 
 			long start = System.currentTimeMillis();
-			MSCA controller = faut.orchestration(p);
+			MSCA controller = new ProductOrchestrationSynthesisFunction().apply(faut.getAut(),p);
 			long elapsedTime = System.currentTimeMillis() - start;
 
 			if (controller==null)
 			{
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
 				//		editor.lastaut=backup;
 				return;
 			}
 			String K="Orc_"+"(R"+p.getRequired().toString()+"_F"+p.getForbidden().toString()+")_"+filename;
 			File file;
 			try {
-				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
+				new MxeConverter().exportMSCA(lastDir+File.separator+K,controller);
+				file = new File(lastDir+File.separator+K);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -1393,14 +1410,14 @@ public class EditorMenuBar extends JMenuBar
 				return;			
 			}
 
-			String message = "The orchestration has been stored with filename "+lastDir+"//"+K
-					+"\n Elapsed time : "+elapsedTime + " milliseconds"
-					+"\n Number of states : "+controller.getNumStates();
+			String message = "The orchestration has been stored with filename "+lastDir+File.separator+K
+					+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
+					+System.lineSeparator()+" Number of states : "+controller.getNumStates();
 
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.PLAIN_MESSAGE);
 
 			editor.lastaut=controller;
-			loadMorphStore(lastDir+"//"+K,editor,file);
+			loadMorphStore(lastDir+File.separator+K,editor,file);
 
 		});
 
@@ -1437,15 +1454,17 @@ public class EditorMenuBar extends JMenuBar
 			Product p=(R.length+F.length>0)?new Product(R,F):null;
 
 			MSCA controller=null;
-			FMCA faut= new FMCA(aut,editor.getProductFrame().getFamily());
+		//	FMCA faut= new FMCA(aut,editor.getProductFrame().getFamily());
 			long elapsedTime;
+			BiFunction<MSCA,Product,MSCA> synth = (p!=null)?new ProductOrchestrationSynthesisFunction()
+					:(a,pp)->{return new OrchestrationSynthesisOperator().apply(a);};
 			long start = System.currentTimeMillis();
-			controller= (p!=null)?faut.orchestration(p):aut.orchestration(); 
+			controller=  synth.apply(aut, p); //(p!=null)?faut.orchestration(p):aut.orchestration(); 
 			elapsedTime = System.currentTimeMillis() - start;
 
 			if (controller==null)
 			{
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+"\n Elapsed time : "+elapsedTime + " milliseconds","",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","",JOptionPane.WARNING_MESSAGE);
 				//	editor.lastaut=backup;
 				return;
 			}
@@ -1453,7 +1472,8 @@ public class EditorMenuBar extends JMenuBar
 			String K="Orc_"+"(R"+Arrays.toString(R)+"_F"+Arrays.toString(F)+")_"+filename;
 			File file;
 			try {
-				file=new BasicMxeConverter().exportMxe(lastDir+"\\"+K,controller);
+				new MxeConverter().exportMSCA(lastDir+File.separator+K,controller);
+				file = new File(lastDir+File.separator+K);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						"Error in saving the file "+e1.getMessage(),
@@ -1461,13 +1481,13 @@ public class EditorMenuBar extends JMenuBar
 
 				return;			
 			}
-			String message = "The orchestration has been stored with filename "+lastDir+"//"+K
-					+"\n Elapsed time : "+elapsedTime + " milliseconds"
-					+"\n Number of states : "+controller.getNumStates();
+			String message = "The orchestration has been stored with filename "+lastDir+File.separator+K
+					+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
+					+System.lineSeparator()+" Number of states : "+controller.getNumStates();
 
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.WARNING_MESSAGE);
 			editor.lastaut=controller;
-			loadMorphStore(lastDir+"//"+K,editor,file);
+			loadMorphStore(lastDir+File.separator+K,editor,file);
 
 		});
 
@@ -1489,7 +1509,7 @@ public class EditorMenuBar extends JMenuBar
 		if (!name.endsWith(".mxe")&&!name.endsWith(".data"))
 			name=name+".mxe";
 		if (lastDir!=null && !name.startsWith(lastDir))
-			name=lastDir+"\\"+name;
+			name=lastDir+File.separator+name;
 		try
 		{	
 			mxGraph graph = editor.getGraphComponent().getGraph();
@@ -1533,7 +1553,7 @@ public class EditorMenuBar extends JMenuBar
 		{								
 			mxGraph graphfinal = editor.getGraphComponent().getGraph();
 			Document document = mxXmlUtils
-					.parseXml(mxUtils.readFile(absfilename));//lastDir+"//"+name));
+					.parseXml(mxUtils.readFile(absfilename));//lastDir+File.separator+name));
 			mxCodec codec = new mxCodec(document);
 			codec.decode(
 					document.getDocumentElement(),

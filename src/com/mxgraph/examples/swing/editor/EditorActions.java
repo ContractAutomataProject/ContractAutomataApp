@@ -62,7 +62,7 @@ import com.mxgraph.util.png.mxPngImageEncoder;
 import com.mxgraph.util.png.mxPngTextDecoder;
 import com.mxgraph.view.mxGraph;
 
-import contractAutomata.BasicMxeConverter;
+import contractAutomata.MxeConverter;
 
 /**
  *
@@ -754,7 +754,7 @@ public class EditorActions
 						if (editor instanceof App)
 						{
 							try {
-							((App)editor).lastaut=new BasicMxeConverter().importMxe(filename);
+							((App)editor).lastaut=new MxeConverter().importMSCA(filename);
 							} catch (Exception ex) {
 								JOptionPane.showMessageDialog(editor.getGraphComponent(),EditorMenuBar.errorMsg, mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 								
