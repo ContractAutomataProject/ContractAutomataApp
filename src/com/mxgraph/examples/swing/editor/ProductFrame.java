@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
@@ -21,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
+import contractAutomata.MSCA;
 import family.Family;
 import family.Product;
 
@@ -39,18 +41,21 @@ public class ProductFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 
-	public ProductFrame(Family f, JPanel frame){
+	public ProductFrame(Family f, JPanel frame, MSCA aut){
 		this.fam=f;
 		JPanel panel=new JPanel();
 		this.setLocationRelativeTo(frame);
 		this.setSize(800,800);
 		setTitle("Family Products");
 		panel.setAutoscrolls(true);
+		Function<Product,Integer> fpi = p->(aut==null)?p.getForbiddenAndRequiredNumber():p.getForbidden().size();
+	
 		prod = new ArrayList<>(f.getProducts());
-		prod.sort((p1,p2)->p2.getForbiddenAndRequiredNumber()-p1.getForbiddenAndRequiredNumber());
+		prod.sort((p1,p2)-> fpi.apply(p2)-fpi.apply(p1));//p2.getForbiddenAndRequiredNumber()-p1.getForbiddenAndRequiredNumber());
 		
 		Map<Integer, Set<Product>> depth = f.getProducts().parallelStream()
-		.collect(Collectors.groupingBy(Product::getForbiddenAndRequiredNumber,Collectors.toSet()));
+		.collect(Collectors.groupingBy(fpi, //Product::getForbiddenAndRequiredNumber,
+				Collectors.toSet()));
 				
 		//int[][] depth = f.getDepth();
 		JScrollPane scrollpanel= new JScrollPane(panel,

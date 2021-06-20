@@ -1,3 +1,5 @@
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
 <h1>Contract Automata App</h1>
 
 This is the GUI application of CAT, and represents an example of usage of the CAT API.
@@ -21,15 +23,19 @@ The tool is available under Creative Common License 4.0,
 https://github.com/davidebasile/CAT_App/blob/master/license.html
 
 
-<h2>Tutorials</h2>
+<h2>Tutorials and Videos</h2>
 
-A first video tutorial is available at https://youtu.be/LAzCEQtYOhU and it shows the usage of the tool for composing automata and compute orchestrations of product lines, using the examples published in JSCP2020.
+The playlist of video tutorials and presentations about the tool is available at
+
+https://www.youtube.com/playlist?list=PLory_2tIDsJvZB2eVlpji-baIz0320TwM
+
+The first video tutorial (https://youtu.be/LAzCEQtYOhU) shows the usage of the tool for composing automata and compute orchestrations of product lines, using the examples published in JSCP2020.
 The directory demoJSCP contains an executable jar and the models used in this tutorial.
 
-The second video tutorial, available at https://youtu.be/W0BHlgQEhIk, shows the computation of orchestrations and choreographies for the examples published in LMCS2020.
+The second video tutorial (https://youtu.be/W0BHlgQEhIk) shows the computation of orchestrations and choreographies for the examples published in LMCS2020.
 The directory demoLMCS2020 contains an executable jar and the models used in this tutorial.
 
-The third video tutorial, available at https://youtu.be/QJjT7f7vlZ4, shows the recent refactoring and improvements of the tool published in Coordination2021.
+The third video tutorial (https://youtu.be/QJjT7f7vlZ4) shows the recent refactoring and improvements of the tool published in Coordination2021.
 
 <h2>Contacts</h2>
 

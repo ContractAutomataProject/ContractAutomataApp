@@ -10,10 +10,12 @@ import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 import org.w3c.dom.Document;
 
+import com.mxgraph.examples.swing.editor.actions.EditorMenuBar;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.layout.mxIGraphLayout;
@@ -65,6 +67,8 @@ public class App extends BasicGraphEditor
 	public MSCA lastaut = null;
 	
 	private ProductFrame pf=null;
+	
+	private JFrame menuFrame=null;
 
 
 	public App()
@@ -84,6 +88,10 @@ public class App extends BasicGraphEditor
 	public ProductFrame getProductFrame()
 	{
 		return this.pf;
+	}
+	
+	public JFrame getMenuFrame() {
+		return menuFrame;
 	}
 	
 	/**
@@ -376,9 +384,10 @@ public class App extends BasicGraphEditor
 		mxConstants.W3C_SHADOWCOLOR = "#D3D3D3";
 
 		App editor = new App();
-		editor.createFrame(new EditorMenuBar(editor)).setVisible(true);
+		editor.menuFrame = editor.createFrame(new EditorMenuBar(editor));
+		editor.menuFrame.setVisible(true);
 	}
-	
+
 	/**
 	 * utility for rearranging the graphical display of the automaton
 	 * @param graph

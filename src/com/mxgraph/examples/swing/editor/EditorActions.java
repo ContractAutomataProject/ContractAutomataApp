@@ -42,6 +42,7 @@ import org.w3c.dom.Document;
 
 import com.mxgraph.analysis.mxDistanceCostFunction;
 import com.mxgraph.analysis.mxGraphAnalysis;
+import com.mxgraph.examples.swing.editor.actions.EditorMenuBar;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.io.mxGdCodec;
 import com.mxgraph.model.mxCell;
@@ -62,7 +63,7 @@ import com.mxgraph.util.png.mxPngImageEncoder;
 import com.mxgraph.util.png.mxPngTextDecoder;
 import com.mxgraph.view.mxGraph;
 
-import contractAutomata.MxeConverter;
+import contractAutomata.converters.MxeConverter;
 
 /**
  *
@@ -225,8 +226,6 @@ public class EditorActions
 			});
 		}
 	}
-
-
 
 	/**
 	 *
@@ -753,10 +752,12 @@ public class EditorActions
 
 						if (editor instanceof App)
 						{
+							App app = ((App)editor);
+							EditorMenuBar menuBar = (EditorMenuBar) app.getMenuFrame().getJMenuBar();
 							try {
-							((App)editor).lastaut=new MxeConverter().importMSCA(filename);
+							app.lastaut=new MxeConverter().importMSCA(filename);
 							} catch (Exception ex) {
-								JOptionPane.showMessageDialog(editor.getGraphComponent(),EditorMenuBar.errorMsg, mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(editor.getGraphComponent(),menuBar.getErrorMsg(), mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 								
 							}
 						}
