@@ -2,6 +2,8 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.function.UnaryOperator;
 
@@ -11,7 +13,7 @@ import javax.swing.JOptionPane;
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
 
-import contractAutomata.MSCA;
+import contractAutomata.automaton.MSCA;
 import contractAutomata.converters.MxeConverter;
 import contractAutomata.operators.OrchestrationSynthesisOperator;
 import contractAutomata.operators.ProductOrchestrationSynthesisOperator;
@@ -25,7 +27,7 @@ public class OrchestrationProductType extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
 		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
-		
+
 		if (menuBar.checkAut(editor)) return;
 		String filename=editor.getCurrentFile().getName();
 
@@ -55,14 +57,16 @@ public class OrchestrationProductType extends AbstractAction {
 		Product p=(R.length+F.length>0)?new Product(R,F):null;
 
 		MSCA controller=null;
-	//	FMCA faut= new FMCA(aut,editor.getProductFrame().getFamily());
-		long elapsedTime;
+		//	FMCA faut= new FMCA(aut,editor.getProductFrame().getFamily());
 		UnaryOperator<MSCA> synth = (p!=null)?
 				new ProductOrchestrationSynthesisOperator(new Agreement(),p)
 				:new OrchestrationSynthesisOperator(new Agreement());
-		long start = System.currentTimeMillis();
+
+		Instant start = Instant.now();
 		controller=  synth.apply(aut); //(p!=null)?faut.orchestration(p):aut.orchestration(); 
-		elapsedTime = System.currentTimeMillis() - start;
+
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
 
 		if (controller==null)
 		{
@@ -92,7 +96,7 @@ public class OrchestrationProductType extends AbstractAction {
 		menuBar.loadMorphStore(menuBar.lastDir+File.separator+K,editor,file);
 
 
-		
+
 	}
 
 }

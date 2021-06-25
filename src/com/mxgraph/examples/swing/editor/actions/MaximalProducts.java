@@ -2,6 +2,8 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -35,11 +37,12 @@ public class MaximalProducts extends AbstractAction {
 
 		Family fam= pf.getFamily();
 
-		long start = System.currentTimeMillis();
+		Instant start = Instant.now();
 		//int[] pid = fam.getMaximalProducts();
 		Set<Product> cp= fam.getMaximalProducts(); //fam.subsetOfProductsFromIndex(pid);
-		long elapsedTime = System.currentTimeMillis() - start;
-
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
+	
 		if (cp==null)
 		{
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Maximal Products",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);

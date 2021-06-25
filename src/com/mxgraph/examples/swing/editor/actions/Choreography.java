@@ -2,6 +2,8 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -9,7 +11,7 @@ import javax.swing.JOptionPane;
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
 
-import contractAutomata.MSCA;
+import contractAutomata.automaton.MSCA;
 import contractAutomata.converters.MxeConverter;
 import contractAutomata.operators.ChoreographySynthesisOperator;
 import contractAutomata.requirements.StrongAgreement;
@@ -29,12 +31,13 @@ public class Choreography extends AbstractAction {
 		//	MSCA backup = aut.clone();
 
 		MSCA controller=null;
-		long start = System.currentTimeMillis();
+		Instant start = Instant.now();
 		try {
 			controller = new ChoreographySynthesisOperator(new StrongAgreement()).apply(aut);
 		} catch(UnsupportedOperationException exc) {
-			long elapsedTime = System.currentTimeMillis() - start;
-			if (exc.getMessage()=="The automaton contains necessary requests that are not allowed in the choreography synthesis")
+			Instant stop = Instant.now();
+			long elapsedTime = Duration.between(start, stop).toMillis();
+				if (exc.getMessage()=="The automaton contains necessary requests that are not allowed in the choreography synthesis")
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						exc.getMessage()+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds",
@@ -43,8 +46,9 @@ public class Choreography extends AbstractAction {
 				return;
 			} else throw exc;
 		}
-		long elapsedTime = System.currentTimeMillis() - start;
-
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
+	
 		if (controller==null)
 		{
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"The choreography is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);

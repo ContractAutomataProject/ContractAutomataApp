@@ -2,6 +2,8 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
 
-import contractAutomata.MSCA;
+import contractAutomata.automaton.MSCA;
 import contractAutomata.converters.MxeConverter;
 import contractAutomata.operators.CompositionFunction;
 
@@ -25,7 +27,7 @@ public class Composition extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
 		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
-		
+
 		if (!menuBar.loseChanges.test(editor)) return;
 
 		mxGraph graph = editor.getGraphComponent().getGraph();
@@ -93,12 +95,13 @@ public class Composition extends AbstractAction {
 		//			if (pruningOption== JOptionPane.CANCEL_OPTION)
 		//				return;
 
-		long start = System.currentTimeMillis();
+		Instant start = Instant.now();
 		MSCA composition = (MSCA) new CompositionFunction().apply(aut, 
 				(pruningOption==JOptionPane.YES_OPTION)?null:
 					(pruningOption==JOptionPane.NO_OPTION)?t->t.getLabel().isRequest():
 						t->!t.getLabel().isMatch(),100); 
-		long elapsedTime = System.currentTimeMillis() - start;
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
 
 		if (composition==null)
 		{
@@ -130,7 +133,7 @@ public class Composition extends AbstractAction {
 
 		menuBar.loadMorphStore(compositionname, editor, file);
 
-		
+
 	}
 
 }

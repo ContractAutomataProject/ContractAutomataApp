@@ -12,7 +12,7 @@ import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
 
-import contractAutomata.MSCA;
+import contractAutomata.automaton.MSCA;
 import contractAutomata.converters.DataConverter;
 import contractAutomata.converters.MxeConverter;
 

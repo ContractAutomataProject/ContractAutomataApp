@@ -2,6 +2,8 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -11,7 +13,7 @@ import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 
-import contractAutomata.MSCA;
+import contractAutomata.automaton.MSCA;
 import contractAutomata.converters.MxeConverter;
 import family.FMCA;
 import family.Family;
@@ -36,15 +38,15 @@ public class OrchestrationFamily extends AbstractAction {
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
 		MSCA aut=editor.lastaut;
-		//	MSCA backup = aut.clone();
 
 		Family f=pf.getFamily();
 
-		long start = System.currentTimeMillis();
-		//MSCA controller = f.getMPCofFamily(aut);
-		MSCA controller = new FMCA(aut,f).getOrchestrationOfFamily();
-		long elapsedTime = System.currentTimeMillis() - start;
 
+		Instant start = Instant.now();
+		MSCA controller = new FMCA(aut,f).getOrchestrationOfFamily();
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
+	
 
 		if (controller==null)
 		{

@@ -88,13 +88,34 @@ public class EditorMenuBar extends JMenuBar
 		menu.add(editor.bind(mxResources.get("new"), new NewAction(), "/com/mxgraph/examples/swing/images/new.gif"));
 		menu.add(editor.bind(mxResources.get("openFile"), new OpenAction(), "/com/mxgraph/examples/swing/images/open.gif"));
 		//menu.add(editor.bind(mxResources.get("importStencil"), new ImportAction(), "/com/mxgraph/examples/swing/images/open.gif"));
-
+		
+		item = menu.add("Open New Window");
+		item.addActionListener(e->{});
+		item.addActionListener(e->
+		{
+			try {
+				new ProcessBuilder("java", "-jar", "App.jar").start();
+				JOptionPane.showMessageDialog(
+						editor.getGraphComponent(),
+						"A new App process is starting",
+						mxResources.get("ok"),
+						JOptionPane.PLAIN_MESSAGE);
+			} catch (IOException e1) {
+				JOptionPane.showMessageDialog(
+						editor.getGraphComponent(),
+						e1.toString(),
+						mxResources.get("error"),
+						JOptionPane.ERROR_MESSAGE);
+			}
+		});
+		
 		menu.addSeparator();
 
 
 		//menu.add(editor.bind("Import Automaton", new ImportAction(), "/com/mxgraph/examples/swing/images/save.gif"));
 		menu.add(editor.bind(mxResources.get("save"), new SaveAction(false), "/com/mxgraph/examples/swing/images/save.gif"));
 		menu.add(editor.bind(mxResources.get("saveAs"), new SaveAction(true), "/com/mxgraph/examples/swing/images/saveas.gif"));
+
 
 		menu.addSeparator();
 		
@@ -244,10 +265,11 @@ public class EditorMenuBar extends JMenuBar
 
 	void loadMorphStore(String name, BasicGraphEditor editor, File file)
 	{
-		if (!name.endsWith(".mxe")&&!name.endsWith(".data"))
+		if (!name.endsWith(".mxe"))//&&!name.endsWith(".data"))
 			name=name+".mxe";
 		if (lastDir!=null && !name.startsWith(lastDir))
 			name=lastDir+File.separator+name;
+		
 		try
 		{	
 			mxGraph graph = editor.getGraphComponent().getGraph();

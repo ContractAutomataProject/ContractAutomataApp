@@ -42,11 +42,8 @@ public class SuperProducts extends AbstractAction {
 			return;
 
 		int pindex=Integer.parseInt(S);
-		//			Product p=f.getElements()[pindex];
 		Product p =pf.getProductAt(pindex);
 
-		//			int[] supind = f.getSuperProductsofProduct(pindex);
-		//			Product[] subprod = f.subsetOfProductsFromIndex(supind);
 		Set<Product> supind =f.getSuperProductsofProduct(p);
 
 		pf.setColorButtonProducts(supind, Color.RED);

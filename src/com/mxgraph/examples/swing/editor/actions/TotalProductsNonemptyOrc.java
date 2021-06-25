@@ -2,6 +2,8 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
@@ -15,8 +17,8 @@ import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 
-import contractAutomata.MSCA;
-import contractAutomata.MSCATransition;
+import contractAutomata.automaton.MSCA;
+import contractAutomata.automaton.transition.MSCATransition;
 import family.FMCA;
 import family.Product;
 
@@ -40,15 +42,15 @@ public class TotalProductsNonemptyOrc extends AbstractAction {
 			return;
 		}
 
-		long start;
-		//int[] vp= pf.getFamily().productsWithNonEmptyMPC(aut);
+		
+		Instant start;
 
 		Map<Product,MSCA> vpp;
 		if (!aut.getForwardStar(aut.getInitial()).stream()
 				.map(MSCATransition::getLabel)
 				.allMatch(l->l.getUnsignedAction().equals("dummy")))
 		{
-			start = System.currentTimeMillis();
+			start = Instant.now();
 			vpp=new FMCA(aut,pf.getFamily()).getTotalProductsWithNonemptyOrchestration();
 		}
 		else
@@ -56,7 +58,9 @@ public class TotalProductsNonemptyOrc extends AbstractAction {
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"Operation not supported for an orchestration of a family","",JOptionPane.WARNING_MESSAGE);
 			return;
 		}
-		long elapsedTime = System.currentTimeMillis() - start;
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
+	
 
 		if (vpp==null)
 		{			

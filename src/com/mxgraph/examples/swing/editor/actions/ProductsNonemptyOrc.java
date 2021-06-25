@@ -2,6 +2,8 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -15,8 +17,8 @@ import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 
-import contractAutomata.MSCA;
-import contractAutomata.MSCATransition;
+import contractAutomata.automaton.MSCA;
+import contractAutomata.automaton.transition.MSCATransition;
 import family.FMCA;
 import family.Product;
 
@@ -39,9 +41,7 @@ public class ProductsNonemptyOrc extends AbstractAction {
 			return;
 		}
 
-		long start = System.currentTimeMillis();
-		//int[] vp= pf.getFamily().productsWithNonEmptyMPC(aut);
-
+		Instant start = Instant.now();
 
 		Set<Product>  vpp;
 		if (!aut.getForwardStar(aut.getInitial()).stream()
@@ -54,8 +54,9 @@ public class ProductsNonemptyOrc extends AbstractAction {
 			return;
 		//				vpp=new FMCA(aut,pf.getFamily()).productsWithNonEmptyOrchestrationFamily();
 		}
-		long elapsedTime = System.currentTimeMillis() - start;
-
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
+	
 		if (vpp==null)
 		{			
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Products With non-empty orchestration"+ System.lineSeparator()+"Elapsed time : "+elapsedTime+ " milliseconds","",JOptionPane.WARNING_MESSAGE);

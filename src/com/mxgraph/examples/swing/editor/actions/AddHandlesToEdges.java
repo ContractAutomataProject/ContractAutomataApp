@@ -10,7 +10,7 @@ import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.util.mxResources;
 
-import contractAutomata.MSCA;
+import contractAutomata.automaton.MSCA;
 import contractAutomata.converters.MxeConverter;
 
 @SuppressWarnings("serial")

@@ -2,6 +2,8 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
@@ -15,8 +17,8 @@ import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 
-import contractAutomata.MSCA;
-import contractAutomata.MSCATransition;
+import contractAutomata.automaton.MSCA;
+import contractAutomata.automaton.transition.MSCATransition;
 import family.FMCA;
 import family.Product;
 
@@ -44,12 +46,12 @@ public class CanonicalProducts extends AbstractAction {
 		//	int[][] ind=new int[1][];
 
 		Map<Product,MSCA> cp;
-		long start;
+		Instant start;
 		if (!aut.getForwardStar(aut.getInitial()).stream()
 				.map(MSCATransition::getLabel)
 				.allMatch(l->l.getUnsignedAction().equals("dummy")))
 		{
-			start = System.currentTimeMillis();
+			start = Instant.now();
 			cp=new FMCA(aut,pf.getFamily()).getCanonicalProducts();
 		}
 		else
@@ -60,8 +62,9 @@ public class CanonicalProducts extends AbstractAction {
 		//	Product[] cp=fam.getCanonicalProducts(aut,null,false,ind);
 
 
-		long elapsedTime= System.currentTimeMillis() - start;
-
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
+	
 		if (cp==null)
 		{
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Canonical Products"+System.lineSeparator()+" Elapsed time : "+elapsedTime+ " milliseconds",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);

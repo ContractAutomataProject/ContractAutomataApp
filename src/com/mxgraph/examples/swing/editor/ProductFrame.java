@@ -22,7 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
-import contractAutomata.MSCA;
+import contractAutomata.automaton.MSCA;
 import family.Family;
 import family.Product;
 

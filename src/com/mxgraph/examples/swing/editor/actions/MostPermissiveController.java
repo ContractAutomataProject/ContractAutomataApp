@@ -2,6 +2,8 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -9,7 +11,7 @@ import javax.swing.JOptionPane;
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
 
-import contractAutomata.MSCA;
+import contractAutomata.automaton.MSCA;
 import contractAutomata.converters.MxeConverter;
 import contractAutomata.operators.OrchestrationSynthesisOperator;
 import contractAutomata.requirements.Agreement;
@@ -32,12 +34,14 @@ public class MostPermissiveController extends AbstractAction {
 
 		MSCA controller=null;
 		long elapsedTime;
-		long start = System.currentTimeMillis();
+		Instant start = Instant.now();
 		try {
 			controller = new OrchestrationSynthesisOperator(new Agreement()).apply(aut);
-			elapsedTime = System.currentTimeMillis() - start;
+			Instant stop = Instant.now();
+			elapsedTime = Duration.between(start, stop).toMillis();
 		} catch(UnsupportedOperationException exc) {
-			elapsedTime = System.currentTimeMillis() - start;
+			Instant stop = Instant.now();
+			elapsedTime = Duration.between(start, stop).toMillis();
 			if (exc.getMessage()=="The automaton contains necessary offers that are not allowed in the orchestration synthesis")
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),

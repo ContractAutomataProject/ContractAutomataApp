@@ -2,19 +2,19 @@ package com.mxgraph.examples.swing.editor.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 
 import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
-import com.mxgraph.util.mxResources;
-import com.mxgraph.view.mxGraph;
 
-import contractAutomata.MSCA;
-import contractAutomata.converters.DataConverter;
+import contractAutomata.automaton.MSCA;
 import contractAutomata.converters.MxeConverter;
+import contractAutomata.operators.OrchestrationSynthesisOperator;
+import contractAutomata.requirements.Agreement;
 
 @SuppressWarnings("serial")
 public class Orchestration extends AbstractAction {
@@ -23,36 +23,62 @@ public class Orchestration extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
 		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
-		
-		if (!menuBar.loseChanges.test(editor)) return;
+		if (menuBar.checkAut(editor)) return;
+		String filename=editor.getCurrentFile().getName();
 
-		mxGraph graph = editor.getGraphComponent().getGraph();
-		if (graph == null) return;
+		menuBar.lastDir=editor.getCurrentFile().getParent();
 
-		JFileChooser fc = new JFileChooser(
-				(editor.getCurrentFile()!=null)?editor.getCurrentFile().getParent(): System.getProperty("user.dir"));
+		MSCA aut=editor.lastaut;
 
-		// Adds file filter for supported file format
-		menuBar.setDefaultFilter(fc,".data","FMCA description",null);
-
-		int rc = fc.showDialog(null,
-				mxResources.get("openFile"));
-		if (rc == JFileChooser.APPROVE_OPTION)
-		{
-			menuBar.lastDir = fc.getSelectedFile().getParent();	
-			MSCA aut;
-			try {
-				aut = new DataConverter().importMSCA(fc.getSelectedFile().toString());
-				new MxeConverter().exportMSCA(fc.getSelectedFile().toString(),aut);
-				File file = new File(fc.getSelectedFile().toString());
-				editor.lastaut=aut;
-				menuBar.loadMorphStore(file.getName(), editor, file);
-			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.toString(),mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-			}
+		MSCA controller=null;
+		Instant start = Instant.now();
+	
+		try {
+			controller = new OrchestrationSynthesisOperator(new Agreement()).apply(aut);
+		} catch(UnsupportedOperationException exc) {
+			Instant stop = Instant.now();
+			long elapsedTime = Duration.between(start, stop).toMillis();
+			if (exc.getMessage()=="The automaton contains necessary offers that are not allowed in the orchestration synthesis")
+			{
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),
+						exc.getMessage()+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds",
+						"Error",JOptionPane.ERROR_MESSAGE);
+				//	editor.lastaut=backup;
+				return;
+			} else throw exc;
 		}
 
-		
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
+	
+		if (controller==null)
+		{
+			JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
+			//editor.lastaut=backup;
+			return;
+		}
+		String K="Orc_"+filename;
+
+		File file;
+		try {
+			new MxeConverter().exportMSCA(menuBar.lastDir+File.separator+K,controller);
+			file = new File(menuBar.lastDir+File.separator+K);
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(editor.getGraphComponent(),
+					"Error in saving the file "+e1.getMessage(),
+					"Error",JOptionPane.ERROR_MESSAGE);
+
+			return;			
+		}
+		String message = "The orchestration has been stored with filename "+menuBar.lastDir+File.separator+K
+				+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
+				+System.lineSeparator()+" Number of states : "+controller.getNumStates();
+
+		JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.PLAIN_MESSAGE);
+
+		editor.lastaut=controller;
+		menuBar.loadMorphStore(menuBar.lastDir+File.separator+K,editor,file);
+
 	}
 
 }

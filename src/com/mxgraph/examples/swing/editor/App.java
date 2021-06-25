@@ -34,7 +34,7 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
-import contractAutomata.MSCA;
+import contractAutomata.automaton.MSCA;
 
 
 /**
