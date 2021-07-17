@@ -180,6 +180,7 @@ public class EditorToolBar extends JToolBar
 					cell.setValue("["+incrementalStateLabel+"]");
 					incrementalStateLabel++;
 				}
+				
 				e.startDrag(null, mxSwingConstants.EMPTY_IMAGE, new Point(),
 								t, null);
 			}
@@ -197,6 +198,7 @@ public class EditorToolBar extends JToolBar
 	public void addEdgeTemplate(final String name, ImageIcon icon,
 			String style, int width, int height, Object value)
 	{
+		
 		mxGeometry geometry = new mxGeometry(0, 0, width, height);
 		geometry.setTerminalPoint(new mxPoint(0, height), true);
 		geometry.setTerminalPoint(new mxPoint(width, 0), false);
@@ -284,20 +286,21 @@ public class EditorToolBar extends JToolBar
 				" Edge ",//"Horizontal Edge",
 				new ImageIcon(
 						App.class
-								.getResource("/com/mxgraph/examples/swing/images/connect.png")),
-				"", 100, 100, "[]");
-		addEdgeTemplate(
-				" Vertical Edge ",
-				new ImageIcon(
-						App.class
-								.getResource("/com/mxgraph/examples/swing/images/vertical.png")),
-				"vertical", 100, 100, "[]");
-		addEdgeTemplate(
-				" Rounded Edge ",
-				new ImageIcon(
-						App.class
-								.getResource("/com/mxgraph/examples/swing/images/entity.png")),
-				"entity", 100, 100, "[]");
+								.getResource("/com/mxgraph/examples/swing/images/arrow.png")),
+				"straight", 100, 100, "[]");
+//		addEdgeTemplate(
+//				" Vertical Edge ",
+//				new ImageIcon(
+//						App.class
+//								.getResource("/com/mxgraph/examples/swing/images/vertical.png")),
+//				"vertical", 100, 100, "[]");
+//		addEdgeTemplate(
+//				" Rounded Edge ",
+//				new ImageIcon(
+//						App.class
+//								.getResource("/com/mxgraph/examples/swing/images/entity.png")),
+//				"entity"
+//				, 100, 100, "[]");
 
 		
 //		

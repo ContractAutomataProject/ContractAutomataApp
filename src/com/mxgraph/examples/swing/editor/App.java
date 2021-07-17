@@ -255,7 +255,7 @@ public class App extends BasicGraphEditor
 			String tip = "<html>";
 			mxGeometry geo = getModel().getGeometry(cell);
 			mxCellState state = getView().getState(cell);
-
+			
 			if (getModel().isEdge(cell))
 			{
 				tip += "points={";
@@ -281,6 +281,7 @@ public class App extends BasicGraphEditor
 				}
 
 				tip += "}<br>";
+				tip += ((mxCell) cell).getStyle()+" qui ";
 				tip += "absPoints={";
 
 				if (state != null)

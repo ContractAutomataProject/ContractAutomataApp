@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="lib/jgraphx.jar"/>
 	<classpathentry kind="lib" path="test-libs/assertj-core-3.10.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/CAT.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CAT_Lib"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
