@@ -12,7 +12,7 @@
 	<dependency>
   <groupId>io.github.davidebasile</groupId>
   <artifactId>ContractAutomataLib</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
 </dependency>
 	</dependencies>
 	<build>
