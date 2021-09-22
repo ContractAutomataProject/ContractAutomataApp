@@ -8,7 +8,7 @@ This is the GUI application of CAT, and represents an example of usage of the CA
   the automata, edit them, and use the main operations (e.g., composition, synthesise).
 
 The main application is in the file App.java, under com.mxgraph.examples.swing.editor package. 
-The app is available in the root of the project (App.jar).
+Check the release for a runnable jar.
 The application is based on an existing framework called *mxGraph* for
 editing graphs in Java. 
 The GUI is implemented by adapting the BasicGraphEditor available 

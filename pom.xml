@@ -2,18 +2,25 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>CAT_App</groupId>
+	<groupId>io.github.davidebasile</groupId>
 	<artifactId>CAT_App</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>CAT_App</name>
-	<description>Contract Automata Application
-</description>
+	<description>Contract Automata Application</description>
+	<url>https://github.com/davidebasile/ContractAutomataApp/</url>
 	<dependencies>
-	<dependency>
-  <groupId>io.github.davidebasile</groupId>
-  <artifactId>ContractAutomataLib</artifactId>
-  <version>0.0.1</version>
-</dependency>
+		<dependency>
+			<groupId>io.github.davidebasile</groupId>
+			<artifactId>ContractAutomataLib</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.mxgraph/jgraphx -->
+		<dependency>
+			<groupId>com.github.vlsi.mxgraph</groupId>
+			<artifactId>jgraphx</artifactId>
+			<version>4.2.2</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -33,6 +40,30 @@
 				<configuration>
 					<release>9</release>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>
+										com.mxgraph.examples.swing.editor.App
+									</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
