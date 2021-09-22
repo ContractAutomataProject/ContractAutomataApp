@@ -3,23 +3,26 @@
 
 <h1>Contract Automata App</h1>
 
-This is the GUI application of CAT, and represents an example of usage of the CAT API.
-The contract automata library has been imported as a Jar, under the lib folder  (check  https://github.com/davidebasile/ContractAutomataTool for the source code).
-The App allows to visualize the automata, edit them, and use the main operations.
+This is the GUI application of CAT, and represents an example of usage of the CAT Library
+ (https://github.com/davidebasile/ContractAutomataTool) to build a tool for visualizing 
+  the automata, edit them, and use the main operations (e.g., composition, synthesise).
 
 The main application is in the file App.java, under com.mxgraph.examples.swing.editor package. 
-A precompiled App.jar file is available in the root of the project.
+The app is available in the root of the project (App.jar).
 The application is based on an existing framework called *mxGraph* for
 editing graphs in Java. 
-The GUI is implemented starting from the BasicGraphEditor available 
+The GUI is implemented by adapting the BasicGraphEditor available 
 in mxGraph.
 The other classes are also modifications of the BasicGraphEditor example 
 of mxGraph. 
+The main operations using the CAT Library are under the package 
+com.mxgraph.examples.swing.editor.actions.
 For more info check https://jgraph.github.io/mxgraph/docs/manual_javavis.html.
 
 The App has been developed using Eclipse and tested on Windows machines. 
 
 <h2>License</h2>
+
 The tool is available under Creative Common License 4.0,
 https://github.com/davidebasile/CAT_App/blob/master/license.html
 
