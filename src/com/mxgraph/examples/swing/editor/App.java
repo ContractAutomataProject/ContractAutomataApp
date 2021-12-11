@@ -101,50 +101,6 @@ public class App extends BasicGraphEditor
 	{
 		super(appTitle, component);
 		pf=null;
-		// Creates the shapes palette
-	//	EditorPalette shapesPalette = insertPalette(mxResources.get("shapes"));
-	
-//		EditorPalette symbolsPalette = insertPalette("Toolbox");//mxResources.get("symbols"));
-//
-//		// Sets the edge template to be used for creating new edges if an edge
-//		// is clicked in the shape palette
-//		
-//		symbolsPalette.addEdgeTemplate(
-//				"Edge",//"Horizontal Edge",
-//				new ImageIcon(
-//						App.class
-//								.getResource("/com/mxgraph/examples/swing/images/connect.png")),
-//				"", 100, 100, "");
-//		symbolsPalette.addEdgeTemplate(
-//				"Vertical Edge",
-//				new ImageIcon(
-//						App.class
-//								.getResource("/com/mxgraph/examples/swing/images/vertical.png")),
-//				"vertical", 100, 100, "");
-//		symbolsPalette.addEdgeTemplate(
-//				"Rounded Edge",
-//				new ImageIcon(
-//						App.class
-//								.getResource("/com/mxgraph/examples/swing/images/entity.png")),
-//				"entity", 100, 100, "");
-//		
-//		symbolsPalette
-//				.addTemplate(
-//						"State",//"Event",
-//						new ImageIcon(
-//								App.class
-//										.getResource("/com/mxgraph/examples/swing/images/event.png")),
-//						"roundImage;image=/com/mxgraph/examples/swing/images/event.png",
-//						40, 40, "State"); //TODO use vectorial images
-//		
-//		symbolsPalette
-//				.addTemplate(
-//						"FinalState",//"Terminate",
-//						new ImageIcon(
-//								App.class
-//										.getResource("/com/mxgraph/examples/swing/images/terminate.png")),
-//						"roundImage;image=/com/mxgraph/examples/swing/images/terminate.png",
-//						40, 40, "FinalState");
 	}
 
 	/**

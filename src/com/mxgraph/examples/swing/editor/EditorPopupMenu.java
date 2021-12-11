@@ -3,7 +3,7 @@ package com.mxgraph.examples.swing.editor;
 import javax.swing.JPopupMenu;
 import javax.swing.TransferHandler;
 
-import com.mxgraph.examples.swing.editor.EditorActions.FMCAAction;
+import com.mxgraph.examples.swing.editor.EditorActions.ModalLabelAction;
 import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxConstants;
@@ -53,11 +53,11 @@ public class EditorPopupMenu extends JPopupMenu
 		
 		//JMenu submenu = (JMenu) menu.add(new JMenu(mxResources.get("line")));
 
-		add(editor.bind("Urgent", new FMCAAction("Urgent", mxConstants.STYLE_STROKECOLOR),""));
+		add(editor.bind("Urgent", new ModalLabelAction("Urgent", mxConstants.STYLE_STROKECOLOR),""));
 				//"/com/mxgraph/examples/swing/images/linecolor.gif"));
 		//add(editor.bind("Greedy", new FMCAAction("Greedy", mxConstants.STYLE_STROKECOLOR),""));  REMOVED!!
-		add(editor.bind("Lazy", new FMCAAction("Lazy", mxConstants.STYLE_STROKECOLOR),""));
-		add(editor.bind("Permitted", new FMCAAction("Permitted", mxConstants.STYLE_STROKECOLOR),""));
+		add(editor.bind("Lazy", new ModalLabelAction("Lazy", mxConstants.STYLE_STROKECOLOR),""));
+		add(editor.bind("Permitted", new ModalLabelAction("Permitted", mxConstants.STYLE_STROKECOLOR),""));
 		
 	/*	addSeparator();
 
