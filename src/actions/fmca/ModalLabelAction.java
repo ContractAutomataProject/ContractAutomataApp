@@ -1,10 +1,11 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.fmca;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
 public class ModalLabelAction extends AbstractAction
@@ -16,16 +17,15 @@ public class ModalLabelAction extends AbstractAction
 	/**
 	 * 
 	 */
-	protected String name, key;
+	protected String name;
 
 	/**
 	 * 
 	 * @param key
 	 */
-	public ModalLabelAction(String name, String key)
+	public ModalLabelAction(String name)
 	{
 		this.name = name;
-		this.key = key;
 	}
 
 	/**
@@ -49,13 +49,13 @@ public class ModalLabelAction extends AbstractAction
 					graph.setCellStyles(key, mxUtils.hexString(newColor));
 				}*/
 				if (this.name=="Urgent")
-					graph.setCellStyles(key, "#FF0000");// mxUtils.hexString( newColor));
+					graph.setCellStyles( mxConstants.STYLE_STROKECOLOR, "#FF0000");// mxUtils.hexString( newColor));
 				else if (this.name=="Greedy")
-					graph.setCellStyles(key, "#FFA500");// mxUtils.hexString( newColor));
+					graph.setCellStyles( mxConstants.STYLE_STROKECOLOR, "#FFA500");// mxUtils.hexString( newColor));
 				else if (this.name=="Lazy")
-					graph.setCellStyles(key, "#00FF00");// mxUtils.hexString( newColor));
+					graph.setCellStyles( mxConstants.STYLE_STROKECOLOR, "#00FF00");// mxUtils.hexString( newColor));
 				else if (this.name=="Permitted")
-					graph.setCellStyles(key,"");
+					graph.setCellStyles( mxConstants.STYLE_STROKECOLOR, "black");
 			}
 		}
 	}

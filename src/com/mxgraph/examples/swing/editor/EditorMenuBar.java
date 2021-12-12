@@ -1,4 +1,4 @@
-package com.mxgraph.examples.swing.editor.actions;
+package com.mxgraph.examples.swing.editor;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,9 +13,6 @@ import javax.swing.TransferHandler;
 
 import org.w3c.dom.Document;
 
-import com.mxgraph.examples.swing.editor.App;
-import com.mxgraph.examples.swing.editor.BasicGraphEditor;
-import com.mxgraph.examples.swing.editor.DefaultFileFilter;
 import com.mxgraph.examples.swing.editor.EditorActions.ExitAction;
 import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
 import com.mxgraph.examples.swing.editor.EditorActions.NewAction;
@@ -24,7 +21,8 @@ import com.mxgraph.examples.swing.editor.EditorActions.PageSetupAction;
 import com.mxgraph.examples.swing.editor.EditorActions.PrintAction;
 import com.mxgraph.examples.swing.editor.EditorActions.SaveAction;
 import com.mxgraph.examples.swing.editor.EditorActions.ScaleAction;
-import com.mxgraph.examples.swing.editor.ProductFrame;
+import com.mxgraph.examples.swing.editor.actions.ExportData;
+import com.mxgraph.examples.swing.editor.actions.ImportData;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
@@ -33,6 +31,25 @@ import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxGraph;
+
+import actions.fmca.CanonicalProducts;
+import actions.fmca.ImportProductLine;
+import actions.fmca.LoadFamily;
+import actions.fmca.MaximalProducts;
+import actions.fmca.OrchestrationFamily;
+import actions.fmca.OrchestrationFamilyEnumerative;
+import actions.fmca.OrchestrationProductId;
+import actions.fmca.OrchestrationProductType;
+import actions.fmca.ProductsNonemptyOrc;
+import actions.fmca.ProductsRespectingValidity;
+import actions.fmca.SaveFamily;
+import actions.fmca.SubProducts;
+import actions.fmca.SuperProducts;
+import actions.fmca.TotalProductsNonemptyOrc;
+import actions.msca.Choreography;
+import actions.msca.Composition;
+import actions.msca.MostPermissiveController;
+import actions.msca.Orchestration;
 
 /**
  * 
@@ -44,12 +61,12 @@ import com.mxgraph.view.mxGraph;
  */
 public class EditorMenuBar extends JMenuBar 
 {
-	String lastDir;
+	public String lastDir;
 
-	Predicate<App> loseChanges = x->((x != null)&&(!x.isModified()
+	public Predicate<App> loseChanges = x->((x != null)&&(!x.isModified()
 			|| JOptionPane.showConfirmDialog(x,	mxResources.get("loseChanges")) == JOptionPane.YES_OPTION));
 
-	final String errorMsg = "States or transitions contain syntax errors."+System.lineSeparator()+" "
+	private final String errorMsg = "States or transitions contain syntax errors."+System.lineSeparator()+" "
 			+ 		"Please, check that each state has the following format:"+System.lineSeparator()
 			+		"[STRING, ..., STRING]"+System.lineSeparator() 
 			+		"there is a unique initial state such that STRING=0"
@@ -152,9 +169,9 @@ public class EditorMenuBar extends JMenuBar
 		menu.add(editor.bind(mxResources.get("selectAll"), mxGraphActions.getSelectAllAction()));
 		menu.add(editor.bind(mxResources.get("selectNone"), mxGraphActions.getSelectNoneAction()));
 
-		menu.addSeparator();
-
-		menu.add(editor.bind("Add handles to edges", new AddHandlesToEdges(),"/com/mxgraph/examples/swing/images/straight.gif"));//mxResources.get("aboutGraphEditor")));
+//		menu.addSeparator();
+//
+//		menu.add(editor.bind("Add handles to edges", new AddHandlesToEdges(),"/com/mxgraph/examples/swing/images/straight.gif"));//mxResources.get("aboutGraphEditor")));
 
 		//menu.add(editor.bind(mxResources.get("warning"), new WarningAction()));
 		//menu.add(editor.bind(mxResources.get("edit"), mxGraphActions.getEditAction()));
@@ -264,7 +281,7 @@ public class EditorMenuBar extends JMenuBar
 		item.addActionListener(e-> editor.about());
 	}
 
-	void loadMorphStore(String name, BasicGraphEditor editor, File file)
+	public void loadMorphStore(String name, BasicGraphEditor editor, File file)
 	{
 		if (!name.endsWith(".mxe"))//&&!name.endsWith(".data"))
 			name=name+".mxe";
@@ -307,7 +324,7 @@ public class EditorMenuBar extends JMenuBar
 
 	}
 
-	void parseAndSet(String absfilename, BasicGraphEditor editor, File file)
+	public void parseAndSet(String absfilename, BasicGraphEditor editor, File file)
 	{
 		//TODO there should be no need in parsing the xml and then converting to xml anymore
 		try
@@ -336,7 +353,7 @@ public class EditorMenuBar extends JMenuBar
 
 	}
 
-	boolean checkAut(App editor)
+	public boolean checkAut(App editor)
 	{
 		try
 		{
@@ -351,7 +368,7 @@ public class EditorMenuBar extends JMenuBar
 		}
 	}
 
-	DefaultFileFilter setDefaultFilter(JFileChooser fc,String type, String title, String type2) {
+	public DefaultFileFilter setDefaultFilter(JFileChooser fc,String type, String title, String type2) {
 		DefaultFileFilter defaultFilter = new DefaultFileFilter(type, "")//mxResources.get("allSupportedFormats")
 				//+ " (.mxe, .png, .vdx)")
 				{

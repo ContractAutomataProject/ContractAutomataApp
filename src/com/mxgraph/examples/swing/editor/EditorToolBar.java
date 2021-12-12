@@ -26,6 +26,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import com.mxgraph.swing.util.mxSwingConstants;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
@@ -39,8 +40,8 @@ public class EditorToolBar extends JToolBar
 	 * 
 	 */
 	private static final long serialVersionUID = -8015443128436394471L;
-	
-	private static int incrementalStateLabel=0;
+
+	public static int incrementalStateLabel=0;
 
 	/**
 	 * 
@@ -56,13 +57,13 @@ public class EditorToolBar extends JToolBar
 	 * 
 	 */
 	protected JLabel selectedEntry = null;
-	
+
 	/**
 	 * 
 	 */
 	protected mxEventSource eventSource = new mxEventSource(this);
 
-	
+
 	/**
 	 * 
 	 */
@@ -96,6 +97,7 @@ public class EditorToolBar extends JToolBar
 	public void addTemplate(final String name, ImageIcon icon, mxCell cell)
 	{
 		mxRectangle bounds = (mxGeometry) cell.getGeometry().clone();
+
 		final mxGraphTransferable t = new mxGraphTransferable(
 				new Object[] { cell }, bounds);
 
@@ -180,9 +182,9 @@ public class EditorToolBar extends JToolBar
 					cell.setValue("["+incrementalStateLabel+"]");
 					incrementalStateLabel++;
 				}
-				
+
 				e.startDrag(null, mxSwingConstants.EMPTY_IMAGE, new Point(),
-								t, null);
+						t, null);
 			}
 
 		};
@@ -194,11 +196,16 @@ public class EditorToolBar extends JToolBar
 		add(entry);
 	}
 
-	
+	public void addNodeTemplate(final String name, final String style, ImageIcon icon) {
+		mxCell cell = new mxCell("", new mxGeometry(0, 0, 40, 40), style);
+		cell.setVertex(true);
+		addTemplate(name,icon,cell);
+
+	}
 	public void addEdgeTemplate(final String name, ImageIcon icon,
 			String style, int width, int height, Object value)
 	{
-		
+
 		mxGeometry geometry = new mxGeometry(0, 0, width, height);
 		geometry.setTerminalPoint(new mxPoint(0, height), true);
 		geometry.setTerminalPoint(new mxPoint(width, 0), false);
@@ -213,7 +220,7 @@ public class EditorToolBar extends JToolBar
 	////////////////////////////////////////////////////////
 	//////END COPIED
 	////////////////////////////////////////////////////////
-	
+
 	/**
 	 * 
 	 */
@@ -231,162 +238,166 @@ public class EditorToolBar extends JToolBar
 
 		/*add(editor.bind("Import", new ImportAction(),
 				"/com/mxgraph/examples/swing/images/open.gif"));
-		*/add(editor.bind("Save", new SaveAction(false),
-				"/com/mxgraph/examples/swing/images/save.gif"));
-		
+		 */add(editor.bind("Save", new SaveAction(false),
+				 "/com/mxgraph/examples/swing/images/save.gif"));
 
-	//	addSeparator();
 
-		add(editor.bind("Print", new PrintAction(),
-				"/com/mxgraph/examples/swing/images/print.gif"));
+		 //	addSeparator();
 
-	//	addSeparator();
+		 add(editor.bind("Print", new PrintAction(),
+				 "/com/mxgraph/examples/swing/images/print.gif"));
 
-		add(editor.bind("Cut", TransferHandler.getCutAction(),
-				"/com/mxgraph/examples/swing/images/cut.gif"));
-		add(editor.bind("Copy", TransferHandler.getCopyAction(),
-				"/com/mxgraph/examples/swing/images/copy.gif"));
-		add(editor.bind("Paste", TransferHandler.getPasteAction(),
-				"/com/mxgraph/examples/swing/images/paste.gif"));
+		 //	addSeparator();
 
-	//	addSeparator();
+		 add(editor.bind("Cut", TransferHandler.getCutAction(),
+				 "/com/mxgraph/examples/swing/images/cut.gif"));
+		 add(editor.bind("Copy", TransferHandler.getCopyAction(),
+				 "/com/mxgraph/examples/swing/images/copy.gif"));
+		 add(editor.bind("Paste", TransferHandler.getPasteAction(),
+				 "/com/mxgraph/examples/swing/images/paste.gif"));
 
-		add(editor.bind("Delete", mxGraphActions.getDeleteAction(),
-				"/com/mxgraph/examples/swing/images/delete.gif"));
+		 //	addSeparator();
 
-	//	addSeparator();
+		 add(editor.bind("Delete", mxGraphActions.getDeleteAction(),
+				 "/com/mxgraph/examples/swing/images/delete.gif"));
 
-		add(editor.bind("Undo", new HistoryAction(true),
-				"/com/mxgraph/examples/swing/images/undo.gif"));
-		add(editor.bind("Redo", new HistoryAction(false),
-				"/com/mxgraph/examples/swing/images/redo.gif"));
-		
-		
-		addSeparator();
+		 //	addSeparator();
 
-		mxCell cellState = new mxCell("", new mxGeometry(0, 0, 40, 40),
-		"roundImage;image=/com/mxgraph/examples/swing/images/event.png");
-		cellState.setVertex(true);
-		addTemplate("State", new ImageIcon(getClass().getResource("/com/mxgraph/examples/swing/images/ellipse.png")), 
-				cellState);
-		
-		mxCell cellFinalState = new mxCell("", new mxGeometry(0, 0, 40, 40),
-				"roundImage;image=/com/mxgraph/examples/swing/images/terminate.png");
-				cellState.setVertex(true);
-		cellFinalState.setVertex(true);
-		
-		addTemplate(
-				" FinalState ",//"Terminate",
-				new ImageIcon(
-						getClass().getResource("/com/mxgraph/examples/swing/images/doubleellipse.png")),
-				cellFinalState);
-		
-		
-		addEdgeTemplate(
-				" Edge ",//"Horizontal Edge",
-				new ImageIcon(
-						App.class
-								.getResource("/com/mxgraph/examples/swing/images/arrow.png")),
-				"straight", 100, 100, "[]");
-//		addEdgeTemplate(
-//				" Vertical Edge ",
-//				new ImageIcon(
-//						App.class
-//								.getResource("/com/mxgraph/examples/swing/images/vertical.png")),
-//				"vertical", 100, 100, "[]");
-//		addEdgeTemplate(
-//				" Rounded Edge ",
-//				new ImageIcon(
-//						App.class
-//								.getResource("/com/mxgraph/examples/swing/images/entity.png")),
-//				"entity"
-//				, 100, 100, "[]");
+		 add(editor.bind("Undo", new HistoryAction(true),
+				 "/com/mxgraph/examples/swing/images/undo.gif"));
+		 add(editor.bind("Redo", new HistoryAction(false),
+				 "/com/mxgraph/examples/swing/images/redo.gif"));
 
-		
-//		
-//		JLabel entry = new JLabel(new ImageIcon(getClass().getResource("/com/mxgraph/examples/swing/images/ellipse.png")));
-//
-//		add(entry);
-//		
-//		entry.setToolTipText("state");
-//		//entry.setText("state");
-//				
-//		mxCell cell = new mxCell("State", new mxGeometry(0, 0, 40, 40),
-//				"roundImage;image=/com/mxgraph/examples/swing/images/event.png");
-//		cell.setVertex(true);
-//
-//		mxRectangle bounds = (mxGeometry) cell.getGeometry().clone();
-//		final mxGraphTransferable t = new mxGraphTransferable(
-//				new Object[] { cell }, bounds);
-//
-//		
-//		entry.addMouseListener(new MouseListener()
-//		{
-//			/*
-//			 * (non-Javadoc)
-//			 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-//			 */
-//			public void mousePressed(MouseEvent e)
-//			{
-//				setSelectionEntry(entry, t);
-//			}
-//
-//			/*
-//			 * (non-Javadoc)
-//			 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-//			 */
-//			public void mouseClicked(MouseEvent e)
-//			{
-//			}
-//
-//			/*
-//			 * (non-Javadoc)
-//			 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-//			 */
-//			public void mouseEntered(MouseEvent e)
-//			{
-//			}
-//
-//			/*
-//			 * (non-Javadoc)
-//			 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-//			 */
-//			public void mouseExited(MouseEvent e)
-//			{
-//			}
-//
-//			/*
-//			 * (non-Javadoc)
-//			 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-//			 */
-//			public void mouseReleased(MouseEvent e)
-//			{
-//			}
-//
-//		});
-//
-//		// Install the handler for dragging nodes into a graph
-//		DragGestureListener dragGestureListener = new DragGestureListener()
-//		{
-//			/**
-//			 * 
-//			 */
-//			public void dragGestureRecognized(DragGestureEvent e)
-//			{
-//				e.startDrag(null, mxSwingConstants.EMPTY_IMAGE, new Point(),
-//								t, null);
-//			}
-//
-//		};
-//
-//		DragSource dragSource = new DragSource();
-//		dragSource.createDefaultDragGestureRecognizer(entry,
-//				DnDConstants.ACTION_COPY, dragGestureListener);
 
-		
-		//addSeparator();
+		 addSeparator();
 
-/*		// Gets the list of available fonts from the local graphics environment
+		 addNodeTemplate(" State ",mxConstants.STYLE_ROUNDED+";"
+				 +mxConstants.STYLE_SHAPE+"="+mxConstants.SHAPE_ELLIPSE+";"
+				 +mxConstants.STYLE_PERIMETER+"="+mxConstants.PERIMETER_ELLIPSE+";"
+				 +mxConstants.STYLE_FILLCOLOR+"="+mxConstants.NONE+";"
+				 +mxConstants.STYLE_STROKECOLOR+"=black;"
+				 +mxConstants.STYLE_VERTICAL_LABEL_POSITION+"="+mxConstants.ALIGN_BOTTOM+";"
+				 +mxConstants.STYLE_SPACING_TOP+"="+"0;",						 
+				 new ImageIcon(
+						 getClass().getResource("/com/mxgraph/examples/swing/images/ellipse.png")));
+
+		 addNodeTemplate(" FinalState ",mxConstants.STYLE_ROUNDED+";"
+						 +mxConstants.STYLE_SHAPE+"="+mxConstants.SHAPE_DOUBLE_ELLIPSE+";"
+						 +mxConstants.STYLE_PERIMETER+"="+mxConstants.PERIMETER_ELLIPSE+";"
+						 +mxConstants.STYLE_FILLCOLOR+"="+mxConstants.NONE+";"
+						 +mxConstants.STYLE_STROKECOLOR+"=black;"
+						 +mxConstants.STYLE_VERTICAL_LABEL_POSITION+"="+mxConstants.ALIGN_BOTTOM+";"
+						 +mxConstants.STYLE_SPACING_TOP+"="+"0;",						 
+						 new ImageIcon(
+								 getClass().getResource("/com/mxgraph/examples/swing/images/doubleellipse.png")));
+
+		 addEdgeTemplate(
+				 " Edge ",//"Horizontal Edge",
+				 new ImageIcon(
+						 App.class
+						 .getResource("/com/mxgraph/examples/swing/images/arrow.png")),
+				 mxConstants.STYLE_EDGE+"="+mxConstants.NONE+";"
+				 +mxConstants.STYLE_STROKECOLOR+"=black;", 100, 100, "[]");
+
+		 //		addEdgeTemplate(
+		 //				" Vertical Edge ",
+		 //				new ImageIcon(
+		 //						App.class
+		 //								.getResource("/com/mxgraph/examples/swing/images/vertical.png")),
+		 //				"vertical", 100, 100, "[]");
+		 //		addEdgeTemplate(
+		 //				" Rounded Edge ",
+		 //				new ImageIcon(
+		 //						App.class
+		 //								.getResource("/com/mxgraph/examples/swing/images/entity.png")),
+		 //				"entity"
+		 //				, 100, 100, "[]");
+
+
+		 //		
+		 //		JLabel entry = new JLabel(new ImageIcon(getClass().getResource("/com/mxgraph/examples/swing/images/ellipse.png")));
+		 //
+		 //		add(entry);
+		 //		
+		 //		entry.setToolTipText("state");
+		 //		//entry.setText("state");
+		 //				
+		 //		mxCell cell = new mxCell("State", new mxGeometry(0, 0, 40, 40),
+		 //				"roundImage;image=/com/mxgraph/examples/swing/images/event.png");
+		 //		cell.setVertex(true);
+		 //
+		 //		mxRectangle bounds = (mxGeometry) cell.getGeometry().clone();
+		 //		final mxGraphTransferable t = new mxGraphTransferable(
+		 //				new Object[] { cell }, bounds);
+		 //
+		 //		
+		 //		entry.addMouseListener(new MouseListener()
+		 //		{
+		 //			/*
+		 //			 * (non-Javadoc)
+		 //			 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+		 //			 */
+		 //			public void mousePressed(MouseEvent e)
+		 //			{
+		 //				setSelectionEntry(entry, t);
+		 //			}
+		 //
+		 //			/*
+		 //			 * (non-Javadoc)
+		 //			 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+		 //			 */
+		 //			public void mouseClicked(MouseEvent e)
+		 //			{
+		 //			}
+		 //
+		 //			/*
+		 //			 * (non-Javadoc)
+		 //			 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+		 //			 */
+		 //			public void mouseEntered(MouseEvent e)
+		 //			{
+		 //			}
+		 //
+		 //			/*
+		 //			 * (non-Javadoc)
+		 //			 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+		 //			 */
+		 //			public void mouseExited(MouseEvent e)
+		 //			{
+		 //			}
+		 //
+		 //			/*
+		 //			 * (non-Javadoc)
+		 //			 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+		 //			 */
+		 //			public void mouseReleased(MouseEvent e)
+		 //			{
+		 //			}
+		 //
+		 //		});
+		 //
+		 //		// Install the handler for dragging nodes into a graph
+		 //		DragGestureListener dragGestureListener = new DragGestureListener()
+		 //		{
+		 //			/**
+		 //			 * 
+		 //			 */
+		 //			public void dragGestureRecognized(DragGestureEvent e)
+		 //			{
+		 //				e.startDrag(null, mxSwingConstants.EMPTY_IMAGE, new Point(),
+		 //								t, null);
+		 //			}
+		 //
+		 //		};
+		 //
+		 //		DragSource dragSource = new DragSource();
+		 //		dragSource.createDefaultDragGestureRecognizer(entry,
+		 //				DnDConstants.ACTION_COPY, dragGestureListener);
+
+
+		 //addSeparator();
+
+		 /*		// Gets the list of available fonts from the local graphics environment
 		// and adds some frequently used fonts at the beginning of the list
 		GraphicsEnvironment env = GraphicsEnvironment
 				.getLocalGraphicsEnvironment();
@@ -404,9 +415,9 @@ public class EditorToolBar extends JToolBar
 
 		fontCombo.addActionListener(new ActionListener()
 		{
-			*//**
-			 * 
-			 *//*
+		  *//**
+		  * 
+		  *//*
 			public void actionPerformed(ActionEvent e)
 			{
 				String font = fontCombo.getSelectedItem().toString();
@@ -430,9 +441,9 @@ public class EditorToolBar extends JToolBar
 
 		sizeCombo.addActionListener(new ActionListener()
 		{
-			*//**
-			 * 
-			 *//*
+		   *//**
+		   * 
+		   *//*
 			public void actionPerformed(ActionEvent e)
 			{
 				mxGraph graph = editor.getGraphComponent().getGraph();
@@ -489,9 +500,9 @@ public class EditorToolBar extends JToolBar
 		// Sets the zoom in the zoom combo the current value
 		mxIEventListener scaleTracker = new mxIEventListener()
 		{
-			*//**
-			 * 
-			 *//*
+		    *//**
+		    * 
+		    *//*
 			public void invoke(Object sender, mxEventObject evt)
 			{
 				ignoreZoomChange = true;
@@ -520,9 +531,9 @@ public class EditorToolBar extends JToolBar
 
 		zoomCombo.addActionListener(new ActionListener()
 		{
-			*//**
-			 * 
-			 *//*
+		     *//**
+		     * 
+		     *//*
 			public void actionPerformed(ActionEvent e)
 			{
 				mxGraphComponent graphComponent = editor.getGraphComponent();

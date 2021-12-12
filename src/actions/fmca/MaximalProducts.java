@@ -1,7 +1,9 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.fmca;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -19,38 +21,41 @@ import family.Family;
 import family.Product;
 
 @SuppressWarnings("serial")
-public class SubProducts extends AbstractAction {
+public class MaximalProducts extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
 	//	EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		
 		ProductFrame pf=editor.getProductFrame();
 		if (pf==null)
 		{
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Family loaded!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		//aut.printToFile(filename);
-		Family f=pf.getFamily();
 
-		String S= (String) JOptionPane.showInputDialog(null, 
-				"Insert Product id",
-				JOptionPane.PLAIN_MESSAGE);
-		if (S==null)
+		Family fam= pf.getFamily();
+
+		Instant start = Instant.now();
+		//int[] pid = fam.getMaximalProducts();
+		Set<Product> cp= fam.getMaximalProducts(); //fam.subsetOfProductsFromIndex(pid);
+		Instant stop = Instant.now();
+		long elapsedTime = Duration.between(start, stop).toMillis();
+	
+		if (cp==null)
+		{
+			JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Maximal Products",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 			return;
+		}
+		
+		pf.setColorButtonProducts(cp, Color.GREEN);
+		String message=cp.size() + " Maximal Products Found:"+System.lineSeparator()+"";
+		for (Product p : cp)
+			message+= pf.indexOf(p)+" : "+System.lineSeparator()+""+p.toString()+""+System.lineSeparator()+"";
 
-		int pindex=Integer.parseInt(S);
-		//Product p=f.getElements()[pindex];
-		Product p = pf.getProductAt(pindex);
-		//			int[] subind = f.getSubProductsofProduct(pindex);
-		//			Product[] subprod = f.subsetOfProductsFromIndex(subind);
-		Set<Product> subprod = f.getSubProductsofProduct(p);
-		pf.setColorButtonProducts(subprod, Color.RED);
+		message += "Elapsed time : "+elapsedTime+ " milliseconds";
 
-		String message=subprod.size() + " Sub-Products of Product "+pindex+System.lineSeparator()+p.toString()+System.lineSeparator();
-		for (Product p2 : subprod)
-			message+= pf.indexOf(p2)+" : "+System.lineSeparator()+p2.toString()+System.lineSeparator();
 		JTextArea textArea = new JTextArea(200,200);
 		textArea.setText(message);
 		textArea.setEditable(true);
@@ -58,13 +63,11 @@ public class SubProducts extends AbstractAction {
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		JDialog jd = new JDialog(pf);
 		jd.add(scrollPane);
-		jd.setTitle("Sub-Products");
+		jd.setTitle("Maximal Products");
 		jd.setResizable(true);
 		jd.setVisible(true);
-
 		jd.setSize(500,500);
 		jd.setLocationRelativeTo(null);
-
 	}
 
 }

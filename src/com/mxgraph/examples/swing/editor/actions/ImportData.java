@@ -9,12 +9,13 @@ import javax.swing.JOptionPane;
 
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
+import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
 
 import contractAutomata.automaton.MSCA;
 import contractAutomata.converters.DataConverter;
-import contractAutomata.converters.MxeConverter;
+import converters.MxeConverter;
 
 @SuppressWarnings("serial")
 public class ImportData extends AbstractAction {

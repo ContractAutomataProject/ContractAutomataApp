@@ -1,4 +1,4 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.fmca;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
+import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 

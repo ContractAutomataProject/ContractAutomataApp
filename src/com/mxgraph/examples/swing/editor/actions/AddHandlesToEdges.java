@@ -8,10 +8,11 @@ import javax.swing.JOptionPane;
 
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
+import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.util.mxResources;
 
 import contractAutomata.automaton.MSCA;
-import contractAutomata.converters.MxeConverter;
+import converters.MxeConverter;
 
 @SuppressWarnings("serial")
 public class AddHandlesToEdges extends AbstractAction 
@@ -41,7 +42,7 @@ public class AddHandlesToEdges extends AbstractAction
 		} 
 		catch(Exception e1)
 		{
-			JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+System.lineSeparator()+" "+menuBar.errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+System.lineSeparator()+" "+menuBar.getErrorMsg(),mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 		}
 
 	}

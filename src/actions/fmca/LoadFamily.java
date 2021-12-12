@@ -1,4 +1,4 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.fmca;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
+import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;

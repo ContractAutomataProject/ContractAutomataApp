@@ -1,4 +1,4 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.fmca;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -19,20 +19,19 @@ import family.Family;
 import family.Product;
 
 @SuppressWarnings("serial")
-public class SuperProducts extends AbstractAction {
+public class SubProducts extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
 	//	EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
 		ProductFrame pf=editor.getProductFrame();
-
 		if (pf==null)
 		{
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Family loaded!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-
+		//aut.printToFile(filename);
 		Family f=pf.getFamily();
 
 		String S= (String) JOptionPane.showInputDialog(null, 
@@ -42,14 +41,15 @@ public class SuperProducts extends AbstractAction {
 			return;
 
 		int pindex=Integer.parseInt(S);
-		Product p =pf.getProductAt(pindex);
+		//Product p=f.getElements()[pindex];
+		Product p = pf.getProductAt(pindex);
+		//			int[] subind = f.getSubProductsofProduct(pindex);
+		//			Product[] subprod = f.subsetOfProductsFromIndex(subind);
+		Set<Product> subprod = f.getSubProductsofProduct(p);
+		pf.setColorButtonProducts(subprod, Color.RED);
 
-		Set<Product> supind =f.getSuperProductsofProduct(p);
-
-		pf.setColorButtonProducts(supind, Color.RED);
-
-		String message=supind.size()+ " Super-Products of Product "+pindex+System.lineSeparator()+p.toString()+System.lineSeparator();
-		for (Product p2 : supind)
+		String message=subprod.size() + " Sub-Products of Product "+pindex+System.lineSeparator()+p.toString()+System.lineSeparator();
+		for (Product p2 : subprod)
 			message+= pf.indexOf(p2)+" : "+System.lineSeparator()+p2.toString()+System.lineSeparator();
 		JTextArea textArea = new JTextArea(200,200);
 		textArea.setText(message);
@@ -58,11 +58,12 @@ public class SuperProducts extends AbstractAction {
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		JDialog jd = new JDialog(pf);
 		jd.add(scrollPane);
-		jd.setTitle("Super-Products");
+		jd.setTitle("Sub-Products");
 		jd.setResizable(true);
+		jd.setVisible(true);
+
 		jd.setSize(500,500);
 		jd.setLocationRelativeTo(null);
-		jd.setVisible(true);
 
 	}
 

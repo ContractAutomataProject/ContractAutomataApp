@@ -15,7 +15,6 @@ import javax.swing.UIManager;
 
 import org.w3c.dom.Document;
 
-import com.mxgraph.examples.swing.editor.actions.EditorMenuBar;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.layout.mxIGraphLayout;
@@ -35,6 +34,7 @@ import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
 import contractAutomata.automaton.MSCA;
+
 
 
 /**
@@ -121,12 +121,15 @@ public class App extends BasicGraphEditor
 		public CustomGraphComponent(mxGraph graph)
 		{
 			super(graph);
-
+			
 			// Sets switches typically used in an editor
 			setPageVisible(false);
 			setGridVisible(false);
 			setToolTips(true);
 			setConnectable(true);
+			graph.setResetEdgesOnConnect(false);
+			
+			
 			
 			getConnectionHandler().setCreateTarget(true);
 
@@ -192,7 +195,28 @@ public class App extends BasicGraphEditor
 		 */
 		public CustomGraph()
 		{
-			setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
+			//setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
+			setAlternateEdgeStyle( mxConstants.STYLE_EDGE+"="+mxConstants.NONE+";"
+					 +mxConstants.STYLE_STROKECOLOR+"=black;");
+			
+			int width=100;
+			int height=100;
+			
+			mxGeometry geometry = new mxGeometry(0, 0, width, height);
+			geometry.setTerminalPoint(new mxPoint(0, height), true);
+			geometry.setTerminalPoint(new mxPoint(width, 0), false);
+			geometry.setRelative(true);
+
+			mxCell cell = new mxCell("[]", geometry,  mxConstants.STYLE_EDGE+"="+mxConstants.NONE+";"
+					 +mxConstants.STYLE_STROKECOLOR+"=black;");
+			cell.setEdge(true);
+			
+			//this.getModel().addListener(eventName, listener);
+			
+		
+			
+			setEdgeTemplate(cell);
+			
 		}
 
 		/**
@@ -306,6 +330,7 @@ public class App extends BasicGraphEditor
 		 * @param style
 		 * @return
 		 */
+		@Override
 		public Object createEdge(Object parent, String id, Object value,
 				Object source, Object target, String style)
 		{
@@ -317,7 +342,9 @@ public class App extends BasicGraphEditor
 				return edge;
 			}
 
-			return super.createEdge(parent, id, value, source, target, style);
+			mxCell edge = (mxCell) super.createEdge(parent, id, value, source, target, style);
+			
+			return edge;
 		}
 
 	}

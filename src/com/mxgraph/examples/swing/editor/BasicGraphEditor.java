@@ -163,8 +163,8 @@ public class BasicGraphEditor extends JPanel
 		graphComponent = component;
 		final mxGraph graph = graphComponent.getGraph();
 		undoManager = createUndoManager();
-		
-		
+
+
 
 		// Do not change the scale and translation after files have been loaded
 		graph.setResetViewOnRootChange(false);
@@ -196,27 +196,27 @@ public class BasicGraphEditor extends JPanel
 
 		// 
 		// 	THE RIGHT PALETTE PANEL HAS BEEN MOVED TO THE TOOLBAR
-		
-		// Creates the library pane that contains the tabs with the palettes
-	//	libraryPane = new JTabbedPane();
 
-//		// Creates the inner split pane that contains the library with the
-//		// palettes and the graph outline on the left side of the window
-//		JSplitPane inner = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-//				libraryPane, graphOutline);
-//		inner.setDividerLocation(320);
-//		inner.setResizeWeight(1);
-//		inner.setDividerSize(6);
-//		inner.setBorder(null);
+		// Creates the library pane that contains the tabs with the palettes
+		//	libraryPane = new JTabbedPane();
+
+		//		// Creates the inner split pane that contains the library with the
+		//		// palettes and the graph outline on the left side of the window
+		//		JSplitPane inner = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+		//				libraryPane, graphOutline);
+		//		inner.setDividerLocation(320);
+		//		inner.setResizeWeight(1);
+		//		inner.setDividerSize(6);
+		//		inner.setBorder(null);
 
 		// Creates the outer split pane that contains the inner split pane and
 		// the graph component on the right side of the window
-//		JSplitPane outer = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, libraryPane,
-//				graphComponent);
-//		outer.setOneTouchExpandable(true);
-//		outer.setDividerLocation(200);
-//		outer.setDividerSize(6);
-//		outer.setBorder(null);
+		//		JSplitPane outer = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, libraryPane,
+		//				graphComponent);
+		//		outer.setOneTouchExpandable(true);
+		//		outer.setDividerLocation(200);
+		//		outer.setDividerSize(6);
+		//		outer.setBorder(null);
 
 		// Creates the status bar
 		statusBar = createStatusBar();
@@ -226,7 +226,7 @@ public class BasicGraphEditor extends JPanel
 
 		// Puts everything together
 		setLayout(new BorderLayout());
-				
+
 		add(graphComponent, BorderLayout.CENTER);//previously was outer instead of graphComponent
 		add(statusBar, BorderLayout.SOUTH);
 		installToolBar();
@@ -281,27 +281,27 @@ public class BasicGraphEditor extends JPanel
 	{
 		graphComponent.getGraph().addListener(mxEvent.REPAINT,
 				new mxIEventListener()
-				{
-					public void invoke(Object source, mxEventObject evt)
-					{
-						String buffer = (graphComponent.getTripleBuffer() != null) ? ""
-								: " (unbuffered)";
-						mxRectangle dirty = (mxRectangle) evt
-								.getProperty("region");
+		{
+			public void invoke(Object source, mxEventObject evt)
+			{
+				String buffer = (graphComponent.getTripleBuffer() != null) ? ""
+						: " (unbuffered)";
+				mxRectangle dirty = (mxRectangle) evt
+						.getProperty("region");
 
-						if (dirty == null)
-						{
-							status("Repaint all" + buffer);
-						}
-						else
-						{
-							status("Repaint: x=" + (int) (dirty.getX()) + " y="
-									+ (int) (dirty.getY()) + " w="
-									+ (int) (dirty.getWidth()) + " h="
-									+ (int) (dirty.getHeight()) + buffer);
-						}
-					}
-				});
+				if (dirty == null)
+				{
+					status("Repaint all" + buffer);
+				}
+				else
+				{
+					status("Repaint: x=" + (int) (dirty.getX()) + " y="
+							+ (int) (dirty.getY()) + " w="
+							+ (int) (dirty.getWidth()) + " h="
+							+ (int) (dirty.getHeight()) + buffer);
+				}
+			}
+		});
 	}
 
 	/**
@@ -312,17 +312,14 @@ public class BasicGraphEditor extends JPanel
 		final EditorPalette palette = new EditorPalette();
 		final JScrollPane scrollPane = new JScrollPane(palette);
 		scrollPane
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane
-				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		libraryPane.add(title, scrollPane);
 
 		// Updates the widths of the palettes if the container size changes
 		libraryPane.addComponentListener(new ComponentAdapter()
 		{
-			/**
-			 * 
-			 */
 			public void componentResized(ComponentEvent e)
 			{
 				int w = scrollPane.getWidth()
@@ -425,7 +422,7 @@ public class BasicGraphEditor extends JPanel
 	{
 		Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
 				graphComponent);
-		EditorPopupMenu menu = new EditorPopupMenu(BasicGraphEditor.this);
+		EditorPopupMenu menu = new EditorPopupMenu(BasicGraphEditor.this, pt);
 		menu.show(graphComponent, pt.x, pt.y);
 
 		e.consume();
@@ -500,8 +497,37 @@ public class BasicGraphEditor extends JPanel
 			 */
 			public void mousePressed(MouseEvent e)
 			{
-				// Handles context menu on the Mac where the trigger is on mousepressed
-				mouseReleased(e);
+
+//				Object o=graphComponent.getCellAt(e.getX(),e.getY());
+//				if(o!=null && o instanceof mxCell) {
+//					mxCell edge =(mxCell)o;
+//					if (edge.isEdge())
+//					{
+//						mxGeometry eg = edge.getGeometry();
+//
+//						mxPoint source = (edge.getSource()!=null)?eg.getSourcePoint():eg.getTerminalPoint(true);
+//						mxPoint target = (edge.getTarget()!=null)?eg.getTargetPoint():eg.getTerminalPoint(false);
+//
+//
+//						List<mxPoint> l = eg.getPoints()!=null?new ArrayList<mxPoint>(eg.getPoints()):new ArrayList<mxPoint>();
+//
+//						Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),graphComponent);
+//
+//						if (!l.stream().anyMatch(p->p.getX()==pt.x&&p.getY()==p.getY()))
+//						{
+//							l.add(new mxPoint(pt.x,pt.y));
+//							eg.setPoints(l);
+//							eg.setSourcePoint(source);
+//							eg.setTargetPoint(target);
+//						}
+//						e.consume();
+//						graphComponent.refresh();
+//
+//					}
+//				}
+//				else 
+					// Handles context menu on the Mac where the trigger is on mousepressed
+					mouseReleased(e);
 			}
 
 			/**
@@ -608,7 +634,7 @@ public class BasicGraphEditor extends JPanel
 	{
 		return graphOutline;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -654,9 +680,9 @@ public class BasicGraphEditor extends JPanel
 						.getID(), e.getActionCommand()));
 			}
 		};
-		
+
 		newAction.putValue(Action.SHORT_DESCRIPTION, action.getValue(Action.SHORT_DESCRIPTION));
-		
+
 		return newAction;
 	}
 
@@ -681,12 +707,12 @@ public class BasicGraphEditor extends JPanel
 			String title = (currentFile != null) ? currentFile
 					.getAbsolutePath() : "new Automaton";//mxResources.get("newDiagram");
 
-			if (modified)
-			{
-				title += "*";
-			}
+					if (modified)
+					{
+						title += "*";
+					}
 
-			frame.setTitle(title + " - " + appTitle);
+					frame.setTitle(title + " - " + appTitle);
 		}
 	}
 

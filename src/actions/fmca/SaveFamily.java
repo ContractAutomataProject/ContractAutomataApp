@@ -1,4 +1,4 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.fmca;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -12,6 +12,7 @@ import javax.swing.filechooser.FileFilter;
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.DefaultFileFilter;
 import com.mxgraph.examples.swing.editor.EditorActions;
+import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxResources;

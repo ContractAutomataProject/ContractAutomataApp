@@ -1,13 +1,19 @@
 package com.mxgraph.examples.swing.editor;
 
+import java.awt.Point;
+import java.util.List;
+
 import javax.swing.JPopupMenu;
 import javax.swing.TransferHandler;
 
-import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
-import com.mxgraph.examples.swing.editor.actions.ModalLabelAction;
+import com.mxgraph.examples.swing.editor.actions.AddHandleAction;
+import com.mxgraph.examples.swing.editor.actions.DeleteHandleAction;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.util.mxGraphActions;
-import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxResources;
+
+import actions.fmca.ModalLabelAction;
 
 public class EditorPopupMenu extends JPopupMenu
 {
@@ -17,49 +23,77 @@ public class EditorPopupMenu extends JPopupMenu
 	 */
 	private static final long serialVersionUID = -3132749140550242191L;
 
-	public EditorPopupMenu(BasicGraphEditor editor)
+	public EditorPopupMenu(BasicGraphEditor editor, Point pt)
 	{
 		boolean selected = !editor.getGraphComponent().getGraph()
 				.isSelectionEmpty();
 
-		add(editor.bind(mxResources.get("undo"), new HistoryAction(true),
-				"/com/mxgraph/examples/swing/images/undo.gif"));
+		//		add(editor.bind(mxResources.get("undo"), new HistoryAction(true),
+		//				"/com/mxgraph/examples/swing/images/undo.gif"));
+		//
+		//		addSeparator();
 
-		addSeparator();
 
-		add(
-				editor.bind(mxResources.get("cut"), TransferHandler
-						.getCutAction(),
-						"/com/mxgraph/examples/swing/images/cut.gif"))
-				.setEnabled(selected);
-		add(
-				editor.bind(mxResources.get("copy"), TransferHandler
-						.getCopyAction(),
-						"/com/mxgraph/examples/swing/images/copy.gif"))
-				.setEnabled(selected);
-		add(editor.bind(mxResources.get("paste"), TransferHandler
-				.getPasteAction(),
-				"/com/mxgraph/examples/swing/images/paste.gif"));
 
-		addSeparator();
+		mxCell edge = this.transitionSelected(editor, pt);
+		if (this.transitionSelected(editor, pt)!=null) {
 
-		add(
-				editor.bind(mxResources.get("delete"), mxGraphActions
-						.getDeleteAction(),
-						"/com/mxgraph/examples/swing/images/delete.gif"))
-				.setEnabled(selected);
-
-		addSeparator();
 		
-		//JMenu submenu = (JMenu) menu.add(new JMenu(mxResources.get("line")));
+			add(editor.bind("Add handle", new AddHandleAction(pt),"/com/mxgraph/examples/swing/images/diamond_end.gif"));
 
-		add(editor.bind("Urgent", new ModalLabelAction("Urgent", mxConstants.STYLE_STROKECOLOR),""));
-				//"/com/mxgraph/examples/swing/images/linecolor.gif"));
-		//add(editor.bind("Greedy", new FMCAAction("Greedy", mxConstants.STYLE_STROKECOLOR),""));  REMOVED!!
-		add(editor.bind("Lazy", new ModalLabelAction("Lazy", mxConstants.STYLE_STROKECOLOR),""));
-		add(editor.bind("Permitted", new ModalLabelAction("Permitted", mxConstants.STYLE_STROKECOLOR),""));
+			List<mxPoint> l = edge.getGeometry().getPoints(); 
+			if (l!=null)
+			{
+				mxPoint sp = l.stream()
+						.filter(p->pt.distance(p.getX(), p.getY())<4)
+						.findFirst().orElse(null);
+
+				if (sp!=null)
+					add(editor.bind("Delete handle", new DeleteHandleAction(sp),"/com/mxgraph/examples/swing/images/delete.gif"));
+			}
+
+			//JMenu submenu = (JMenu) menu.add(new JMenu(mxResources.get("line")));
+
+			add(editor.bind("Urgent", new ModalLabelAction("Urgent"),"/com/mxgraph/examples/swing/images/arrow.gif"));
+			//"/com/mxgraph/examples/swing/images/linecolor.gif"));
+			//add(editor.bind("Greedy", new FMCAAction("Greedy", mxConstants.STYLE_STROKECOLOR),""));  REMOVED!!
+			add(editor.bind("Lazy", new ModalLabelAction("Lazy"),"/com/mxgraph/examples/swing/images/arrow.gif"));
+			add(editor.bind("Permitted", new ModalLabelAction("Permitted"),"/com/mxgraph/examples/swing/images/arrow.gif"));
+
+			addSeparator();
+
+		}
 		
-	/*	addSeparator();
+		if (selected) {
+			addSeparator();
+			
+			add(
+					editor.bind(mxResources.get("delete"), mxGraphActions
+							.getDeleteAction(),
+							"/com/mxgraph/examples/swing/images/delete.gif"))
+			.setEnabled(selected);
+
+			add(
+					editor.bind(mxResources.get("cut"), TransferHandler
+							.getCutAction(),
+							"/com/mxgraph/examples/swing/images/cut.gif"))
+			.setEnabled(selected);
+			add(
+					editor.bind(mxResources.get("copy"), TransferHandler
+							.getCopyAction(),
+							"/com/mxgraph/examples/swing/images/copy.gif"))
+			.setEnabled(selected);
+		}
+
+		if (!selected) {
+			add(editor.bind(mxResources.get("paste"), TransferHandler
+					.getPasteAction(),
+					"/com/mxgraph/examples/swing/images/paste.gif"));
+		}
+
+
+
+		/*	addSeparator();
 
 		// Creates the format menu
 		JMenu menu = (JMenu) add(new JMenu(mxResources.get("format")));
@@ -88,6 +122,22 @@ public class EditorPopupMenu extends JPopupMenu
 
 		add(editor.bind(mxResources.get("selectAll"), mxGraphActions
 				.getSelectAllAction()));
-*/	}
+		 */	}
+
+	private mxCell transitionSelected(BasicGraphEditor editor, Point pt) {
+		if (!editor.getGraphComponent().getGraph()
+				.isSelectionEmpty() && editor.getGraphComponent().getGraph().getSelectionCell() instanceof mxCell) {
+			mxCell edge =(mxCell)  editor.getGraphComponent().getGraph().getSelectionCell();
+			if (edge.isEdge()) return edge;
+		}
+		Object o=editor.getGraphComponent().getCellAt(pt.x,pt.y);
+		if(o!=null && o instanceof mxCell) {
+			mxCell edge =(mxCell)o;
+			if (edge.isEdge())
+				return edge;
+		}
+
+		return null;
+	}
 
 }

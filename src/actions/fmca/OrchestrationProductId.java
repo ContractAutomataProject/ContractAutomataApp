@@ -1,4 +1,4 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.fmca;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -10,23 +10,31 @@ import javax.swing.JOptionPane;
 
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
+import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 
 import contractAutomata.automaton.MSCA;
-import contractAutomata.converters.MxeConverter;
-import family.FMCA;
-import family.Family;
+import contractAutomata.operators.ProductOrchestrationSynthesisOperator;
+import contractAutomata.requirements.Agreement;
+import converters.MxeConverter;
+import family.Product;
 
 @SuppressWarnings("serial")
-public class OrchestrationFamilyEnumerative extends AbstractAction {
+public class OrchestrationProductId extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
 		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		
 		if (menuBar.checkAut(editor)) return;
 		String filename=editor.getCurrentFile().getName();
+
+		menuBar.lastDir=editor.getCurrentFile().getParent();
+
+		MSCA aut=editor.lastaut;
+		//	MSCA backup = aut.clone();
 
 		ProductFrame pf=editor.getProductFrame();
 		if (pf==null)
@@ -35,26 +43,29 @@ public class OrchestrationFamilyEnumerative extends AbstractAction {
 			return;
 		}
 
-		menuBar.lastDir=editor.getCurrentFile().getParent();
-		MSCA aut=editor.lastaut;
-		Family f=pf.getFamily();
+		//FMCA faut= new FMCA(aut,pf.getFamily());
 
-		JOptionPane.showMessageDialog(editor.getGraphComponent(),"Warning : the enumerative computation may require several minutes!","Warning",JOptionPane.WARNING_MESSAGE);
+		String S= (String) JOptionPane.showInputDialog(editor.getGraphComponent(), 
+				"Insert Product id",
+				JOptionPane.PLAIN_MESSAGE);
+		if (S==null)
+			return;
 
+		//Product p=f.getElements()[Integer.parseInt(S)];
+		Product p=pf.getProductAt(Integer.parseInt(S));
 
 		Instant start = Instant.now();
-		MSCA controller = new FMCA(aut,f).getOrchestrationOfFamilyEnumerative();
+		MSCA controller = new ProductOrchestrationSynthesisOperator(new Agreement(),p).apply(aut);
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 	
-
 		if (controller==null)
 		{
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
+			//		editor.lastaut=backup;
 			return;
 		}
-
-		String K="Orc_familyWithoutPO_"+filename;
+		String K="Orc_"+"(R"+p.getRequired().toString()+"_F"+p.getForbidden().toString()+")_"+filename;
 		File file;
 		try {
 			new MxeConverter().exportMSCA(menuBar.lastDir+File.separator+K,controller);
@@ -67,12 +78,15 @@ public class OrchestrationFamilyEnumerative extends AbstractAction {
 			return;			
 		}
 
-		String message = "The orchestration has been stored with filename "+menuBar.lastDir+File.separator+K;
+		String message = "The orchestration has been stored with filename "+menuBar.lastDir+File.separator+K
+				+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
+				+System.lineSeparator()+" Number of states : "+controller.getNumStates();
 
+		JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.PLAIN_MESSAGE);
 
-		JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.WARNING_MESSAGE);
 		editor.lastaut=controller;
-		menuBar.loadMorphStore(K,editor,file);
+		menuBar.loadMorphStore(menuBar.lastDir+File.separator+K,editor,file);
+
 		
 	}
 

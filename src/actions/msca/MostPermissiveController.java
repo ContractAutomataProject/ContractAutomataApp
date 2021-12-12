@@ -1,4 +1,4 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.msca;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -10,34 +10,39 @@ import javax.swing.JOptionPane;
 
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
+import com.mxgraph.examples.swing.editor.EditorMenuBar;
 
 import contractAutomata.automaton.MSCA;
-import contractAutomata.converters.MxeConverter;
 import contractAutomata.operators.OrchestrationSynthesisOperator;
 import contractAutomata.requirements.Agreement;
+import converters.MxeConverter;
 
 @SuppressWarnings("serial")
-public class Orchestration extends AbstractAction {
+public class MostPermissiveController extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
 		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		
 		if (menuBar.checkAut(editor)) return;
 		String filename=editor.getCurrentFile().getName();
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
 		MSCA aut=editor.lastaut;
+		//		MSCA backup = aut.clone();
 
 		MSCA controller=null;
+		long elapsedTime;
 		Instant start = Instant.now();
-	
 		try {
 			controller = new OrchestrationSynthesisOperator(new Agreement()).apply(aut);
+			Instant stop = Instant.now();
+			elapsedTime = Duration.between(start, stop).toMillis();
 		} catch(UnsupportedOperationException exc) {
 			Instant stop = Instant.now();
-			long elapsedTime = Duration.between(start, stop).toMillis();
+			elapsedTime = Duration.between(start, stop).toMillis();
 			if (exc.getMessage()=="The automaton contains necessary offers that are not allowed in the orchestration synthesis")
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
@@ -48,9 +53,7 @@ public class Orchestration extends AbstractAction {
 			} else throw exc;
 		}
 
-		Instant stop = Instant.now();
-		long elapsedTime = Duration.between(start, stop).toMillis();
-	
+
 		if (controller==null)
 		{
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"The orchestration is empty"+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds","Empty",JOptionPane.WARNING_MESSAGE);
@@ -79,6 +82,7 @@ public class Orchestration extends AbstractAction {
 		editor.lastaut=controller;
 		menuBar.loadMorphStore(menuBar.lastDir+File.separator+K,editor,file);
 
+		
 	}
 
 }

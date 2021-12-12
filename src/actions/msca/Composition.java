@@ -1,4 +1,4 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.msca;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -13,12 +13,13 @@ import javax.swing.JOptionPane;
 
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
+import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
 
 import contractAutomata.automaton.MSCA;
-import contractAutomata.converters.MxeConverter;
 import contractAutomata.operators.CompositionFunction;
+import converters.MxeConverter;
 
 @SuppressWarnings("serial")
 public class Composition extends AbstractAction {
@@ -57,7 +58,7 @@ public class Composition extends AbstractAction {
 				aut.add(new MxeConverter().importMSCA(fileName));
 			}
 			catch (Exception e1) {
-				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+System.lineSeparator()+menuBar.errorMsg,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.getMessage()+System.lineSeparator()+menuBar.getErrorMsg(),mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			if (lastIteration)

@@ -1,4 +1,4 @@
-package com.mxgraph.examples.swing.editor.actions;
+package actions.msca;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -10,11 +10,12 @@ import javax.swing.JOptionPane;
 
 import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
+import com.mxgraph.examples.swing.editor.EditorMenuBar;
 
 import contractAutomata.automaton.MSCA;
-import contractAutomata.converters.MxeConverter;
 import contractAutomata.operators.ChoreographySynthesisOperator;
 import contractAutomata.requirements.StrongAgreement;
+import converters.MxeConverter;
 
 @SuppressWarnings("serial")
 public class Choreography extends AbstractAction {
