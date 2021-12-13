@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -29,6 +30,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.mxgraph.model.mxCell;
+
+import castate.MxCAState;
 import contractAutomata.automaton.MSCA;
 import contractAutomata.automaton.label.CALabel;
 import contractAutomata.automaton.state.BasicState;
@@ -75,6 +79,8 @@ public class MxeConverter implements MSCAConverter {
 			if ((nNode.getNodeType() == Node.ELEMENT_NODE))
 			{
 				Element eElement = (Element) nNode;
+				mxCell cell = new mxCell(null,null,eElement.getAttribute("style"));
+				
 				if (Integer.parseInt(eElement.getAttribute("id"))>1 && !eElement.hasAttribute("edge"))
 				{
 					String value = eElement.getAttribute("value");
@@ -101,6 +107,14 @@ public class MxeConverter implements MSCAConverter {
 						String[] st=Arrays.stream(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(","))
 								.toArray(String[]::new);
 
+						Function<String,BasicState> convertToBs= s->{
+//							mxCodec codec = new mxCodec();
+//							System.out.println(eElement.getAttribute("style"));
+//							mxICell cell=codec.decodeCell(eElement, false);
+							return new BasicState(s, MxCAState.isInitial.test(cell),//st[ind].equals("0"),
+								MxCAState.isFinal.test(cell));//eElement.getAttribute("style").contains("doubleEllipse"));
+						};
+						
 						//\forall i. \exists bs \in princ2bs(i). bs==st[i]
 
 						List<BasicState> lbs = IntStream.range(0, st.length)
@@ -108,19 +122,21 @@ public class MxeConverter implements MSCAConverter {
 									if (princ2bs.containsKey(ind))
 									{
 										Set<BasicState> sbs = princ2bs.get(ind);
+
 										return sbs.stream()
 												.filter(bs->bs.getState().equals(st[ind]))
 												.findFirst()
-												.orElseGet(()->
-												{BasicState bs = new BasicState(st[ind],st[ind].equals("0"),eElement.getAttribute("style").contains("doubleEllipse"));
-												sbs.add(bs);	
-												return bs;});
+												.orElseGet(()->{
+													BasicState bs =convertToBs.apply(st[ind]);
+													sbs.add(bs);	
+													return bs;}); //orElseGet is needed when those basicstates are not written in the xml, e.g. when 
+										// one is editing with mxGraph.
 									}
 									else 
 									{
-										BasicState bs = new BasicState(st[ind],st[ind].equals("0"),eElement.getAttribute("style").contains("doubleEllipse"));
+										BasicState bs =convertToBs.apply(st[ind]);
 										princ2bs.put(ind, new HashSet<BasicState>(Arrays.asList(bs)));
-										return bs;  //orElseGet and the else branch are needed when those basicstates are not written in the xml, e.g. when 
+										return bs;  // this else branch is needed when those basicstates are not written in the xml, e.g. when 
 										// one is editing with mxGraph.
 									}})
 								.collect(Collectors.toList());
@@ -129,7 +145,7 @@ public class MxeConverter implements MSCAConverter {
 										geom.hasAttribute("y")?Float.parseFloat(geom.getAttribute("y")):0);
 						//useful when not morphing (e.g. adding handles to edges)					
 
-						if (castate.isFinalstate()!=eElement.getAttribute("style").contains("doubleEllipse"))
+						if (castate.isFinalstate()!=MxCAState.isFinal.test(cell))
 							throw new IOException("Problems with final states in .mxe");
 
 						if (id2castate.put(Integer.parseInt(eElement.getAttribute("id")), castate)!=null)
@@ -344,12 +360,21 @@ public class MxeConverter implements MSCAConverter {
 		Attr parent=doc.createAttribute("parent");
 		parent.setValue("1");
 		Attr style=doc.createAttribute("style");
-		String stylevalue = "roundImage;fillColor=none;strokeColor=black;verticalLabelPosition=bottom;spacingTop=2;";
+		
 		if (castate.isFinalstate())
-			style.setValue(stylevalue+"shape=doubleEllipse;");
-		else
-			style.setValue(stylevalue+"shape=ellipse;");
-	
+		{
+			if (castate.isInitial())
+				style.setValue(MxCAState.initialfinalnodestylevalue);
+			else
+				style.setValue(MxCAState.finalnodestylevalue);
+		}
+		else 
+		{
+			if (castate.isInitial())
+				style.setValue(MxCAState.initialnodestylevalue);			
+			else
+				style.setValue(MxCAState.nodestylevalue);				
+		}
 
 		Attr value=doc.createAttribute("value");
 		value.setValue(castate.getState().toString());
@@ -369,8 +394,11 @@ public class MxeConverter implements MSCAConverter {
 		Attr as=doc.createAttribute("as");
 		as.setValue("geometry");
 		mxGeometry1.setAttributeNode(as);
-		mxGeometry1.setAttribute("height", "50.0");
-		mxGeometry1.setAttribute("width", "50.0");
+
+	
+		mxGeometry1.setAttribute("width", (castate.isInitial())?"56.5":"40.0");
+		mxGeometry1.setAttribute("height", "40.0");
+
 
 
 		//createElement does not set attributes x and y

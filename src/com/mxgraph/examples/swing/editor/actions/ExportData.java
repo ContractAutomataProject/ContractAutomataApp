@@ -21,6 +21,7 @@ public class ExportData extends AbstractAction {
 		App editor = (App) EditorActions.getEditor(e);
 		
 		String filename =editor.getCurrentFile().getAbsolutePath();
+		filename = filename.substring(0,filename.length()-4);
 		MSCA aut=editor.lastaut;
 		//			try {
 		//				aut = new BasicMxeConverter().importMxe(filename);

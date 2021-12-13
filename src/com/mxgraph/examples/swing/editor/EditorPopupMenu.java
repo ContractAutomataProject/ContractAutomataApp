@@ -2,12 +2,15 @@ package com.mxgraph.examples.swing.editor;
 
 import java.awt.Point;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.swing.JPopupMenu;
 import javax.swing.TransferHandler;
 
 import com.mxgraph.examples.swing.editor.actions.AddHandleAction;
 import com.mxgraph.examples.swing.editor.actions.DeleteHandleAction;
+import com.mxgraph.examples.swing.editor.actions.ToggleFinalStateAction;
+import com.mxgraph.examples.swing.editor.actions.ToggleInitialStateAction;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxPoint;
@@ -17,7 +20,6 @@ import actions.fmca.ModalLabelAction;
 
 public class EditorPopupMenu extends JPopupMenu
 {
-
 	/**
 	 * 
 	 */
@@ -35,8 +37,8 @@ public class EditorPopupMenu extends JPopupMenu
 
 
 
-		mxCell edge = this.transitionSelected(editor, pt);
-		if (this.transitionSelected(editor, pt)!=null) {
+		mxCell edge = this.cellSelected(editor, pt, x->x.isEdge());
+		if (edge!=null) {
 
 		
 			add(editor.bind("Add handle", new AddHandleAction(pt),"/com/mxgraph/examples/swing/images/diamond_end.gif"));
@@ -64,9 +66,14 @@ public class EditorPopupMenu extends JPopupMenu
 
 		}
 		
-		if (selected) {
+		mxCell node = this.cellSelected(editor, pt, x->x.isVertex());
+	
+		if (node!=null) {
+			add(editor.bind("Toggle Initial state", new ToggleInitialStateAction(node),"/com/mxgraph/examples/swing/images/sstate.png"));
+			add(editor.bind("Toggle Final state", new ToggleFinalStateAction(node),"/com/mxgraph/examples/swing/images/fstate.png"));
 			addSeparator();
-			
+		}
+		if (selected) {			
 			add(
 					editor.bind(mxResources.get("delete"), mxGraphActions
 							.getDeleteAction(),
@@ -122,19 +129,22 @@ public class EditorPopupMenu extends JPopupMenu
 
 		add(editor.bind(mxResources.get("selectAll"), mxGraphActions
 				.getSelectAllAction()));
-		 */	}
+		 */	
+	}
 
-	private mxCell transitionSelected(BasicGraphEditor editor, Point pt) {
+
+	
+	private mxCell cellSelected(BasicGraphEditor editor, Point pt, Predicate<mxCell> pred) {
 		if (!editor.getGraphComponent().getGraph()
 				.isSelectionEmpty() && editor.getGraphComponent().getGraph().getSelectionCell() instanceof mxCell) {
-			mxCell edge =(mxCell)  editor.getGraphComponent().getGraph().getSelectionCell();
-			if (edge.isEdge()) return edge;
+			mxCell c =(mxCell)  editor.getGraphComponent().getGraph().getSelectionCell();
+			if (pred.test(c)) return c;
 		}
 		Object o=editor.getGraphComponent().getCellAt(pt.x,pt.y);
 		if(o!=null && o instanceof mxCell) {
-			mxCell edge =(mxCell)o;
-			if (edge.isEdge())
-				return edge;
+			mxCell c=(mxCell)o;
+			if (pred.test(c))
+				return c;
 		}
 
 		return null;

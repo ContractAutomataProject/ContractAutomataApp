@@ -33,6 +33,7 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
+import castate.MxCAState;
 import contractAutomata.automaton.MSCA;
 
 
@@ -44,8 +45,7 @@ import contractAutomata.automaton.MSCA;
  *
  */
 public class App extends BasicGraphEditor
-{
-	
+{	
 	/**
 	 * 
 	 */
@@ -70,10 +70,10 @@ public class App extends BasicGraphEditor
 	
 	private JFrame menuFrame=null;
 
-
 	public App()
 	{
 		this("Contract Automata Tool (September 2021)", new CustomGraphComponent(new CustomGraph()));
+		MxCAState.setShapes();
 	}
 
 	/**
@@ -196,25 +196,19 @@ public class App extends BasicGraphEditor
 		public CustomGraph()
 		{
 			//setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
-			setAlternateEdgeStyle( mxConstants.STYLE_EDGE+"="+mxConstants.NONE+";"
-					 +mxConstants.STYLE_STROKECOLOR+"=black;");
+			setAlternateEdgeStyle(EditorToolBar.edgestylevalue);
 			
 			int width=100;
 			int height=100;
 			
+			//the new edge template is inizialised here
 			mxGeometry geometry = new mxGeometry(0, 0, width, height);
 			geometry.setTerminalPoint(new mxPoint(0, height), true);
 			geometry.setTerminalPoint(new mxPoint(width, 0), false);
 			geometry.setRelative(true);
-
-			mxCell cell = new mxCell("[]", geometry,  mxConstants.STYLE_EDGE+"="+mxConstants.NONE+";"
-					 +mxConstants.STYLE_STROKECOLOR+"=black;");
+			
+			mxCell cell = new mxCell("[!a]", geometry,  EditorToolBar.edgestylevalue);
 			cell.setEdge(true);
-			
-			//this.getModel().addListener(eventName, listener);
-			
-		
-			
 			setEdgeTemplate(cell);
 			
 		}
@@ -342,11 +336,26 @@ public class App extends BasicGraphEditor
 				return edge;
 			}
 
-			mxCell edge = (mxCell) super.createEdge(parent, id, value, source, target, style);
-			
-			return edge;
+			return super.createEdge(parent, id, value, source, target, style);
 		}
 
+		/**
+		 * overrides the method for avoiding the duplication of a state generated 
+		 * by dragging an arrow from a source state
+		 */
+		@Override
+		public Object addCell(Object cell, Object parent, Integer index,
+				Object source, Object target) {
+			((mxCell) target).setStyle(MxCAState.nodestylevalue+";");
+			mxCell n=(mxCell) target;
+			double x=n.getGeometry().getX();
+			double y=n.getGeometry().getY();
+			n.setGeometry(new mxGeometry(x, y, 40, 40));
+
+			n.setValue("["+EditorToolBar.incrementalStateLabel+"]");
+			EditorToolBar.incrementalStateLabel++;
+			return super.addCell(cell, parent, index, source, target);
+		}
 	}
 
 	/**

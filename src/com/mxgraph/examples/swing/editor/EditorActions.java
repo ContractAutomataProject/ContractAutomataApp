@@ -469,7 +469,6 @@ public class EditorActions
 								JOptionPane.showMessageDialog(editor.getGraphComponent(),menuBar.getErrorMsg()+System.lineSeparator()+ex.getMessage(), mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 							}
 						}
-
 						editor.setModified(false);
 						editor.setCurrentFile(new File(filename));
 					}
@@ -495,6 +494,7 @@ public class EditorActions
 					{
 						saveXmlPng(editor, filename, bg);
 					}
+					
 					//						else
 					//						{
 					//							BufferedImage image = mxCellRenderer

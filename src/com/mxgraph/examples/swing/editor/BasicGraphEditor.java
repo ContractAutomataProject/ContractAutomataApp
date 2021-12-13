@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -25,7 +23,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -163,8 +160,6 @@ public class BasicGraphEditor extends JPanel
 		graphComponent = component;
 		final mxGraph graph = graphComponent.getGraph();
 		undoManager = createUndoManager();
-
-
 
 		// Do not change the scale and translation after files have been loaded
 		graph.setResetViewOnRootChange(false);
@@ -307,30 +302,30 @@ public class BasicGraphEditor extends JPanel
 	/**
 	 * 
 	 */
-	public EditorPalette insertPalette(String title)
-	{
-		final EditorPalette palette = new EditorPalette();
-		final JScrollPane scrollPane = new JScrollPane(palette);
-		scrollPane
-		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane
-		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		libraryPane.add(title, scrollPane);
-
-		// Updates the widths of the palettes if the container size changes
-		libraryPane.addComponentListener(new ComponentAdapter()
-		{
-			public void componentResized(ComponentEvent e)
-			{
-				int w = scrollPane.getWidth()
-						- scrollPane.getVerticalScrollBar().getWidth();
-				palette.setPreferredWidth(w);
-			}
-
-		});
-
-		return palette;
-	}
+//	public EditorPalette insertPalette(String title)
+//	{
+//		final EditorPalette palette = new EditorPalette();
+//		final JScrollPane scrollPane = new JScrollPane(palette);
+//		scrollPane
+//		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		scrollPane
+//		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		libraryPane.add(title, scrollPane);
+//
+//		// Updates the widths of the palettes if the container size changes
+//		libraryPane.addComponentListener(new ComponentAdapter()
+//		{
+//			public void componentResized(ComponentEvent e)
+//			{
+//				int w = scrollPane.getWidth()
+//						- scrollPane.getVerticalScrollBar().getWidth();
+//				palette.setPreferredWidth(w);
+//			}
+//
+//		});
+//
+//		return palette;
+//	}
 
 	/**
 	 * 

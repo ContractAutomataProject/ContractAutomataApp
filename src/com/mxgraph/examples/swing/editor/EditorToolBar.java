@@ -33,6 +33,8 @@ import com.mxgraph.util.mxEventSource;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 
+import castate.MxCAState;
+
 public class EditorToolBar extends JToolBar
 {
 
@@ -40,6 +42,11 @@ public class EditorToolBar extends JToolBar
 	 * 
 	 */
 	private static final long serialVersionUID = -8015443128436394471L;
+		
+	public final static String edgestylevalue =  mxConstants.STYLE_EDGE+"="+mxConstants.NONE+";"
+			 +mxConstants.STYLE_STROKECOLOR+"=black;"
+					 +mxConstants.STYLE_FONTCOLOR+"=black;";
+
 
 	public static int incrementalStateLabel=0;
 
@@ -271,33 +278,22 @@ public class EditorToolBar extends JToolBar
 
 		 addSeparator();
 
-		 addNodeTemplate(" State ",mxConstants.STYLE_ROUNDED+";"
-				 +mxConstants.STYLE_SHAPE+"="+mxConstants.SHAPE_ELLIPSE+";"
-				 +mxConstants.STYLE_PERIMETER+"="+mxConstants.PERIMETER_ELLIPSE+";"
-				 +mxConstants.STYLE_FILLCOLOR+"="+mxConstants.NONE+";"
-				 +mxConstants.STYLE_STROKECOLOR+"=black;"
-				 +mxConstants.STYLE_VERTICAL_LABEL_POSITION+"="+mxConstants.ALIGN_BOTTOM+";"
-				 +mxConstants.STYLE_SPACING_TOP+"="+"0;",						 
+		 addNodeTemplate(" State ", MxCAState.nodestylevalue,						 
 				 new ImageIcon(
 						 getClass().getResource("/com/mxgraph/examples/swing/images/ellipse.png")));
 
-		 addNodeTemplate(" FinalState ",mxConstants.STYLE_ROUNDED+";"
-						 +mxConstants.STYLE_SHAPE+"="+mxConstants.SHAPE_DOUBLE_ELLIPSE+";"
-						 +mxConstants.STYLE_PERIMETER+"="+mxConstants.PERIMETER_ELLIPSE+";"
-						 +mxConstants.STYLE_FILLCOLOR+"="+mxConstants.NONE+";"
-						 +mxConstants.STYLE_STROKECOLOR+"=black;"
-						 +mxConstants.STYLE_VERTICAL_LABEL_POSITION+"="+mxConstants.ALIGN_BOTTOM+";"
-						 +mxConstants.STYLE_SPACING_TOP+"="+"0;",						 
-						 new ImageIcon(
-								 getClass().getResource("/com/mxgraph/examples/swing/images/doubleellipse.png")));
+//		 addNodeTemplate(" FinalState ",nodestylevalue
+//						 +mxConstants.STYLE_SHAPE+"="+mxConstants.SHAPE_DOUBLE_ELLIPSE+";"
+//						 +mxConstants.STYLE_PERIMETER+"="+mxConstants.PERIMETER_ELLIPSE+";",						 
+//						 new ImageIcon(
+//								 getClass().getResource("/com/mxgraph/examples/swing/images/doubleellipse.png")));
 
 		 addEdgeTemplate(
 				 " Edge ",//"Horizontal Edge",
 				 new ImageIcon(
 						 App.class
 						 .getResource("/com/mxgraph/examples/swing/images/arrow.png")),
-				 mxConstants.STYLE_EDGE+"="+mxConstants.NONE+";"
-				 +mxConstants.STYLE_STROKECOLOR+"=black;", 100, 100, "[]");
+				edgestylevalue, 100, 100, "[]");
 
 		 //		addEdgeTemplate(
 		 //				" Vertical Edge ",

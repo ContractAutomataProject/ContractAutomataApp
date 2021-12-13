@@ -43,9 +43,13 @@ public class ImportData extends AbstractAction {
 			menuBar.lastDir = fc.getSelectedFile().getParent();	
 			MSCA aut;
 			try {
-				aut = new DataConverter().importMSCA(fc.getSelectedFile().toString());
-				new MxeConverter().exportMSCA(fc.getSelectedFile().toString(),aut);
-				File file = new File(fc.getSelectedFile().toString());
+				String filename = fc.getSelectedFile().toString();
+				aut = new DataConverter().importMSCA(filename);
+				filename = filename.substring(0,filename.lastIndexOf("."));
+				new MxeConverter().exportMSCA(filename,aut);
+
+				filename = filename+".mxe";
+				File file = new File(filename);
 				editor.lastaut=aut;
 				menuBar.loadMorphStore(file.getName(), editor, file);
 			} catch (Exception e1) {
