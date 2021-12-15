@@ -393,7 +393,6 @@ public class EditorMenuBar extends JMenuBar
 	}
 
 }
-
 //END OF CLASS
 
 

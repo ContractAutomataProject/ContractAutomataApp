@@ -48,7 +48,7 @@ public class ImportData extends AbstractAction {
 				filename = filename.substring(0,filename.lastIndexOf("."));
 				new MxeConverter().exportMSCA(filename,aut);
 
-				filename = filename+".mxe";
+				filename=filename.endsWith(".mxe")?filename:(filename+".mxe"); //filename = filename+".mxe";
 				File file = new File(filename);
 				editor.lastaut=aut;
 				menuBar.loadMorphStore(file.getName(), editor, file);

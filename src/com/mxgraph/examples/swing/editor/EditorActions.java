@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
@@ -766,19 +767,6 @@ public class EditorActions
 								else
 
 								{
-									// TODO check why it resets x,y
-									//									if (editor instanceof App)
-									//									{
-									//										try {
-									//										((App)editor).lastaut=MSCAIO.parseXMLintoMSCA(fc
-									//												.getSelectedFile()
-									//												.getAbsolutePath());
-									//										} catch (Exception ex) {
-									//											JOptionPane.showMessageDialog(editor.getGraphComponent(),EditorMenuBar.errorMsg, mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-									//											
-									//										}
-									//									}
-
 									Document document = mxXmlUtils
 											.parseXml(mxUtils.readFile(fc
 													.getSelectedFile()
@@ -788,6 +776,7 @@ public class EditorActions
 									codec.decode(
 											document.getDocumentElement(),
 											graph.getModel());
+									
 									editor.setCurrentFile(fc
 											.getSelectedFile());
 
