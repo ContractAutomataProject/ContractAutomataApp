@@ -12,18 +12,24 @@ import java.util.stream.Collectors;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import castate.MxCAState;
 import contractAutomata.automaton.MSCA;
 import contractAutomata.automaton.state.BasicState;
-import contractAutomata.converters.MxeConverter;
+import contractAutomata.converters.MSCAConverter;
+import converters.MxeConverter;
 
 public class MxeConverterTest {
 	
-	//TODO update tests to the new MxeConverter class
+	@Before
+	public void setup() {
+		MxCAState.setShapes();
+	}
 	
-	private final MxeConverter bmc = new MxeConverter();
+	private final MSCAConverter bmc = new MxeConverter();
 	private final String dir = System.getProperty("user.dir")+File.separator+"test"+File.separator
 			+"io"+File.separator+"github"+File.separator+"davidebasile"+File.separator+"catapptest"
 			+File.separator+"resources"+File.separator;
@@ -59,7 +65,6 @@ public class MxeConverterTest {
 	@Test
 	public void parse_noxy() throws Exception, TransformerException {		
 		//check if by parsing and printing the automaton does not change
-
 		
 		MSCA aut = bmc.importMSCA(dir+"test_parse_noxy.mxe");
 		bmc.exportMSCA(dir+"test_parse_withxy.mxe",aut);
@@ -78,7 +83,6 @@ public class MxeConverterTest {
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"test_newPrincipalWithNoBasicStates.mxe"))
 	    .isInstanceOf(IllegalArgumentException.class)
 	    .hasMessageContaining("source, label or target with different ranks");
-
 	}
 	
 

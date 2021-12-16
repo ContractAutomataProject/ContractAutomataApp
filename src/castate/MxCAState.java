@@ -21,10 +21,10 @@ import contractAutomata.automaton.state.CAState;
 
 public class MxCAState extends CAState {
 	
-	public final static Predicate<mxICell> isInitial = n -> (n.getStyle()!=null)&&(n.getStyle().contains((String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE"))
+	public final static Predicate<mxICell> isInitial = n -> (n!=null)&&(n.getStyle()!=null)&&(n.getStyle().contains((String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE"))
 			||n.getStyle().contains((String) mxStyleRegistry.getValue("SHAPE_INITIALSTATE")));
 
-	public final static Predicate<mxICell> isFinal = n -> (n.getStyle()!=null)&&(n.getStyle().contains((String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE"))
+	public final static Predicate<mxICell> isFinal = n -> (n!=null)&&(n.getStyle()!=null)&&(n.getStyle().contains((String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE"))
 			||n.getStyle().contains(mxConstants.SHAPE_DOUBLE_ELLIPSE));
 
 	private final static String stylevalue = mxConstants.STYLE_ROUNDED+";"

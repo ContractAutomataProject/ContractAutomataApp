@@ -79,7 +79,6 @@ public class MxeConverter implements MSCAConverter {
 			if ((nNode.getNodeType() == Node.ELEMENT_NODE))
 			{
 				Element eElement = (Element) nNode;
-				mxCell cell = new mxCell(null,null,eElement.getAttribute("style"));
 				
 				if (Integer.parseInt(eElement.getAttribute("id"))>1 && !eElement.hasAttribute("edge"))
 				{
@@ -106,7 +105,8 @@ public class MxeConverter implements MSCAConverter {
 						Element geom= (Element) (NodeList)eElement.getElementsByTagName("mxGeometry").item(0);
 						String[] st=Arrays.stream(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(","))
 								.toArray(String[]::new);
-
+						mxCell cell = new mxCell(null,null,eElement.getAttribute("style"));
+						
 						Function<String,BasicState> convertToBs= s->{
 							//return new BasicState(s, s.equals("0"),eElement.getAttribute("style").contains("terminate.png"));
 							return new BasicState(s, MxCAState.isInitial.test(cell),MxCAState.isFinal.test(cell));
@@ -145,7 +145,7 @@ public class MxeConverter implements MSCAConverter {
 						if (castate.isFinalstate()!= 
 								//eElement.getAttribute("style").contains("terminate.png"))
 								MxCAState.isFinal.test(cell))
-							throw new IOException("Problems with final states in .mxe");
+							throw new IOException("Problems with final states in .mxe "+cell.getStyle());
 
 						if (id2castate.put(Integer.parseInt(eElement.getAttribute("id")), castate)!=null)
 							throw new IOException("Duplicate states!");
