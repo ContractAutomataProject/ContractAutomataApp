@@ -4,7 +4,7 @@
 <h1>Contract Automata App</h1>
 
 This is the GUI application of CAT, and represents an example of usage of the CAT Library
- (https://github.com/davidebasile/ContractAutomataTool) to build a tool for visualizing 
+ (https://github.com/ContractAutomataProject/ContractAutomataTool) to build a tool for visualizing 
   the automata, edit them, and use the main operations (e.g., composition, synthesise).
 
 The main application is in the file App.java, under com.mxgraph.examples.swing.editor package. 
@@ -24,7 +24,7 @@ The App has been developed using Eclipse and tested on Windows machines.
 <h2>License</h2>
 
 The tool is available under Creative Common License 4.0,
-https://github.com/davidebasile/CAT_App/blob/master/license.html
+https://github.com/ContractAutomataProject/CAT_App/blob/master/license.html
 
 
 <h2>Tutorials and Videos</h2>
@@ -33,13 +33,11 @@ The playlist of video tutorials and presentations about the tool is available at
 
 https://www.youtube.com/playlist?list=PLory_2tIDsJvZB2eVlpji-baIz0320TwM
 
-The first video tutorial (https://youtu.be/LAzCEQtYOhU) shows the usage of the tool for composing automata and compute orchestrations of product lines, using the examples published in JSCP2020.
+<!--The first video tutorial (https://youtu.be/LAzCEQtYOhU) shows the usage of the tool for composing automata and compute orchestrations of product lines, using the examples published in JSCP2020.
 The directory demoJSCP contains an executable jar and the models used in this tutorial.
-
 The second video tutorial (https://youtu.be/W0BHlgQEhIk) shows the computation of orchestrations and choreographies for the examples published in LMCS2020.
 The directory demoLMCS2020 contains an executable jar and the models used in this tutorial.
-
-The third video tutorial (https://youtu.be/QJjT7f7vlZ4) shows the recent refactoring and improvements of the tool published in Coordination2021.
+The third video tutorial (https://youtu.be/QJjT7f7vlZ4) shows the recent refactoring and improvements of the tool published in Coordination2021.-->
 
 <h2>Contacts</h2>
 
