@@ -4,7 +4,7 @@
 <h1>Contract Automata App</h1>
 
 This is the GUI application of CAT, and represents an example of usage of the CAT Library
- (https://github.com/ContractAutomataProject/ContractAutomataTool) to build a tool for visualizing 
+ (https://github.com/davidebasile/ContractAutomataLib) to build a tool for visualizing 
   the automata, edit them, and use the main operations (e.g., composition, synthesise).
 
 The main application is in the file App.java, under com.mxgraph.examples.swing.editor package. 
