@@ -16,8 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import castate.MxCAState;
-import converters.MxeConverter;
+import io.github.davidebasile.catapp.castate.MxCAState;
+import io.github.davidebasile.catapp.converters.MxeConverter;
 import io.github.davidebasile.contractautomata.automaton.MSCA;
 import io.github.davidebasile.contractautomata.automaton.state.BasicState;
 import io.github.davidebasile.contractautomata.converters.DataConverter;
