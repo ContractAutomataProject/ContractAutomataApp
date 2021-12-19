@@ -15,7 +15,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
@@ -29,6 +34,7 @@ import com.mxgraph.canvas.mxSvgCanvas;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.io.mxGdCodec;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxCellRenderer;
@@ -41,8 +47,12 @@ import com.mxgraph.util.png.mxPngEncodeParam;
 import com.mxgraph.util.png.mxPngImageEncoder;
 import com.mxgraph.util.png.mxPngTextDecoder;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxStyleRegistry;
 
+import castate.MxCAState;
 import converters.MxeConverter;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.converters.DataConverter;
 
 /**
  *
@@ -71,10 +81,6 @@ public class EditorActions
 
 		return null;
 	}
-
-	/**
-	 *
-	 */
 
 	/**
 	 *
@@ -263,8 +269,7 @@ public class EditorActions
 			param.setCompressedText(new String[] { "mxGraphModel", xml });
 
 			// Saves as a PNG file
-			FileOutputStream outputStream = new FileOutputStream(new File(
-					filename));
+			FileOutputStream outputStream = new FileOutputStream(new File(filename));
 			try
 			{
 				mxPngImageEncoder encoder = new mxPngImageEncoder(outputStream,
@@ -273,7 +278,6 @@ public class EditorActions
 				if (image != null)
 				{
 					encoder.encode(image);
-
 					editor.setModified(false);
 					editor.setCurrentFile(new File(filename));
 				}
@@ -300,12 +304,8 @@ public class EditorActions
 			{
 				mxGraphComponent graphComponent = editor.getGraphComponent();
 				//				mxGraph graph = graphComponent.getGraph();
-				FileFilter selectedFilter = null;
-				DefaultFileFilter xmlPngFilter = new DefaultFileFilter(".png",
-						"PNG " + mxResources.get("file") + " (.png)");
-				//				FileFilter vmlFileFilter = new DefaultFileFilter(".html",
-				//						"VML " + mxResources.get("file") + " (.html)");
 				String filename = null;
+				String ext = null;
 				//				boolean dialogShown = false;
 
 				if (showDialog || editor.getCurrentFile() == null)
@@ -327,24 +327,40 @@ public class EditorActions
 
 					JFileChooser fc = new JFileChooser(wd);
 
-					// Adds the default file format
-					fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
-							"mxGraph Editor " + mxResources.get("file")
-							+ " (.mxe)"));
+					FileFilter selectedFilter = null;
+					DefaultFileFilter defaultFilter = new DefaultFileFilter(".mxe",
+							"Contract Automata mxGraph Editor " + mxResources.get("file")
+							+ " (.mxe)");
 
-					FileFilter defaultFilter = xmlPngFilter;
+					fc.setFileFilter(defaultFilter);
+					//				FileFilter vmlFileFilter = new DefaultFileFilter(".html",
+					//						"VML " + mxResources.get("file") + " (.html)");
+
+					
+					// Adds the default file format
 					fc.addChoosableFileFilter(defaultFilter);
+					
+
+					fc.addChoosableFileFilter(new DefaultFileFilter(".data",
+							"Contract Automata Textual Representation " + mxResources.get("file") + " (.data)"));
+
+					fc.addChoosableFileFilter(new DefaultFileFilter(".png",
+							"PNG " + mxResources.get("file") + " (.png)"));
 
 					// Adds special vector graphics formats and HTML
-					fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
-							"Graph Drawing " + mxResources.get("file")
-							+ " (.txt)"));
+//					fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
+//							"Graph Drawing " + mxResources.get("file")
+//							+ " (.txt)"));
 					fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
 							"SVG " + mxResources.get("file") + " (.svg)"));
-					//fc.addChoosableFileFilter(vmlFileFilter);
-					fc.addChoosableFileFilter(new DefaultFileFilter(".html",
-							"HTML " + mxResources.get("file") + " (.html)"));
+					
 
+					
+					
+					//fc.addChoosableFileFilter(vmlFileFilter);
+//					fc.addChoosableFileFilter(new DefaultFileFilter(".html",
+//							"HTML " + mxResources.get("file") + " (.html)"));
+//
 					// Adds a filter for each supported image format
 //					Object[] imageFormats = ImageIO.getReaderFormatNames();
 
@@ -370,7 +386,6 @@ public class EditorActions
 					// Adds filter that accepts all supported image formats
 					//					fc.addChoosableFileFilter(new DefaultFileFilter.ImageFileFilter(
 					//							mxResources.get("allImages")));
-					fc.setFileFilter(defaultFilter);
 					int rc = fc.showDialog(null, mxResources.get("save"));
 					//	dialogShown = true;
 
@@ -388,7 +403,7 @@ public class EditorActions
 
 					if (selectedFilter instanceof DefaultFileFilter)
 					{
-						String ext = ((DefaultFileFilter) selectedFilter)
+						ext = ((DefaultFileFilter) selectedFilter)
 								.getExtension();
 
 						if (!filename.toLowerCase().endsWith(ext))
@@ -411,11 +426,45 @@ public class EditorActions
 
 				try
 				{
-					String ext = filename
-							.substring(filename.lastIndexOf('.') + 1);
-
+					ext=filename.substring(filename.lastIndexOf('.') + 1);	
 					if (ext.equalsIgnoreCase("svg"))
 					{
+						mxGraph graph = editor.getGraphComponent().getGraph();
+						graph.selectAll();						
+						//cannot draw custom shapes in SVG, so it draws a small arrow to the initial state
+						
+						Consumer<mxCell> resetGeometry = c -> c.setGeometry(new mxGeometry(c.getGeometry().getX()+MxCAState.initialStateWidthIncrement,c.getGeometry().getY(),
+								c.getGeometry().getWidth()-MxCAState.initialStateWidthIncrement,c.getGeometry().getHeight()));
+						
+						String in = (String) mxStyleRegistry.getValue("SHAPE_INITIALSTATE");
+						String infin = (String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE");
+						List<mxCell> tempInitial = Arrays.stream(graph.getSelectionCells())
+						.map(c->(mxCell)c)
+						.filter(c->c.getStyle()!=null)
+						.filter(c->c.getStyle().contains(in))
+						.peek(resetGeometry)
+						.peek(c->c.setStyle(MxCAState.nodestylevalue))
+						.collect(Collectors.toList());
+
+						List<mxCell> tempInitialFinal = Arrays.stream(graph.getSelectionCells())
+						.map(c->(mxCell)c)
+						.filter(c->c.getStyle()!=null)
+						.filter(c->c.getStyle().contains(infin))
+						.peek(resetGeometry)
+						.peek(c->c.setStyle(MxCAState.finalnodestylevalue))
+						.collect(Collectors.toList());
+						
+						mxCell initial=Stream.concat(tempInitial.stream(),tempInitialFinal.stream())
+						.findFirst().orElseThrow(RuntimeException::new); //the initial state cell found
+				
+						mxCell edgeinit = (mxCell) graph.insertEdge(graph.getDefaultParent(), null, null, null, null, EditorToolBar.edgestylevalue);
+						edgeinit.getGeometry().getSourcePoint().setX(initial.getGeometry().getX()-MxCAState.initialStateWidthIncrement);
+						edgeinit.getGeometry().getSourcePoint().setY(initial.getGeometry().getCenterY());
+						edgeinit.getGeometry().getTargetPoint().setX(initial.getGeometry().getX());
+						edgeinit.getGeometry().getTargetPoint().setY(initial.getGeometry().getCenterY());
+						edgeinit.setValue("");
+						graph.selectAll();
+						
 						mxSvgCanvas canvas = (mxSvgCanvas) mxCellRenderer
 								.drawCells(editor.getGraphComponent().getGraph(), null, 1, null,
 										new CanvasFactory()
@@ -430,24 +479,42 @@ public class EditorActions
 
 												return canvas;
 											}
-
 										});
-
+						
 						mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
 								filename);
+						
+						Consumer<mxCell> setGeometry = c -> c.setGeometry(new mxGeometry(c.getGeometry().getX()-MxCAState.initialStateWidthIncrement,c.getGeometry().getY(),
+								c.getGeometry().getWidth()+MxCAState.initialStateWidthIncrement,c.getGeometry().getHeight()));
+				
+						
+						//restoring
+						tempInitial.parallelStream()
+						.peek(setGeometry)
+						.forEach(c->c.setStyle(MxCAState.initialnodestylevalue));
+
+						tempInitialFinal.parallelStream()
+						.peek(setGeometry)
+						.forEach(c->c.setStyle(MxCAState.initialfinalnodestylevalue));
+						
+						graph.removeCells(new Object[] {edgeinit});
+						graph.clearSelection();
+						graph.refresh();
+						editor.setModified(false);
 					}
+					
 //					else if (selectedFilter == vmlFileFilter)
 //					{
 //						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
 //								.createVmlDocument(graph, null, 1, null, null)
 //								.getDocumentElement()), filename);
 //					}
-					else if (ext.equalsIgnoreCase("html"))
-					{
-						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
-								.createHtmlDocument(editor.getGraphComponent().getGraph(), null, 1, null, null)
-								.getDocumentElement()), filename);
-					}
+//					else if (ext.equalsIgnoreCase("html"))
+//					{
+//						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
+//								.createHtmlDocument(editor.getGraphComponent().getGraph(), null, 1, null, null)
+//								.getDocumentElement()), filename);
+//					}
 					else if (ext.equalsIgnoreCase("mxe")
 							|| ext.equalsIgnoreCase("xml"))
 					{
@@ -472,11 +539,23 @@ public class EditorActions
 						editor.setModified(false);
 						editor.setCurrentFile(new File(filename));
 					}
-					else if (ext.equalsIgnoreCase("txt"))
+					else if (ext.equalsIgnoreCase("data")) 
 					{
-						String content = mxGdCodec.encode(editor.graphComponent.getGraph());
-						mxUtils.writeFile(content, filename);
+						try {
+							MSCA aut=((App) editor).lastaut;
+							new DataConverter().exportMSCA(filename,aut);
+							editor.setModified(false);
+							JOptionPane.showMessageDialog(editor.getGraphComponent(),"The automaton has been stored with filename "+filename,"Success!",JOptionPane.PLAIN_MESSAGE);
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(editor.getGraphComponent(),"File not found"+e1.toString(),mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+						}	
+
 					}
+//					else if (ext.equalsIgnoreCase("txt"))
+//					{
+//						String content = mxGdCodec.encode(editor.graphComponent.getGraph());
+//						mxUtils.writeFile(content, filename);
+//					}
 					Color bg = null;
 
 					if ((!ext.equalsIgnoreCase("gif") && !ext
@@ -488,8 +567,8 @@ public class EditorActions
 						bg = graphComponent.getBackground();
 					}
 
-					if (selectedFilter == xmlPngFilter
-							|| (editor.getCurrentFile() != null
+					if (//selectedFilter == xmlPngFilter ||
+							(editor.getCurrentFile() != null
 							&& ext.equalsIgnoreCase("png")))// && !dialogShown))
 					{
 						saveXmlPng(editor, filename, bg);
@@ -612,8 +691,6 @@ public class EditorActions
 		 * 
 		 */
 		protected String lastDir;
-		//protected FMCA lastaut;
-
 
 		/**
 		 * 
@@ -646,9 +723,7 @@ public class EditorActions
 					codec.decode(document.getDocumentElement(), editor
 							.getGraphComponent().getGraph().getModel());
 					editor.setCurrentFile(file);
-
 					resetEditor(editor);
-
 					return;
 				}
 			}
@@ -708,7 +783,7 @@ public class EditorActions
 						// Adds file filter for supported file format
 						DefaultFileFilter defaultFilter = new DefaultFileFilter(
 								".mxe", mxResources.get("allSupportedFormats")
-								+ " (.mxe, .png, .vdx)")
+								+ " (.mxe, .png, .data)")
 						{
 
 							public boolean accept(File file)
@@ -717,27 +792,30 @@ public class EditorActions
 
 								return super.accept(file)
 										|| lcase.endsWith(".png")
-										|| lcase.endsWith(".vdx");
+										|| lcase.endsWith(".data");
 							}
 						};
 						fc.addChoosableFileFilter(defaultFilter);
 
 						fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
-								"mxGraph Editor " + mxResources.get("file")
+								"Contract Automata mxGraph Editor " + mxResources.get("file")
 								+ " (.mxe)"));
+						fc.addChoosableFileFilter(new DefaultFileFilter(".data",
+								"Contract Automata Textual Representation " + mxResources.get("file")
+								+ " (.data)"));
 						fc.addChoosableFileFilter(new DefaultFileFilter(".png",
 								"PNG+XML  " + mxResources.get("file")
 								+ " (.png)"));
 
 						// Adds file filter for VDX import
-						fc.addChoosableFileFilter(new DefaultFileFilter(".vdx",
-								"XML Drawing  " + mxResources.get("file")
-								+ " (.vdx)"));
+//						fc.addChoosableFileFilter(new DefaultFileFilter(".vdx",
+//								"XML Drawing  " + mxResources.get("file")
+//								+ " (.vdx)"));
 
 						// Adds file filter for GD import
-						fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
-								"Graph Drawing  " + mxResources.get("file")
-								+ " (.txt)"));
+//						fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
+//								"Graph Drawing  " + mxResources.get("file")
+//								+ " (.txt)"));
 
 						fc.setFileFilter(defaultFilter);
 
@@ -756,13 +834,36 @@ public class EditorActions
 									openXmlPng(editor, fc.getSelectedFile());
 								}
 								else if (fc.getSelectedFile().getAbsolutePath()
-										.toLowerCase().endsWith(".txt"))
+								.toLowerCase().endsWith(".data"))
 								{
-									openGD(editor, fc.getSelectedFile(),
-											mxUtils.readFile(fc
-													.getSelectedFile()
-													.getAbsolutePath()));
+									EditorMenuBar menuBar = (EditorMenuBar) ((App) editor).getMenuFrame().getJMenuBar();
+									menuBar.lastDir = fc.getSelectedFile().getParent();	
+									MSCA aut;
+									try {
+										String filename = fc.getSelectedFile().toString();
+										aut = new DataConverter().importMSCA(filename);
+										filename = filename.substring(0,filename.lastIndexOf("."));
+										new MxeConverter().exportMSCA(filename,aut); //when importing it also exports
+
+										filename=filename.endsWith(".mxe")?filename:(filename+".mxe"); 
+										File file = new File(filename);
+										((App) editor).lastaut=aut;
+										menuBar.loadMorphStore(file.getName(), editor, file);
+										editor.setCurrentFile(file);
+									} catch (Exception e1) {
+										JOptionPane.showMessageDialog(editor.getGraphComponent(),e1.toString(),
+												mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+									}
+									resetEditor(editor);
 								}
+//								else if (fc.getSelectedFile().getAbsolutePath()
+//										.toLowerCase().endsWith(".txt"))
+//								{
+//									openGD(editor, fc.getSelectedFile(),
+//											mxUtils.readFile(fc
+//													.getSelectedFile()
+//													.getAbsolutePath()));
+//								}
 								else
 
 								{
@@ -779,8 +880,6 @@ public class EditorActions
 									editor.setCurrentFile(fc
 											.getSelectedFile());
 
-
-									//		//TODO import .data could be swapped to open, as well as export to save
 								}
 							}
 							catch (IOException ex)
@@ -1350,7 +1449,7 @@ public class EditorActions
 //						"get" + fieldname);
 //				Object current = getter.invoke(target);
 //
-//				// TODO: Support other atomic types
+//				// : Support other atomic types
 //				if (current instanceof Integer)
 //				{
 //					Method setter = target.getClass().getMethod(
@@ -2047,7 +2146,7 @@ public class EditorActions
 //				{
 //					Image background = mxUtils.loadImage(value);
 //					// Incorrect URLs will result in no image.
-//					// TODO provide feedback that the URL is not correct
+//					// todo provide feedback that the URL is not correct
 //					if (background != null)
 //					{
 //						graphComponent.setBackgroundImage(new ImageIcon(

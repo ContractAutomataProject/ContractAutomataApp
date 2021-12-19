@@ -16,12 +16,12 @@ import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
 
-import family.FMCA;
-import family.Family;
-import family.PartialProductGenerator;
-import family.Product;
-import family.converters.DimacFamilyConverter;
-import family.converters.FeatureIDEfamilyConverter;
+import io.github.davidebasile.contractautomata.family.FMCA;
+import io.github.davidebasile.contractautomata.family.Family;
+import io.github.davidebasile.contractautomata.family.PartialProductGenerator;
+import io.github.davidebasile.contractautomata.family.Product;
+import io.github.davidebasile.contractautomata.family.converters.DimacFamilyConverter;
+import io.github.davidebasile.contractautomata.family.converters.FeatureIDEfamilyConverter;
 
 @SuppressWarnings("serial")
 public class ImportProductLine extends AbstractAction {

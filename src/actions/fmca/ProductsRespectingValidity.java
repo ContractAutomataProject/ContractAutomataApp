@@ -18,10 +18,10 @@ import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 
-import contractAutomata.automaton.MSCA;
-import contractAutomata.automaton.transition.MSCATransition;
-import family.FMCA;
-import family.Product;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.transition.MSCATransition;
+import io.github.davidebasile.contractautomata.family.FMCA;
+import io.github.davidebasile.contractautomata.family.Product;
 
 @SuppressWarnings("serial")
 public class ProductsRespectingValidity extends AbstractAction {

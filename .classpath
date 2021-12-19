@@ -26,5 +26,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="test-libs/assertj-core-3.10.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CAT_Lib"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

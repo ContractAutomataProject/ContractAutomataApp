@@ -17,8 +17,8 @@ import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 
-import family.Family;
-import family.Product;
+import io.github.davidebasile.contractautomata.family.Family;
+import io.github.davidebasile.contractautomata.family.Product;
 
 @SuppressWarnings("serial")
 public class MaximalProducts extends AbstractAction {

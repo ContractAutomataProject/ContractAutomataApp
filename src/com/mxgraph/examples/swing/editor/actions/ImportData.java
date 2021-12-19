@@ -13,9 +13,9 @@ import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
 
-import contractAutomata.automaton.MSCA;
-import contractAutomata.converters.DataConverter;
 import converters.MxeConverter;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.converters.DataConverter;
 
 @SuppressWarnings("serial")
 public class ImportData extends AbstractAction {

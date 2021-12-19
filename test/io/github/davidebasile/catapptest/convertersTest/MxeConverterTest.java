@@ -17,10 +17,11 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import castate.MxCAState;
-import contractAutomata.automaton.MSCA;
-import contractAutomata.automaton.state.BasicState;
-import contractAutomata.converters.MSCAConverter;
 import converters.MxeConverter;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.state.BasicState;
+import io.github.davidebasile.contractautomata.converters.DataConverter;
+import io.github.davidebasile.contractautomata.converters.MSCAConverter;
 
 public class MxeConverterTest {
 	
@@ -72,6 +73,12 @@ public class MxeConverterTest {
 		MSCA test = bmc.importMSCA(dir+"test_parse_withxy.mxe");
 		assertEquals(checkTransitions(aut,test),true);
 
+	}
+	
+	@Test
+	public void importProvola() throws Exception {
+		MSCA aut = new DataConverter().importMSCA(dir+"provola.data");
+		bmc.exportMSCA(dir+"provola.mxe", aut);
 	}
 	
 	//****************************Exceptions**********************************

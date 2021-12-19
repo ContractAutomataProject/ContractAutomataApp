@@ -15,8 +15,8 @@ import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
 
-import family.Family;
-import family.converters.ProdFamilyConverter;
+import io.github.davidebasile.contractautomata.family.Family;
+import io.github.davidebasile.contractautomata.family.converters.ProdFamilyConverter;
 
 @SuppressWarnings("serial")
 public class LoadFamily extends AbstractAction {

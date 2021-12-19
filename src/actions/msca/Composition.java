@@ -17,9 +17,9 @@ import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
 
-import contractAutomata.automaton.MSCA;
-import contractAutomata.operators.CompositionFunction;
 import converters.MxeConverter;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.operators.CompositionFunction;
 
 @SuppressWarnings("serial")
 public class Composition extends AbstractAction {

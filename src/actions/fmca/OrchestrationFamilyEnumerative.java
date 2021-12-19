@@ -14,10 +14,10 @@ import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.util.mxResources;
 
-import contractAutomata.automaton.MSCA;
 import converters.MxeConverter;
-import family.FMCA;
-import family.Family;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.family.FMCA;
+import io.github.davidebasile.contractautomata.family.Family;
 
 @SuppressWarnings("serial")
 public class OrchestrationFamilyEnumerative extends AbstractAction {

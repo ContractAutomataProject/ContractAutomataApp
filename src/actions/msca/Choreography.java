@@ -12,10 +12,10 @@ import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.examples.swing.editor.EditorMenuBar;
 
-import contractAutomata.automaton.MSCA;
-import contractAutomata.operators.ChoreographySynthesisOperator;
-import contractAutomata.requirements.StrongAgreement;
 import converters.MxeConverter;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.operators.ChoreographySynthesisOperator;
+import io.github.davidebasile.contractautomata.requirements.StrongAgreement;
 
 @SuppressWarnings("serial")
 public class Choreography extends AbstractAction {

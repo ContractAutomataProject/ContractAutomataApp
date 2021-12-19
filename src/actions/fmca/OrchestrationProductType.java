@@ -14,12 +14,12 @@ import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.examples.swing.editor.EditorMenuBar;
 
-import contractAutomata.automaton.MSCA;
-import contractAutomata.operators.OrchestrationSynthesisOperator;
-import contractAutomata.operators.ProductOrchestrationSynthesisOperator;
-import contractAutomata.requirements.Agreement;
 import converters.MxeConverter;
-import family.Product;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.family.Product;
+import io.github.davidebasile.contractautomata.operators.OrchestrationSynthesisOperator;
+import io.github.davidebasile.contractautomata.operators.ProductOrchestrationSynthesisOperator;
+import io.github.davidebasile.contractautomata.requirements.Agreement;
 
 @SuppressWarnings("serial")
 public class OrchestrationProductType extends AbstractAction {

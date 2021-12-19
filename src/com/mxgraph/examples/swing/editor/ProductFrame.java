@@ -22,9 +22,9 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
-import contractAutomata.automaton.MSCA;
-import family.Family;
-import family.Product;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.family.Family;
+import io.github.davidebasile.contractautomata.family.Product;
 
 /**
  * This class represents a frame visualising the products of a feature model

@@ -11,8 +11,8 @@ import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.examples.swing.editor.EditorMenuBar;
 import com.mxgraph.util.mxResources;
 
-import contractAutomata.automaton.MSCA;
 import converters.MxeConverter;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
 
 @SuppressWarnings("serial")
 public class AddHandlesToEdges extends AbstractAction 

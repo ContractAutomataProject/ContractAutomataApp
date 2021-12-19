@@ -3,6 +3,7 @@ package castate;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Predicate;
+
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxICell;
@@ -16,10 +17,21 @@ import com.mxgraph.view.mxPerimeter;
 import com.mxgraph.view.mxPerimeter.mxPerimeterFunction;
 import com.mxgraph.view.mxStyleRegistry;
 
-import contractAutomata.automaton.state.BasicState;
-import contractAutomata.automaton.state.CAState;
+import io.github.davidebasile.contractautomata.automaton.state.BasicState;
+import io.github.davidebasile.contractautomata.automaton.state.CAState;
 
+/**
+ * Extending CAState with information on x,y coordinates. 
+ * Including static functionalities related to the style of mxCells containing MxCAStates.
+ * 
+ * @author Davide Basile
+ *
+ */
 public class MxCAState extends CAState {
+
+	private final float x;
+	private final float y;
+	public final static double initialStateWidthIncrement = 16.5;
 	
 	public final static Predicate<mxICell> isInitial = n -> (n!=null)&&(n.getStyle()!=null)&&(n.getStyle().contains((String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE"))
 			||n.getStyle().contains((String) mxStyleRegistry.getValue("SHAPE_INITIALSTATE")));
@@ -51,16 +63,25 @@ public class MxCAState extends CAState {
 				 +mxConstants.STYLE_PERIMETER+"=InitialStatePerimeter;";
 
 	public MxCAState(List<BasicState> lstate, float x, float y) {
-		super(lstate, x, y);
-		isFinal.and(isInitial);
+		super(lstate);
+		this.x=x;
+		this.y=y;
+
+	}
+	
+	public float getX() {
+		return x;
+	}
+
+	public float getY() {
+		return y;
 	}
 
 	//the perimeter of the initial state
 	public static mxPerimeterFunction InitialStatePerimeter = new mxPerimeterFunction() {
 		@Override
 		public mxPoint apply(mxRectangle bounds, mxCellState vertex, mxPoint next, boolean orthogonal) {
-			double shift=16.5;
-			mxRectangle rect =new mxRectangle(bounds.getX()+shift,bounds.getY(),bounds.getWidth()-shift,bounds.getHeight());
+			mxRectangle rect =new mxRectangle(bounds.getX()+initialStateWidthIncrement,bounds.getY(),bounds.getWidth()-initialStateWidthIncrement,bounds.getHeight());
 			return mxPerimeter.EllipsePerimeter.apply(rect, vertex, next, orthogonal) ;
 		}
 	};
@@ -84,7 +105,6 @@ public class MxCAState extends CAState {
 		mxStencilShape newShape = new mxStencilShape(initialStateShape);
 		mxGraphics2DCanvas.putShape( (String) mxStyleRegistry.getValue("SHAPE_INITIALSTATE"), newShape);
 
-
 		String initialFinalStateShape="";
 		try {
 			initialFinalStateShape = mxUtils.readFile(System.getProperty("user.dir")+"/src/com/mxgraph/examples/swing/images/startfinalstate.shape");
@@ -93,6 +113,7 @@ public class MxCAState extends CAState {
 		}
 		newShape = new mxStencilShape(initialFinalStateShape);
 		mxGraphics2DCanvas.putShape((String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE"), newShape);
+		
 
 		mxStyleRegistry.putValue("InitialStatePerimeter", InitialStatePerimeter);
 	}

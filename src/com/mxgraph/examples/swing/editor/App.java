@@ -34,7 +34,7 @@ import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
 import castate.MxCAState;
-import contractAutomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
 
 
 
@@ -63,11 +63,11 @@ public class App extends BasicGraphEditor
 	 * connections. This is currently unused.
 	 */
 	public static URL url = null;
-	
+
 	public MSCA lastaut = null;
-	
+
 	private ProductFrame pf=null;
-	
+
 	private JFrame menuFrame=null;
 
 	public App()
@@ -84,16 +84,16 @@ public class App extends BasicGraphEditor
 	{
 		this.pf=pf;
 	}
-	
+
 	public ProductFrame getProductFrame()
 	{
 		return this.pf;
 	}
-	
+
 	public JFrame getMenuFrame() {
 		return menuFrame;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -121,16 +121,16 @@ public class App extends BasicGraphEditor
 		public CustomGraphComponent(mxGraph graph)
 		{
 			super(graph);
-			
+
 			// Sets switches typically used in an editor
 			setPageVisible(false);
 			setGridVisible(false);
 			setToolTips(true);
 			setConnectable(true);
 			graph.setResetEdgesOnConnect(false);
-			
-			
-			
+
+
+
 			getConnectionHandler().setCreateTarget(true);
 
 			// Loads the defalt stylesheet from an external file
@@ -196,21 +196,21 @@ public class App extends BasicGraphEditor
 		public CustomGraph()
 		{
 			//setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
-			setAlternateEdgeStyle(EditorToolBar.edgestylevalue);
-			
+			//setAlternateEdgeStyle(EditorToolBar.edgestylevalue);
+
 			int width=100;
 			int height=100;
-			
+
 			//the new edge template is inizialised here
 			mxGeometry geometry = new mxGeometry(0, 0, width, height);
 			geometry.setTerminalPoint(new mxPoint(0, height), true);
 			geometry.setTerminalPoint(new mxPoint(width, 0), false);
 			geometry.setRelative(true);
-			
+
 			mxCell cell = new mxCell("[!a]", geometry,  EditorToolBar.edgestylevalue);
 			cell.setEdge(true);
 			setEdgeTemplate(cell);
-			
+
 		}
 
 		/**
@@ -229,7 +229,7 @@ public class App extends BasicGraphEditor
 			String tip = "<html>";
 			mxGeometry geo = getModel().getGeometry(cell);
 			mxCellState state = getView().getState(cell);
-			
+
 			if (getModel().isEdge(cell))
 			{
 				tip += "points={";
@@ -246,8 +246,8 @@ public class App extends BasicGraphEditor
 						{
 							mxPoint point = it.next();
 							tip += "[x=" + numberFormat.format(point.getX())
-									+ ",y=" + numberFormat.format(point.getY())
-									+ "],";
+							+ ",y=" + numberFormat.format(point.getY())
+							+ "],";
 						}
 
 						tip = tip.substring(0, tip.length() - 1);
@@ -265,8 +265,8 @@ public class App extends BasicGraphEditor
 					{
 						mxPoint point = state.getAbsolutePoint(i);
 						tip += "[x=" + numberFormat.format(point.getX())
-								+ ",y=" + numberFormat.format(point.getY())
-								+ "],";
+						+ ",y=" + numberFormat.format(point.getY())
+						+ "],";
 					}
 
 					tip = tip.substring(0, tip.length() - 1);
@@ -304,8 +304,8 @@ public class App extends BasicGraphEditor
 			mxPoint trans = getView().getTranslate();
 
 			tip += "<br>scale=" + numberFormat.format(getView().getScale())
-					+ ", translate=[x=" + numberFormat.format(trans.getX())
-					+ ",y=" + numberFormat.format(trans.getY()) + "]";
+			+ ", translate=[x=" + numberFormat.format(trans.getX())
+			+ ",y=" + numberFormat.format(trans.getY()) + "]";
 			tip += "</html>";
 
 			return tip;
@@ -346,14 +346,17 @@ public class App extends BasicGraphEditor
 		@Override
 		public Object addCell(Object cell, Object parent, Integer index,
 				Object source, Object target) {
-			((mxCell) target).setStyle(MxCAState.nodestylevalue+";");
-			mxCell n=(mxCell) target;
-			double x=n.getGeometry().getX();
-			double y=n.getGeometry().getY();
-			n.setGeometry(new mxGeometry(x, y, 40, 40));
+			if (target!=null)
+			{
+				((mxCell) target).setStyle(MxCAState.nodestylevalue+";");
+				mxCell n=(mxCell) target;
+				double x=n.getGeometry().getX();
+				double y=n.getGeometry().getY();
+				n.setGeometry(new mxGeometry(x, y, 40, 40));
 
-			n.setValue("["+EditorToolBar.incrementalStateLabel+"]");
-			EditorToolBar.incrementalStateLabel++;
+				n.setValue("["+EditorToolBar.incrementalStateLabel+"]");
+				EditorToolBar.incrementalStateLabel++;
+			}
 			return super.addCell(cell, parent, index, source, target);
 		}
 	}

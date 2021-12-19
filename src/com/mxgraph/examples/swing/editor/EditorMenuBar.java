@@ -1,9 +1,11 @@
 package com.mxgraph.examples.swing.editor;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.function.Predicate;
 
+import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -21,8 +23,6 @@ import com.mxgraph.examples.swing.editor.EditorActions.PageSetupAction;
 import com.mxgraph.examples.swing.editor.EditorActions.PrintAction;
 import com.mxgraph.examples.swing.editor.EditorActions.SaveAction;
 import com.mxgraph.examples.swing.editor.EditorActions.ScaleAction;
-import com.mxgraph.examples.swing.editor.actions.ExportData;
-import com.mxgraph.examples.swing.editor.actions.ImportData;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
@@ -89,7 +89,7 @@ public class EditorMenuBar extends JMenuBar
 		final mxGraph graphfinal = editor.getGraphComponent().getGraph();
 
 		graphfinal.setDisconnectOnMove(false);
-		graphfinal.setEdgeLabelsMovable(false);
+		graphfinal.setEdgeLabelsMovable(true);
 		//graph.setAllowDanglingEdges(false);
 		graphfinal.setAllowLoops(true);
 		graphfinal.setCellsResizable(false);
@@ -107,26 +107,6 @@ public class EditorMenuBar extends JMenuBar
 		menu.add(editor.bind(mxResources.get("openFile"), new OpenAction(), "/com/mxgraph/examples/swing/images/open.gif"));
 		//menu.add(editor.bind(mxResources.get("importStencil"), new ImportAction(), "/com/mxgraph/examples/swing/images/open.gif"));
 		
-		item = menu.add("Open New Window");
-		item.addActionListener(e->{});
-		item.addActionListener(e->
-		{
-			try {
-				new ProcessBuilder("java", "-jar", "App.jar").start();
-				JOptionPane.showMessageDialog(
-						editor.getGraphComponent(),
-						"A new App process is starting",
-						mxResources.get("ok"),
-						JOptionPane.PLAIN_MESSAGE);
-			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(
-						editor.getGraphComponent(),
-						e1.toString(),
-						mxResources.get("error"),
-						JOptionPane.ERROR_MESSAGE);
-			}
-		});
-		
 		menu.addSeparator();
 
 
@@ -137,8 +117,53 @@ public class EditorMenuBar extends JMenuBar
 
 		menu.addSeparator();
 		
-		menu.add(editor.bind("Import .data", new ImportData(),"/com/mxgraph/examples/swing/images/import.gif"));//mxResources.get("aboutGraphEditor")));
-		menu.add(editor.bind("Export .data", new ExportData(),"/com/mxgraph/examples/swing/images/export.gif"));//mxResources.get("aboutGraphEditor")));
+//		menu.add(editor.bind("Import .data", new ImportData(),"/com/mxgraph/examples/swing/images/import.gif"));//mxResources.get("aboutGraphEditor")));
+//		menu.add(editor.bind("Export .data", new ExportData(),"/com/mxgraph/examples/swing/images/export.gif"));//mxResources.get("aboutGraphEditor")));
+		menu.add(editor.bind("Open New Window", 	
+		new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+			public void actionPerformed(ActionEvent e)
+			{
+				try {
+					String[] startOptions = new String[]
+							{"java", "-cp", System.getProperty("java.class.path", "."), App.class.getName()};
+					new ProcessBuilder(startOptions).start();
+					//new ProcessBuilder("java", "-jar", "App.jar").start();
+					JOptionPane.showMessageDialog(
+							editor.getGraphComponent(),
+							"A new App process is starting",
+							//mxResources.get("ok")
+							"",
+							JOptionPane.PLAIN_MESSAGE);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(
+							editor.getGraphComponent(),
+							e1.toString(),
+							mxResources.get("error"),
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		},"/com/mxgraph/examples/swing/images/new.gif"));
+		
+//		item = menu.add("Open New Instance of CAT");
+//		item.addActionListener(e->
+//		{
+//			try {
+//				new ProcessBuilder("java", "-jar", "App.jar").start();
+//				JOptionPane.showMessageDialog(
+//						editor.getGraphComponent(),
+//						"A new App process is starting",
+//						mxResources.get("ok"),
+//						JOptionPane.PLAIN_MESSAGE);
+//			} catch (IOException e1) {
+//				JOptionPane.showMessageDialog(
+//						editor.getGraphComponent(),
+//						e1.toString(),
+//						mxResources.get("error"),
+//						JOptionPane.ERROR_MESSAGE);
+//			}
+//		});
+		
 
 		menu.addSeparator();
 		menu.add(editor.bind(mxResources.get("pageSetup"), new PageSetupAction(), "/com/mxgraph/examples/swing/images/pagesetup.gif"));
@@ -307,9 +332,7 @@ public class EditorMenuBar extends JMenuBar
 			App.morphGraph(mgc.getGraph(), mgc);
 
 			String xml = mxXmlUtils.getXml(new mxCodec().encode(mgc.getGraph().getModel()));
-			mxUtils.writeFile(xml, name);
-
-
+			mxUtils.writeFile(xml, name); //writing the morphed graph
 			parseAndSet(name, editor, file);
 		}
 		catch (IOException ex)

@@ -63,7 +63,7 @@ public class ToggleInitialStateAction extends AbstractAction
 	
 			double x=node.getGeometry().getX();
 			double y=node.getGeometry().getY();
-			node.setGeometry(new mxGeometry(x, y, 56.5, 40));
+			node.setGeometry(new mxGeometry(x, y, 40+MxCAState.initialStateWidthIncrement, 40));
 
 			graphComponent.getGraph().clearSelection();
 			graphComponent.getGraph().addSelectionCell(node);

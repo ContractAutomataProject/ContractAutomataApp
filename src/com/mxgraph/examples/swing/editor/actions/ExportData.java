@@ -10,8 +10,8 @@ import com.mxgraph.examples.swing.editor.App;
 import com.mxgraph.examples.swing.editor.EditorActions;
 import com.mxgraph.util.mxResources;
 
-import contractAutomata.automaton.MSCA;
-import contractAutomata.converters.DataConverter;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.converters.DataConverter;
 
 @SuppressWarnings("serial")
 public class ExportData extends AbstractAction {

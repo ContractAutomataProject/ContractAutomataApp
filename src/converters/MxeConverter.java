@@ -33,12 +33,12 @@ import org.xml.sax.SAXException;
 import com.mxgraph.model.mxCell;
 
 import castate.MxCAState;
-import contractAutomata.automaton.MSCA;
-import contractAutomata.automaton.label.CALabel;
-import contractAutomata.automaton.state.BasicState;
-import contractAutomata.automaton.state.CAState;
-import contractAutomata.automaton.transition.MSCATransition;
-import contractAutomata.converters.MSCAConverter;
+import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
+import io.github.davidebasile.contractautomata.automaton.state.BasicState;
+import io.github.davidebasile.contractautomata.automaton.state.CAState;
+import io.github.davidebasile.contractautomata.automaton.transition.MSCATransition;
+import io.github.davidebasile.contractautomata.converters.MSCAConverter;
 
 /**
  * Import/export in xml (mxe) format. This is the format 
@@ -137,7 +137,7 @@ public class MxeConverter implements MSCAConverter {
 										// one is editing with mxGraph.
 									}})
 								.collect(Collectors.toList());
-						CAState castate = new CAState(lbs, 
+						CAState castate = new MxCAState(lbs, 
 								geom.hasAttribute("x")?Float.parseFloat(geom.getAttribute("x")):0,
 										geom.hasAttribute("y")?Float.parseFloat(geom.getAttribute("y")):0);
 						//useful when not morphing (e.g. adding handles to edges)					
@@ -394,8 +394,8 @@ public class MxeConverter implements MSCAConverter {
 		as.setValue("geometry");
 		mxGeometry1.setAttributeNode(as);
 
-	
-		mxGeometry1.setAttribute("width", (castate.isInitial())?"56.5":"40.0");
+		double incrementedWidth = 40 + MxCAState.initialStateWidthIncrement;
+		mxGeometry1.setAttribute("width", (castate.isInitial())?incrementedWidth+"":"40.0");
 		mxGeometry1.setAttribute("height", "40.0");
 
 
@@ -404,7 +404,7 @@ public class MxeConverter implements MSCAConverter {
 		//		if (!mxGeometry1.hasAttribute("x"))
 		//		{
 		Attr x=doc.createAttribute("x");
-		x.setNodeValue(castate.getX()+"");
+		x.setNodeValue(((castate instanceof MxCAState)?((MxCAState)castate).getX():0.0)+"");
 		mxGeometry1.setAttributeNode(x);
 
 		//		}
@@ -414,7 +414,7 @@ public class MxeConverter implements MSCAConverter {
 		//		if (!mxGeometry1.hasAttribute("y"))
 		//		{
 		Attr y=doc.createAttribute("y");
-		y.setNodeValue(castate.getY()+"");
+		y.setNodeValue(((castate instanceof MxCAState)?((MxCAState)castate).getY():0.0)+"");
 		mxGeometry1.setAttributeNode(y);
 
 		//		}

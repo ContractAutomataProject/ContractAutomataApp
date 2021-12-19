@@ -17,7 +17,7 @@ import com.mxgraph.examples.swing.editor.ProductFrame;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxResources;
 
-import family.converters.ProdFamilyConverter;
+import io.github.davidebasile.contractautomata.family.converters.ProdFamilyConverter;
 
 @SuppressWarnings("serial")
 public class SaveFamily extends AbstractAction {
