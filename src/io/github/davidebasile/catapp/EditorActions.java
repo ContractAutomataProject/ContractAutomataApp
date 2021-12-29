@@ -864,9 +864,7 @@ public class EditorActions
 //													.getSelectedFile()
 //													.getAbsolutePath()));
 //								}
-								else
-
-								{
+								else {
 									Document document = mxXmlUtils
 											.parseXml(mxUtils.readFile(fc
 													.getSelectedFile()
@@ -879,7 +877,6 @@ public class EditorActions
 									
 									editor.setCurrentFile(fc
 											.getSelectedFile());
-
 								}
 							}
 							catch (IOException ex)

@@ -98,7 +98,7 @@ public class Composition extends AbstractAction {
 		//				return;
 
 		Instant start = Instant.now();
-		MSCA composition = (MSCA) new CompositionFunction().apply(aut, 
+		MSCA composition = (MSCA) new CompositionFunction(aut).apply( 
 				(pruningOption==JOptionPane.YES_OPTION)?null:
 					(pruningOption==JOptionPane.NO_OPTION)?t->t.getLabel().isRequest():
 						t->!t.getLabel().isMatch(),100); 

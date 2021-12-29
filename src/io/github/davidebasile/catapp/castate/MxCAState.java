@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
-import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.shape.mxStencilShape;
 import com.mxgraph.util.mxConstants;
@@ -31,6 +30,22 @@ public class MxCAState extends CAState {
 
 	private final float x;
 	private final float y;
+	
+	public MxCAState(List<BasicState> lstate, float x, float y) {
+		super(lstate);
+		this.x=x;
+		this.y=y;
+
+	}
+	
+	public float getX() {
+		return x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
 	public final static double initialStateWidthIncrement = 16.5;
 	
 	public final static Predicate<mxICell> isInitial = n -> (n!=null)&&(n.getStyle()!=null)&&(n.getStyle().contains((String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE"))
@@ -62,30 +77,6 @@ public class MxCAState extends CAState {
 				 +mxConstants.STYLE_SHAPE+"=initialFinalState;"
 				 +mxConstants.STYLE_PERIMETER+"=InitialStatePerimeter;";
 
-	public MxCAState(List<BasicState> lstate, float x, float y) {
-		super(lstate);
-		this.x=x;
-		this.y=y;
-
-	}
-	
-	public float getX() {
-		return x;
-	}
-
-	public float getY() {
-		return y;
-	}
-
-	//the perimeter of the initial state
-	public static mxPerimeterFunction InitialStatePerimeter = new mxPerimeterFunction() {
-		@Override
-		public mxPoint apply(mxRectangle bounds, mxCellState vertex, mxPoint next, boolean orthogonal) {
-			mxRectangle rect =new mxRectangle(bounds.getX()+initialStateWidthIncrement,bounds.getY(),bounds.getWidth()-initialStateWidthIncrement,bounds.getHeight());
-			return mxPerimeter.EllipsePerimeter.apply(rect, vertex, next, orthogonal) ;
-		}
-	};
-
 
 	public static void setShapes() {
 		mxStyleRegistry.putValue("SHAPE_INITIALSTATE","initialState");
@@ -115,21 +106,13 @@ public class MxCAState extends CAState {
 		mxGraphics2DCanvas.putShape((String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE"), newShape);
 		
 
-		mxStyleRegistry.putValue("InitialStatePerimeter", InitialStatePerimeter);
+		mxStyleRegistry.putValue("InitialStatePerimeter", new mxPerimeterFunction() {
+			@Override
+			public mxPoint apply(mxRectangle bounds, mxCellState vertex, mxPoint next, boolean orthogonal) {
+				mxRectangle rect =new mxRectangle(bounds.getX()+initialStateWidthIncrement,bounds.getY(),bounds.getWidth()-initialStateWidthIncrement,bounds.getHeight());
+				return mxPerimeter.EllipsePerimeter.apply(rect, vertex, next, orthogonal) ;
+			}
+		});
 	}
 	
-	public static void toggleFinalState(mxCell node) {
-		if (MxCAState.isFinal.test(node)) {
-			if (MxCAState.isInitial.test(node))
-				node.setStyle(initialnodestylevalue);
-			else
-				node.setStyle(nodestylevalue);
-		}
-		else {
-			if (MxCAState.isInitial.test(node))
-				node.setStyle(initialfinalnodestylevalue);			
-			else
-				node.setStyle(finalnodestylevalue);				
-		}
-	}
 }

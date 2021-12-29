@@ -29,7 +29,18 @@ public class ToggleFinalStateAction extends AbstractAction
 
 	public void actionPerformed(ActionEvent e)
 	{
-		MxCAState.toggleFinalState(node);
+		if (MxCAState.isFinal.test(node)) {
+			if (MxCAState.isInitial.test(node))
+				node.setStyle(MxCAState.initialnodestylevalue);
+			else
+				node.setStyle(MxCAState.nodestylevalue);
+		}
+		else {
+			if (MxCAState.isInitial.test(node))
+				node.setStyle(MxCAState.initialfinalnodestylevalue);			
+			else
+				node.setStyle(MxCAState.finalnodestylevalue);				
+		};
 		mxGraphComponent graphComponent = (mxGraphComponent) e.getSource();
 		graphComponent.refresh();
 	}
