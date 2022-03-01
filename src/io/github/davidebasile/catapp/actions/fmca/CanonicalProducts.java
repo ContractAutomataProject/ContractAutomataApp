@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
@@ -18,8 +19,11 @@ import io.github.davidebasile.catapp.App;
 import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.ProductFrame;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
-import io.github.davidebasile.contractautomata.automaton.transition.MSCATransition;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
+import io.github.davidebasile.contractautomata.automaton.state.BasicState;
+import io.github.davidebasile.contractautomata.automaton.state.CAState;
+import io.github.davidebasile.contractautomata.automaton.transition.ModalTransition;
 import io.github.davidebasile.contractautomata.family.FMCA;
 import io.github.davidebasile.contractautomata.family.Product;
 
@@ -41,15 +45,15 @@ public class CanonicalProducts extends AbstractAction {
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
-		MSCA aut=editor.lastaut;
+		ModalAutomaton<CALabel> aut=editor.lastaut;
 
 
 		//	int[][] ind=new int[1][];
 
-		Map<Product,MSCA> cp;
+		Map<Product,ModalAutomaton<CALabel>> cp;
 		Instant start;
 		if (!aut.getForwardStar(aut.getInitial()).stream()
-				.map(MSCATransition::getLabel)
+				.map(ModalTransition<List<BasicState>,List<String>,CAState,CALabel>::getLabel)
 				.allMatch(l->l.getUnsignedAction().equals("dummy")))
 		{
 			start = Instant.now();

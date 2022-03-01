@@ -33,11 +33,11 @@ import org.xml.sax.SAXException;
 import com.mxgraph.model.mxCell;
 
 import io.github.davidebasile.catapp.castate.MxCAState;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
 import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.automaton.state.BasicState;
 import io.github.davidebasile.contractautomata.automaton.state.CAState;
-import io.github.davidebasile.contractautomata.automaton.transition.MSCATransition;
+import io.github.davidebasile.contractautomata.automaton.transition.ModalTransition;
 import io.github.davidebasile.contractautomata.converters.MSCAConverter;
 
 /**
@@ -59,7 +59,7 @@ public class MxeConverter implements MSCAConverter {
 	 * @throws IOException  exception problems when reading the file
 	 */
 	@Override
-	public MSCA importMSCA(String filename) throws ParserConfigurationException, SAXException, IOException {
+	public ModalAutomaton<CALabel> importMSCA(String filename) throws ParserConfigurationException, SAXException, IOException {
 		//TODO long function
 		File inputFile = new File(filename);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -70,7 +70,7 @@ public class MxeConverter implements MSCAConverter {
 
 		Map<Integer,Set<BasicState>> princ2bs = new HashMap<>();
 		Map<Integer, CAState> id2castate = new HashMap<>();
-		Set<MSCATransition> transitions= new HashSet<MSCATransition>();
+		Set<ModalTransition<List<BasicState>,List<String>,CAState,CALabel>> transitions= new HashSet<ModalTransition<List<BasicState>,List<String>,CAState,CALabel>>();
 
 		//first read all basic states and castates, then all the edges.
 		for (int i = 0; i < nodeList.getLength(); i++) 
@@ -170,17 +170,17 @@ public class MxeConverter implements MSCAConverter {
 					List<String> labels = Arrays.asList(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(","));
 					if (labels.stream().anyMatch(item->!(item.startsWith(CALabel.offer)||item.startsWith(CALabel.request)||item.startsWith(CALabel.idle))))
 						throw new IOException("Ill-formed action");
-					transitions.add(new MSCATransition(id2castate.get(Integer.parseInt(eElement.getAttribute("source"))),
+					transitions.add(new ModalTransition<List<BasicState>,List<String>,CAState,CALabel>(id2castate.get(Integer.parseInt(eElement.getAttribute("source"))),
 							new CALabel(labels),//label
 							id2castate.get(Integer.parseInt(eElement.getAttribute("target"))), 
-							(eElement.getAttribute("style").contains("strokeColor=#FF0000"))? MSCATransition.Modality.URGENT: //red
-								(eElement.getAttribute("style").contains("strokeColor=#00FF00"))? MSCATransition.Modality.LAZY: //green
-									MSCATransition.Modality.PERMITTED));
+							(eElement.getAttribute("style").contains("strokeColor=#FF0000"))? ModalTransition.Modality.URGENT: //red
+								(eElement.getAttribute("style").contains("strokeColor=#00FF00"))? ModalTransition.Modality.LAZY: //green
+									ModalTransition.Modality.PERMITTED));
 				}
 			}
 		}
 
-		return new MSCA(transitions);
+		return new ModalAutomaton<CALabel>(transitions);
 
 	}
 
@@ -194,7 +194,7 @@ public class MxeConverter implements MSCAConverter {
 	 */
 
 	@Override
-	public void exportMSCA(String fileName, MSCA aut) throws ParserConfigurationException, TransformerException
+	public void exportMSCA(String fileName, ModalAutomaton<CALabel> aut) throws ParserConfigurationException, TransformerException
 	{
 		DocumentBuilderFactory dbFactory =
 				DocumentBuilderFactory.newInstance();
@@ -237,13 +237,13 @@ public class MxeConverter implements MSCAConverter {
 			id+=1;
 		}
 
-		Set<? extends MSCATransition> tr= aut.getTransition();
-		for (MSCATransition t : tr)
+		Set<? extends ModalTransition<List<BasicState>,List<String>,CAState,CALabel>> tr= aut.getTransition();
+		for (ModalTransition<List<BasicState>,List<String>,CAState,CALabel> t : tr)
 		{
 			createElementEdge(doc,root,Integer.toString(id),
 					state2element.get(t.getSource()),
 					state2element.get(t.getTarget()),
-					Arrays.toString(t.getLabel().getLabelAsList().stream().toArray(String[]::new)),t.getModality());
+					Arrays.toString(t.getLabel().getAction().stream().toArray(String[]::new)),t.getModality());
 			id+=1;
 		}
 
@@ -261,15 +261,15 @@ public class MxeConverter implements MSCAConverter {
 	//	return file;
 	}
 
-	private static Element createElementEdge(Document doc, Element root,String id, Element source, Element target,String label,MSCATransition.Modality type)
+	private static Element createElementEdge(Document doc, Element root,String id, Element source, Element target,String label,ModalTransition.Modality type)
 	{
 		Attr parent=doc.createAttribute("parent");
 		parent.setValue("1");
 		Attr style=doc.createAttribute("style");
 
-		if (type==MSCATransition.Modality.URGENT)
+		if (type==ModalTransition.Modality.URGENT)
 			style.setValue("edgeStyle=none;strokeColor=#FF0000;");
-		else if (type==MSCATransition.Modality.LAZY)
+		else if (type==ModalTransition.Modality.LAZY)
 			style.setValue("edgeStyle=none;strokeColor=#00FF00;");
 		else
 			style.setValue("edgeStyle=none;strokeColor=black;");

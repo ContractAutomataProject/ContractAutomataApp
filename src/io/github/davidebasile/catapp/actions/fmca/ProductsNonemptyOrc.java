@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -18,8 +19,11 @@ import io.github.davidebasile.catapp.App;
 import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.ProductFrame;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
-import io.github.davidebasile.contractautomata.automaton.transition.MSCATransition;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
+import io.github.davidebasile.contractautomata.automaton.state.BasicState;
+import io.github.davidebasile.contractautomata.automaton.state.CAState;
+import io.github.davidebasile.contractautomata.automaton.transition.ModalTransition;
 import io.github.davidebasile.contractautomata.family.FMCA;
 import io.github.davidebasile.contractautomata.family.Product;
 
@@ -33,7 +37,7 @@ public class ProductsNonemptyOrc extends AbstractAction {
 		if (menuBar.checkAut(editor)) return;
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
-		MSCA aut=editor.lastaut;
+		ModalAutomaton<CALabel> aut=editor.lastaut;
 
 		ProductFrame pf=editor.getProductFrame();
 		if (pf==null)
@@ -46,7 +50,7 @@ public class ProductsNonemptyOrc extends AbstractAction {
 
 		Set<Product>  vpp;
 		if (!aut.getForwardStar(aut.getInitial()).stream()
-				.map(MSCATransition::getLabel)
+				.map(ModalTransition<List<BasicState>,List<String>,CAState,CALabel>::getLabel)
 				.allMatch(l->l.getUnsignedAction().equals("dummy")))
 			vpp=new FMCA(aut,pf.getFamily()).productsWithNonEmptyOrchestration();
 		else

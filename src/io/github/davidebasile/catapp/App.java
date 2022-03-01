@@ -34,7 +34,8 @@ import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
 import io.github.davidebasile.catapp.castate.MxCAState;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 
 
 
@@ -64,7 +65,7 @@ public class App extends BasicGraphEditor
 	 */
 	public static URL url = null;
 
-	public MSCA lastaut = null;
+	public ModalAutomaton<CALabel> lastaut = null;
 
 	private ProductFrame pf=null;
 

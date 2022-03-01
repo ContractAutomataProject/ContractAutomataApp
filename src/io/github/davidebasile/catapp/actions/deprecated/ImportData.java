@@ -14,7 +14,8 @@ import io.github.davidebasile.catapp.App;
 import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.converters.DataConverter;
 
 @SuppressWarnings("serial")
@@ -41,7 +42,7 @@ public class ImportData extends AbstractAction {
 		if (rc == JFileChooser.APPROVE_OPTION)
 		{
 			menuBar.lastDir = fc.getSelectedFile().getParent();	
-			MSCA aut;
+			ModalAutomaton<CALabel> aut;
 			try {
 				String filename = fc.getSelectedFile().toString();
 				aut = new DataConverter().importMSCA(filename);

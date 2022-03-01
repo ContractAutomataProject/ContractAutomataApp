@@ -18,7 +18,8 @@ import org.xml.sax.SAXException;
 
 import io.github.davidebasile.catapp.castate.MxCAState;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.automaton.state.BasicState;
 import io.github.davidebasile.contractautomata.converters.DataConverter;
 import io.github.davidebasile.contractautomata.converters.MSCAConverter;
@@ -39,7 +40,7 @@ public class MxeConverterTest {
 	public void parseAndCheckBasicStatesTest_SCP2020_BusinessClientxHotelxEconomyClient() throws Exception {		
 		//check if there are different objects for the same basic state
 		
-		MSCA aut = bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");
+		ModalAutomaton<CALabel> aut = bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");
 
 		assertEquals(aut.getStates().stream()
 		.flatMap(cs->cs.getState().stream()
@@ -56,9 +57,9 @@ public class MxeConverterTest {
 	public void conversionXMLtestSCP2020_BusinessClientxHotel() throws Exception, TransformerException {
 		//check if by converting and parsing the automaton does not change
 		
-		MSCA comp= bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");			
+		ModalAutomaton<CALabel> comp= bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");			
 		bmc.exportMSCA(dir+"test.mxe",comp);
-		MSCA test=bmc.importMSCA(dir+"test.mxe");
+		ModalAutomaton<CALabel> test=bmc.importMSCA(dir+"test.mxe");
 
 		assertEquals(checkTransitions(comp,test),true);
 	}
@@ -67,17 +68,17 @@ public class MxeConverterTest {
 	public void parse_noxy() throws Exception, TransformerException {		
 		//check if by parsing and printing the automaton does not change
 		
-		MSCA aut = bmc.importMSCA(dir+"test_parse_noxy.mxe");
+		ModalAutomaton<CALabel> aut = bmc.importMSCA(dir+"test_parse_noxy.mxe");
 		bmc.exportMSCA(dir+"test_parse_withxy.mxe",aut);
 
-		MSCA test = bmc.importMSCA(dir+"test_parse_withxy.mxe");
+		ModalAutomaton<CALabel> test = bmc.importMSCA(dir+"test_parse_withxy.mxe");
 		assertEquals(checkTransitions(aut,test),true);
 
 	}
 	
 	@Test
 	public void importProvola() throws Exception {
-		MSCA aut = new DataConverter().importMSCA(dir+"provola.data");
+		ModalAutomaton<CALabel> aut = new DataConverter().importMSCA(dir+"provola.data");
 		bmc.exportMSCA(dir+"provola.mxe", aut);
 	}
 	
@@ -150,7 +151,7 @@ public class MxeConverterTest {
 	}
 
 
-	public static boolean checkTransitions(MSCA aut, MSCA test) {
+	public static boolean checkTransitions(ModalAutomaton<CALabel> aut, ModalAutomaton<CALabel> test) {
 		Set<String> autTr=aut.getTransition().parallelStream()
 				.map(t->t.toCSV())
 				.collect(Collectors.toSet());

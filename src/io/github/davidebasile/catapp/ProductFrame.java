@@ -22,7 +22,8 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.family.Family;
 import io.github.davidebasile.contractautomata.family.Product;
 
@@ -41,7 +42,7 @@ public class ProductFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 
-	public ProductFrame(Family f, JPanel frame, MSCA aut){
+	public ProductFrame(Family f, JPanel frame, ModalAutomaton<CALabel> aut){
 		this.fam=f;
 		JPanel panel=new JPanel();
 		this.setLocationRelativeTo(frame);

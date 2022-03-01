@@ -51,7 +51,8 @@ import com.mxgraph.view.mxStyleRegistry;
 
 import io.github.davidebasile.catapp.castate.MxCAState;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.converters.DataConverter;
 
 /**
@@ -542,7 +543,7 @@ public class EditorActions
 					else if (ext.equalsIgnoreCase("data")) 
 					{
 						try {
-							MSCA aut=((App) editor).lastaut;
+							ModalAutomaton<CALabel> aut=((App) editor).lastaut;
 							new DataConverter().exportMSCA(filename,aut);
 							editor.setModified(false);
 							JOptionPane.showMessageDialog(editor.getGraphComponent(),"The automaton has been stored with filename "+filename,"Success!",JOptionPane.PLAIN_MESSAGE);
@@ -838,7 +839,7 @@ public class EditorActions
 								{
 									EditorMenuBar menuBar = (EditorMenuBar) ((App) editor).getMenuFrame().getJMenuBar();
 									menuBar.lastDir = fc.getSelectedFile().getParent();	
-									MSCA aut;
+									ModalAutomaton<CALabel> aut;
 									try {
 										String filename = fc.getSelectedFile().toString();
 										aut = new DataConverter().importMSCA(filename);

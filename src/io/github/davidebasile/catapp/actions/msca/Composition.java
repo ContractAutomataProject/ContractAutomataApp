@@ -18,8 +18,11 @@ import io.github.davidebasile.catapp.App;
 import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
-import io.github.davidebasile.contractautomata.operators.CompositionFunction;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
+import io.github.davidebasile.contractautomata.operators.MSCACompositionFunction;
+import io.github.davidebasile.contractautomata.requirements.Agreement;
+import io.github.davidebasile.contractautomata.requirements.StrongAgreement;
 
 @SuppressWarnings("serial")
 public class Composition extends AbstractAction {
@@ -41,7 +44,7 @@ public class Composition extends AbstractAction {
 
 		fc.setDialogTitle("Select an FMCA to be composed");
 
-		List<MSCA> aut = new ArrayList<>(3);
+		List<ModalAutomaton<CALabel>> aut = new ArrayList<>(3);
 		List<String> names= new ArrayList<>(3);
 
 		boolean lastIteration=false;
@@ -98,10 +101,10 @@ public class Composition extends AbstractAction {
 		//				return;
 
 		Instant start = Instant.now();
-		MSCA composition = (MSCA) new CompositionFunction(aut).apply( 
+		ModalAutomaton<CALabel> composition = (ModalAutomaton<CALabel>) new MSCACompositionFunction(aut,
 				(pruningOption==JOptionPane.YES_OPTION)?null:
-					(pruningOption==JOptionPane.NO_OPTION)?t->t.getLabel().isRequest():
-						t->!t.getLabel().isMatch(),100); 
+					(pruningOption==JOptionPane.NO_OPTION)?new Agreement().negate():
+						new StrongAgreement().negate()).apply(Integer.MAX_VALUE); 
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 

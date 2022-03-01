@@ -12,7 +12,8 @@ import io.github.davidebasile.catapp.App;
 import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.operators.ChoreographySynthesisOperator;
 import io.github.davidebasile.contractautomata.requirements.StrongAgreement;
 
@@ -27,10 +28,10 @@ public class Choreography extends AbstractAction {
 		String filename=editor.getCurrentFile().getName();
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
-		MSCA aut=editor.lastaut;
+		ModalAutomaton<CALabel> aut=editor.lastaut;
 		//	MSCA backup = aut.clone();
 
-		MSCA controller=null;
+		ModalAutomaton<CALabel> controller=null;
 		Instant start = Instant.now();
 		try {
 			controller = new ChoreographySynthesisOperator(new StrongAgreement()).apply(aut);

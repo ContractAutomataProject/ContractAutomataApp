@@ -15,7 +15,8 @@ import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.ProductFrame;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.family.FMCA;
 import io.github.davidebasile.contractautomata.family.Family;
 
@@ -38,13 +39,13 @@ public class OrchestrationFamily extends AbstractAction {
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
-		MSCA aut=editor.lastaut;
+		ModalAutomaton<CALabel> aut=editor.lastaut;
 
 		Family f=pf.getFamily();
 
 
 		Instant start = Instant.now();
-		MSCA controller = new FMCA(aut,f).getOrchestrationOfFamily();
+		ModalAutomaton<CALabel> controller = new FMCA(aut,f).getOrchestrationOfFamily();
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 	

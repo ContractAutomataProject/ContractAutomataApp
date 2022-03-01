@@ -5,7 +5,6 @@ import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.function.UnaryOperator;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -14,7 +13,8 @@ import io.github.davidebasile.catapp.App;
 import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.family.Product;
 import io.github.davidebasile.contractautomata.operators.OrchestrationSynthesisOperator;
 import io.github.davidebasile.contractautomata.operators.ProductOrchestrationSynthesisOperator;
@@ -32,7 +32,7 @@ public class OrchestrationProductType extends AbstractAction {
 		String filename=editor.getCurrentFile().getName();
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
-		MSCA aut=editor.lastaut;
+		ModalAutomaton<CALabel> aut=editor.lastaut;
 		//	MSCA backup = aut.clone();//in case aut becomes null
 
 		String S= (String) JOptionPane.showInputDialog(null, 
@@ -56,9 +56,9 @@ public class OrchestrationProductType extends AbstractAction {
 
 		Product p=(R.length+F.length>0)?new Product(R,F):null;
 
-		MSCA controller=null;
+		ModalAutomaton<CALabel> controller=null;
 		//	FMCA faut= new FMCA(aut,editor.getProductFrame().getFamily());
-		UnaryOperator<MSCA> synth = (p!=null)?
+		OrchestrationSynthesisOperator synth = (p!=null)?
 				new ProductOrchestrationSynthesisOperator(new Agreement(),p)
 				:new OrchestrationSynthesisOperator(new Agreement());
 

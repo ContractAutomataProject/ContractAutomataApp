@@ -10,7 +10,8 @@ import com.mxgraph.util.mxResources;
 
 import io.github.davidebasile.catapp.App;
 import io.github.davidebasile.catapp.EditorActions;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.converters.DataConverter;
 
 @SuppressWarnings("serial")
@@ -22,7 +23,7 @@ public class ExportData extends AbstractAction {
 		
 		String filename =editor.getCurrentFile().getAbsolutePath();
 		filename = filename.substring(0,filename.length()-4);
-		MSCA aut=editor.lastaut;
+		ModalAutomaton<CALabel> aut=editor.lastaut;
 		//			try {
 		//				aut = new BasicMxeConverter().importMxe(filename);
 		//				editor.lastaut=aut;

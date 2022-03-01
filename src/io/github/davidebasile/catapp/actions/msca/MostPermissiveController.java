@@ -12,7 +12,8 @@ import io.github.davidebasile.catapp.App;
 import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.operators.OrchestrationSynthesisOperator;
 import io.github.davidebasile.contractautomata.requirements.Agreement;
 
@@ -29,10 +30,9 @@ public class MostPermissiveController extends AbstractAction {
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
-		MSCA aut=editor.lastaut;
-		//		MSCA backup = aut.clone();
-
-		MSCA controller=null;
+	    ModalAutomaton<CALabel> aut=editor.lastaut;
+		
+	    ModalAutomaton<CALabel> controller=null;
 		long elapsedTime;
 		Instant start = Instant.now();
 		try {

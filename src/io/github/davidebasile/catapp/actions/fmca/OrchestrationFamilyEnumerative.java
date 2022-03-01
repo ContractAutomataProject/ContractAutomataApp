@@ -15,7 +15,8 @@ import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.ProductFrame;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.family.FMCA;
 import io.github.davidebasile.contractautomata.family.Family;
 
@@ -37,14 +38,14 @@ public class OrchestrationFamilyEnumerative extends AbstractAction {
 		}
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
-		MSCA aut=editor.lastaut;
+		ModalAutomaton<CALabel> aut=editor.lastaut;
 		Family f=pf.getFamily();
 
 		JOptionPane.showMessageDialog(editor.getGraphComponent(),"Warning : the enumerative computation may require several minutes!","Warning",JOptionPane.WARNING_MESSAGE);
 
 
 		Instant start = Instant.now();
-		MSCA controller = new FMCA(aut,f).getOrchestrationOfFamilyEnumerative();
+		ModalAutomaton<CALabel> controller = new FMCA(aut,f).getOrchestrationOfFamilyEnumerative();
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 	

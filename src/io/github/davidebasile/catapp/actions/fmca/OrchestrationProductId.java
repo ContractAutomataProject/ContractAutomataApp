@@ -15,7 +15,8 @@ import io.github.davidebasile.catapp.EditorActions;
 import io.github.davidebasile.catapp.EditorMenuBar;
 import io.github.davidebasile.catapp.ProductFrame;
 import io.github.davidebasile.catapp.converters.MxeConverter;
-import io.github.davidebasile.contractautomata.automaton.MSCA;
+import io.github.davidebasile.contractautomata.automaton.ModalAutomaton;
+import io.github.davidebasile.contractautomata.automaton.label.CALabel;
 import io.github.davidebasile.contractautomata.family.Product;
 import io.github.davidebasile.contractautomata.operators.ProductOrchestrationSynthesisOperator;
 import io.github.davidebasile.contractautomata.requirements.Agreement;
@@ -33,7 +34,7 @@ public class OrchestrationProductId extends AbstractAction {
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
-		MSCA aut=editor.lastaut;
+		ModalAutomaton<CALabel> aut=editor.lastaut;
 		//	MSCA backup = aut.clone();
 
 		ProductFrame pf=editor.getProductFrame();
@@ -55,7 +56,7 @@ public class OrchestrationProductId extends AbstractAction {
 		Product p=pf.getProductAt(Integer.parseInt(S));
 
 		Instant start = Instant.now();
-		MSCA controller = new ProductOrchestrationSynthesisOperator(new Agreement(),p).apply(aut);
+		ModalAutomaton<CALabel> controller = new ProductOrchestrationSynthesisOperator(new Agreement(),p).apply(aut);
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 	
