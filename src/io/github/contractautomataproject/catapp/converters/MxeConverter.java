@@ -86,7 +86,7 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 					if (value.startsWith("principal"))//basic state
 					{
 						Integer principal = Integer.parseInt(value.substring(value.indexOf("=")+1, value.indexOf(",")));//first entry is principal
-						BasicState<String> bs = BasicState.readCSV(value.substring(value.indexOf(",")+1));
+						BasicState<String> bs = readCSV(value.substring(value.indexOf(",")+1));
 
 						if (princ2bs.containsKey(principal))
 						{
@@ -184,6 +184,27 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 
 	}
 
+	/**
+	 * 
+	 * @param s the encoding of the object as comma separated values
+	 * @return a new BasicState<String> object constructed from the parameter s
+	 */
+	private BasicState<String> readCSV(String s) {
+		boolean initial=false; 
+		boolean	finalstate=false;
+		String label="";
+		String[] cs = s.split(",");
+		for (String keyval : cs)
+		{
+			String[] kv = keyval.split("=");
+			if(kv[0].equals("label"))
+				label=kv[1];
+			else if (kv[0].equals("initial"))
+				initial=true;
+			else finalstate=true;
+		}
+		return new BasicState<>(label,initial,finalstate);
+	}
 
 	/**
 	 * Export the MSCA aut as a mxGraphModel  (used by mxGraph)  with XML extension (.mxe)
