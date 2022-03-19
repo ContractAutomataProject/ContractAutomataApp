@@ -14,9 +14,11 @@ import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.converters.AutDataConverter;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 @SuppressWarnings("serial")
 public class ImportData extends AbstractAction {
@@ -42,7 +44,7 @@ public class ImportData extends AbstractAction {
 		if (rc == JFileChooser.APPROVE_OPTION)
 		{
 			menuBar.lastDir = fc.getSelectedFile().getParent();	
-			ModalAutomaton<CALabel> aut;
+			Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut;
 			try {
 				String filename = fc.getSelectedFile().toString();
 				aut = new AutDataConverter<CALabel>(CALabel::new).importMSCA(filename);

@@ -16,22 +16,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import io.github.contractautomataproject.catapp.castate.MxCAState;
+import io.github.contractautomataproject.catapp.castate.MxState;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
 import io.github.contractautomataproject.catlib.automaton.state.BasicState;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.converters.AutConverter;
 import io.github.contractautomataproject.catlib.converters.AutDataConverter;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 public class MxeConverterTest {
 	
 	@Before
 	public void setup() {
-		MxCAState.setShapes();
+		MxState.setShapes();
 	}
 	
-	private final AutConverter<ModalAutomaton<CALabel>,ModalAutomaton<CALabel>> bmc = new MxeConverter();
+	private final AutConverter<Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>,Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>> bmc = new MxeConverter();
 	private final String dir = System.getProperty("user.dir")+File.separator+"test"+File.separator
 			+"io"+File.separator+"github"+File.separator+"contractautomataproject"+File.separator+"catapptest"
 			+File.separator+"resources"+File.separator;
@@ -40,7 +42,7 @@ public class MxeConverterTest {
 	public void parseAndCheckBasicStatesTest_SCP2020_BusinessClientxHotelxEconomyClient() throws Exception {		
 		//check if there are different objects for the same basic state
 		
-		ModalAutomaton<CALabel> aut = bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut = bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");
 
 		assertEquals(aut.getStates().stream()
 		.flatMap(cs->cs.getState().stream()
@@ -57,9 +59,9 @@ public class MxeConverterTest {
 	public void conversionXMLtestSCP2020_BusinessClientxHotel() throws Exception, TransformerException {
 		//check if by converting and parsing the automaton does not change
 		
-		ModalAutomaton<CALabel> comp= bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");			
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> comp= bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");			
 		bmc.exportMSCA(dir+"test.mxe",comp);
-		ModalAutomaton<CALabel> test=bmc.importMSCA(dir+"test.mxe");
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> test=bmc.importMSCA(dir+"test.mxe");
 
 		assertEquals(checkTransitions(comp,test),true);
 	}
@@ -68,17 +70,17 @@ public class MxeConverterTest {
 	public void parse_noxy() throws Exception, TransformerException {		
 		//check if by parsing and printing the automaton does not change
 		
-		ModalAutomaton<CALabel> aut = bmc.importMSCA(dir+"test_parse_noxy.mxe");
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut = bmc.importMSCA(dir+"test_parse_noxy.mxe");
 		bmc.exportMSCA(dir+"test_parse_withxy.mxe",aut);
 
-		ModalAutomaton<CALabel> test = bmc.importMSCA(dir+"test_parse_withxy.mxe");
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> test = bmc.importMSCA(dir+"test_parse_withxy.mxe");
 		assertEquals(checkTransitions(aut,test),true);
 
 	}
 	
 	@Test
 	public void importProvola() throws Exception {
-		ModalAutomaton<CALabel> aut = new AutDataConverter<CALabel>(CALabel::new).importMSCA(dir+"provola.data");
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut = new AutDataConverter<CALabel>(CALabel::new).importMSCA(dir+"provola.data");
 		bmc.exportMSCA(dir+"provola.mxe", aut);
 	}
 	
@@ -151,7 +153,7 @@ public class MxeConverterTest {
 	}
 
 
-	public static boolean checkTransitions(ModalAutomaton<CALabel> aut, ModalAutomaton<CALabel> test) {
+	public static boolean checkTransitions(Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut, Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> test) {
 		Set<String> autTr=aut.getTransition().parallelStream()
 				.map(t->t.toString())
 				.collect(Collectors.toSet());

@@ -16,23 +16,23 @@ import com.mxgraph.view.mxPerimeter;
 import com.mxgraph.view.mxPerimeter.mxPerimeterFunction;
 
 import io.github.contractautomataproject.catlib.automaton.state.BasicState;
-import io.github.contractautomataproject.catlib.automaton.state.CAState;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 
 import com.mxgraph.view.mxStyleRegistry;
 
 /**
- * Extending CAState with information on x,y coordinates. 
- * Including static functionalities related to the style of mxCells containing MxCAStates.
+ * Extending State with information on x,y coordinates. 
+ * Including static functionalities related to the style of mxCells containing MxStates.
  * 
  * @author Davide Basile
  *
  */
-public class MxCAState extends CAState {
+public class MxState extends State<String> {
 
 	private final float x;
 	private final float y;
 	
-	public MxCAState(List<BasicState<String>> lstate, float x, float y) {
+	public MxState(List<BasicState<String>> lstate, float x, float y) {
 		super(lstate);
 		this.x=x;
 		this.y=y;

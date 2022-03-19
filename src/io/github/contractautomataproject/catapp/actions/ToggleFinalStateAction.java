@@ -7,7 +7,7 @@ import javax.swing.AbstractAction;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
-import io.github.contractautomataproject.catapp.castate.MxCAState;
+import io.github.contractautomataproject.catapp.castate.MxState;
 
 public class ToggleFinalStateAction extends AbstractAction
 {
@@ -29,17 +29,17 @@ public class ToggleFinalStateAction extends AbstractAction
 
 	public void actionPerformed(ActionEvent e)
 	{
-		if (MxCAState.isFinal.test(node)) {
-			if (MxCAState.isInitial.test(node))
-				node.setStyle(MxCAState.initialnodestylevalue);
+		if (MxState.isFinal.test(node)) {
+			if (MxState.isInitial.test(node))
+				node.setStyle(MxState.initialnodestylevalue);
 			else
-				node.setStyle(MxCAState.nodestylevalue);
+				node.setStyle(MxState.nodestylevalue);
 		}
 		else {
-			if (MxCAState.isInitial.test(node))
-				node.setStyle(MxCAState.initialfinalnodestylevalue);			
+			if (MxState.isInitial.test(node))
+				node.setStyle(MxState.initialfinalnodestylevalue);			
 			else
-				node.setStyle(MxCAState.finalnodestylevalue);				
+				node.setStyle(MxState.finalnodestylevalue);				
 		};
 		mxGraphComponent graphComponent = (mxGraphComponent) e.getSource();
 		graphComponent.refresh();

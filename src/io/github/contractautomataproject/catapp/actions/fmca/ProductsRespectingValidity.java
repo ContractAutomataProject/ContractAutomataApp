@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -19,10 +18,9 @@ import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.ProductFrame;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
-import io.github.contractautomataproject.catlib.automaton.state.BasicState;
-import io.github.contractautomataproject.catlib.automaton.state.CAState;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.family.FMCA;
 import io.github.contractautomataproject.catlib.family.Product;
 import io.github.contractautomataproject.catlib.transition.ModalTransition;
@@ -45,13 +43,13 @@ public class ProductsRespectingValidity extends AbstractAction {
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
-		ModalAutomaton<CALabel> aut=editor.lastaut;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=editor.lastaut;
 
 		Instant start = Instant.now();
 		Set<Product> vpp;
 
 		if (!aut.getForwardStar(aut.getInitial()).stream()
-				.map(ModalTransition<List<BasicState<String>>,List<String>,CAState,CALabel>::getLabel)
+				.map(ModalTransition<String,String,State<String>,CALabel>::getLabel)
 				.allMatch(l->l.getUnsignedAction().equals("dummy")))
 			vpp= new FMCA(aut,pf.getFamily()).productsRespectingValidity();
 		else

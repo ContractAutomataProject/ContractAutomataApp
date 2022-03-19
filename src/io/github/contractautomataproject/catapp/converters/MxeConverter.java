@@ -32,11 +32,11 @@ import org.xml.sax.SAXException;
 
 import com.mxgraph.model.mxCell;
 
-import io.github.contractautomataproject.catapp.castate.MxCAState;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catapp.castate.MxState;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
 import io.github.contractautomataproject.catlib.automaton.state.BasicState;
-import io.github.contractautomataproject.catlib.automaton.state.CAState;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.converters.AutConverter;
 import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
@@ -47,7 +47,7 @@ import io.github.contractautomataproject.catlib.transition.ModalTransition;
  * @author Davide Basile
  *
  */
-public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalAutomaton<CALabel>> {
+public class MxeConverter implements AutConverter<Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>,Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>> {
 
 	/**
 	 * Import the mxGraphModel XML description (used by the mxGraph) into an MSCA object
@@ -59,7 +59,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 	 * @throws SAXException 
 	 */
 	@Override
-	public ModalAutomaton<CALabel> importMSCA(String filename) throws IOException, ParserConfigurationException, SAXException {
+	public Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> importMSCA(String filename) throws IOException, ParserConfigurationException, SAXException {
 		//TODO long function
 		File inputFile = new File(filename);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -69,8 +69,8 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 		NodeList nodeList = (NodeList) doc.getElementsByTagName("mxCell");
 
 		Map<Integer,Set<BasicState<String>>> princ2bs = new HashMap<>();
-		Map<Integer, CAState> id2castate = new HashMap<>();
-		Set<ModalTransition<List<BasicState<String>>,List<String>,CAState,CALabel>> transitions= new HashSet<ModalTransition<List<BasicState<String>>,List<String>,CAState,CALabel>>();
+		Map<Integer, State<String>> id2castate = new HashMap<>();
+		Set<ModalTransition<String,String,State<String>,CALabel>> transitions= new HashSet<ModalTransition<String,String,State<String>,CALabel>>();
 
 		//first read all basic states and castates, then all the edges.
 		for (int i = 0; i < nodeList.getLength(); i++) 
@@ -109,7 +109,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 						
 						Function<String,BasicState<String>> convertToBs= s->{
 							//return new BasicState(s, s.equals("0"),eElement.getAttribute("style").contains("terminate.png"));
-							return new BasicState<String>(s, MxCAState.isInitial.test(cell),MxCAState.isFinal.test(cell));
+							return new BasicState<String>(s, MxState.isInitial.test(cell),MxState.isFinal.test(cell));
 						};
 						
 						//\forall i. \exists bs \in princ2bs(i). bs==st[i]
@@ -137,14 +137,14 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 										// one is editing with mxGraph.
 									}})
 								.collect(Collectors.toList());
-						CAState castate = new MxCAState(lbs, 
+						State<String> castate = new MxState(lbs, 
 								geom.hasAttribute("x")?Float.parseFloat(geom.getAttribute("x")):0,
 										geom.hasAttribute("y")?Float.parseFloat(geom.getAttribute("y")):0);
 						//useful when not morphing (e.g. adding handles to edges)					
 
 						if (castate.isFinalstate()!= 
 								//eElement.getAttribute("style").contains("terminate.png"))
-								MxCAState.isFinal.test(cell))
+								MxState.isFinal.test(cell))
 							throw new IOException("Problems with final states in .mxe "+cell.getStyle());
 
 						if (id2castate.put(Integer.parseInt(eElement.getAttribute("id")), castate)!=null)
@@ -170,7 +170,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 					List<String> labels = Arrays.asList(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(","));
 					if (labels.stream().anyMatch(item->!(item.startsWith(CALabel.OFFER)||item.startsWith(CALabel.REQUEST)||item.startsWith(CALabel.IDLE))))
 						throw new IOException("Ill-formed action");
-					transitions.add(new ModalTransition<List<BasicState<String>>,List<String>,CAState,CALabel>(id2castate.get(Integer.parseInt(eElement.getAttribute("source"))),
+					transitions.add(new ModalTransition<String,String,State<String>,CALabel>(id2castate.get(Integer.parseInt(eElement.getAttribute("source"))),
 							new CALabel(labels),//label
 							id2castate.get(Integer.parseInt(eElement.getAttribute("target"))), 
 							(eElement.getAttribute("style").contains("strokeColor=#FF0000"))? ModalTransition.Modality.URGENT: //red
@@ -180,7 +180,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 			}
 		}
 
-		return new ModalAutomaton<CALabel>(transitions);
+		return new Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>(transitions);
 
 	}
 
@@ -193,7 +193,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 	 * @throws TransformerException  exception with transformer
 	 */
 	@Override
-	public  void exportMSCA(String fileName, ModalAutomaton<CALabel> aut) throws ParserConfigurationException, TransformerException
+	public  void exportMSCA(String fileName, Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut) throws ParserConfigurationException, TransformerException
 	{
 		DocumentBuilderFactory dbFactory =
 				DocumentBuilderFactory.newInstance();
@@ -228,16 +228,16 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 			id+=1;
 		}
 
-		Map<CAState,Element> state2element = new HashMap<CAState, Element>();
+		Map<State<String>,Element> state2element = new HashMap<State<String>, Element>();
 
-		for (CAState s : aut.getStates())
+		for (State<String> s : aut.getStates())
 		{
 			state2element.put(s, createElementState(doc, root,Integer.toString(id), s));
 			id+=1;
 		}
 
-		Set<? extends ModalTransition<List<BasicState<String>>,List<String>,CAState,CALabel>> tr= aut.getTransition();
-		for (ModalTransition<List<BasicState<String>>,List<String>,CAState,CALabel> t : tr)
+		Set<? extends ModalTransition<String,String,State<String>,CALabel>> tr= aut.getTransition();
+		for (ModalTransition<String,String,State<String>,CALabel> t : tr)
 		{
 			createElementEdge(doc,root,Integer.toString(id),
 					state2element.get(t.getSource()),
@@ -338,7 +338,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 		mxcell1.setAttributeNode(id1);
 
 		mxcell1.setAttribute("value", "principal="+principal+
-				","+bs.toString());
+				",label="+bs.getState()+((bs.isFinalstate())?",final=true":"")+((bs.isInitial())?",initial=true":""));
 
 
 		root.appendChild(mxcell1);
@@ -353,7 +353,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 	 * @param arrintstate
 	 * @return
 	 */
-	private static Element createElementState(Document doc, Element root,String id, CAState castate)
+	private static Element createElementState(Document doc, Element root,String id, State<String> castate)
 	{
 		Attr parent=doc.createAttribute("parent");
 		parent.setValue("1");
@@ -362,16 +362,16 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 		if (castate.isFinalstate())
 		{
 			if (castate.isInitial())
-				style.setValue(MxCAState.initialfinalnodestylevalue);
+				style.setValue(MxState.initialfinalnodestylevalue);
 			else
-				style.setValue(MxCAState.finalnodestylevalue);
+				style.setValue(MxState.finalnodestylevalue);
 		}
 		else 
 		{
 			if (castate.isInitial())
-				style.setValue(MxCAState.initialnodestylevalue);			
+				style.setValue(MxState.initialnodestylevalue);			
 			else
-				style.setValue(MxCAState.nodestylevalue);				
+				style.setValue(MxState.nodestylevalue);				
 		}
 
 		Attr value=doc.createAttribute("value");
@@ -395,7 +395,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 		as.setValue("geometry");
 		mxGeometry1.setAttributeNode(as);
 
-		double incrementedWidth = 40 + MxCAState.initialStateWidthIncrement;
+		double incrementedWidth = 40 + MxState.initialStateWidthIncrement;
 		mxGeometry1.setAttribute("width", (castate.isInitial())?incrementedWidth+"":"40.0");
 		mxGeometry1.setAttribute("height", "40.0");
 
@@ -405,7 +405,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 		//		if (!mxGeometry1.hasAttribute("x"))
 		//		{
 		Attr x=doc.createAttribute("x");
-		x.setNodeValue(((castate instanceof MxCAState)?((MxCAState)castate).getX():0.0)+"");
+		x.setNodeValue(((castate instanceof MxState)?((MxState)castate).getX():0.0)+"");
 		mxGeometry1.setAttributeNode(x);
 
 		//		}
@@ -415,7 +415,7 @@ public class MxeConverter implements AutConverter<ModalAutomaton<CALabel>,ModalA
 		//		if (!mxGeometry1.hasAttribute("y"))
 		//		{
 		Attr y=doc.createAttribute("y");
-		y.setNodeValue(((castate instanceof MxCAState)?((MxCAState)castate).getY():0.0)+"");
+		y.setNodeValue(((castate instanceof MxState)?((MxState)castate).getY():0.0)+"");
 		mxGeometry1.setAttributeNode(y);
 
 		//		}

@@ -49,11 +49,13 @@ import com.mxgraph.util.png.mxPngTextDecoder;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStyleRegistry;
 
-import io.github.contractautomataproject.catapp.castate.MxCAState;
+import io.github.contractautomataproject.catapp.castate.MxState;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.converters.AutDataConverter;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 /**
  *
@@ -434,8 +436,8 @@ public class EditorActions
 						graph.selectAll();						
 						//cannot draw custom shapes in SVG, so it draws a small arrow to the initial state
 						
-						Consumer<mxCell> resetGeometry = c -> c.setGeometry(new mxGeometry(c.getGeometry().getX()+MxCAState.initialStateWidthIncrement,c.getGeometry().getY(),
-								c.getGeometry().getWidth()-MxCAState.initialStateWidthIncrement,c.getGeometry().getHeight()));
+						Consumer<mxCell> resetGeometry = c -> c.setGeometry(new mxGeometry(c.getGeometry().getX()+MxState.initialStateWidthIncrement,c.getGeometry().getY(),
+								c.getGeometry().getWidth()-MxState.initialStateWidthIncrement,c.getGeometry().getHeight()));
 						
 						String in = (String) mxStyleRegistry.getValue("SHAPE_INITIALSTATE");
 						String infin = (String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE");
@@ -444,7 +446,7 @@ public class EditorActions
 						.filter(c->c.getStyle()!=null)
 						.filter(c->c.getStyle().contains(in))
 						.peek(resetGeometry)
-						.peek(c->c.setStyle(MxCAState.nodestylevalue))
+						.peek(c->c.setStyle(MxState.nodestylevalue))
 						.collect(Collectors.toList());
 
 						List<mxCell> tempInitialFinal = Arrays.stream(graph.getSelectionCells())
@@ -452,14 +454,14 @@ public class EditorActions
 						.filter(c->c.getStyle()!=null)
 						.filter(c->c.getStyle().contains(infin))
 						.peek(resetGeometry)
-						.peek(c->c.setStyle(MxCAState.finalnodestylevalue))
+						.peek(c->c.setStyle(MxState.finalnodestylevalue))
 						.collect(Collectors.toList());
 						
 						mxCell initial=Stream.concat(tempInitial.stream(),tempInitialFinal.stream())
 						.findFirst().orElseThrow(RuntimeException::new); //the initial state cell found
 				
 						mxCell edgeinit = (mxCell) graph.insertEdge(graph.getDefaultParent(), null, null, null, null, EditorToolBar.edgestylevalue);
-						edgeinit.getGeometry().getSourcePoint().setX(initial.getGeometry().getX()-MxCAState.initialStateWidthIncrement);
+						edgeinit.getGeometry().getSourcePoint().setX(initial.getGeometry().getX()-MxState.initialStateWidthIncrement);
 						edgeinit.getGeometry().getSourcePoint().setY(initial.getGeometry().getCenterY());
 						edgeinit.getGeometry().getTargetPoint().setX(initial.getGeometry().getX());
 						edgeinit.getGeometry().getTargetPoint().setY(initial.getGeometry().getCenterY());
@@ -485,18 +487,18 @@ public class EditorActions
 						mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()),
 								filename);
 						
-						Consumer<mxCell> setGeometry = c -> c.setGeometry(new mxGeometry(c.getGeometry().getX()-MxCAState.initialStateWidthIncrement,c.getGeometry().getY(),
-								c.getGeometry().getWidth()+MxCAState.initialStateWidthIncrement,c.getGeometry().getHeight()));
+						Consumer<mxCell> setGeometry = c -> c.setGeometry(new mxGeometry(c.getGeometry().getX()-MxState.initialStateWidthIncrement,c.getGeometry().getY(),
+								c.getGeometry().getWidth()+MxState.initialStateWidthIncrement,c.getGeometry().getHeight()));
 				
 						
 						//restoring
 						tempInitial.parallelStream()
 						.peek(setGeometry)
-						.forEach(c->c.setStyle(MxCAState.initialnodestylevalue));
+						.forEach(c->c.setStyle(MxState.initialnodestylevalue));
 
 						tempInitialFinal.parallelStream()
 						.peek(setGeometry)
-						.forEach(c->c.setStyle(MxCAState.initialfinalnodestylevalue));
+						.forEach(c->c.setStyle(MxState.initialfinalnodestylevalue));
 						
 						graph.removeCells(new Object[] {edgeinit});
 						graph.clearSelection();
@@ -543,7 +545,7 @@ public class EditorActions
 					else if (ext.equalsIgnoreCase("data")) 
 					{
 						try {
-							ModalAutomaton<CALabel> aut=((App) editor).lastaut;
+							Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=((App) editor).lastaut;
 							new AutDataConverter<CALabel>(CALabel::new).exportMSCA(filename,aut);
 							editor.setModified(false);
 							JOptionPane.showMessageDialog(editor.getGraphComponent(),"The automaton has been stored with filename "+filename,"Success!",JOptionPane.PLAIN_MESSAGE);
@@ -839,7 +841,7 @@ public class EditorActions
 								{
 									EditorMenuBar menuBar = (EditorMenuBar) ((App) editor).getMenuFrame().getJMenuBar();
 									menuBar.lastDir = fc.getSelectedFile().getParent();	
-									ModalAutomaton<CALabel> aut;
+									Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut;
 									try {
 										String filename = fc.getSelectedFile().toString();
 										aut = new AutDataConverter<CALabel>(CALabel::new).importMSCA(filename);

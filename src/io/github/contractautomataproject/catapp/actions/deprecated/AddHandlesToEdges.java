@@ -12,8 +12,10 @@ import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 @SuppressWarnings("serial")
 public class AddHandlesToEdges extends AbstractAction 
@@ -33,7 +35,7 @@ public class AddHandlesToEdges extends AbstractAction
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
 		String absfilename =editor.getCurrentFile().getAbsolutePath();
-		ModalAutomaton<CALabel> aut=editor.lastaut;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=editor.lastaut;
 
 		try {
 			aut=new MxeConverter().importMSCA(absfilename);

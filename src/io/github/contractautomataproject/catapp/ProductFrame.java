@@ -22,10 +22,12 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.family.Family;
 import io.github.contractautomataproject.catlib.family.Product;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 /**
  * This class represents a frame visualising the products of a feature model
@@ -42,7 +44,7 @@ public class ProductFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 
-	public ProductFrame(Family f, JPanel frame, ModalAutomaton<CALabel> aut){
+	public ProductFrame(Family f, JPanel frame, Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut){
 		this.fam=f;
 		JPanel panel=new JPanel();
 		this.setLocationRelativeTo(frame);

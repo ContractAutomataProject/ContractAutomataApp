@@ -33,7 +33,7 @@ import io.github.contractautomataproject.catapp.EditorActions.NewAction;
 import io.github.contractautomataproject.catapp.EditorActions.OpenAction;
 import io.github.contractautomataproject.catapp.EditorActions.PrintAction;
 import io.github.contractautomataproject.catapp.EditorActions.SaveAction;
-import io.github.contractautomataproject.catapp.castate.MxCAState;
+import io.github.contractautomataproject.catapp.castate.MxState;
 
 public class EditorToolBar extends JToolBar
 {
@@ -278,7 +278,7 @@ public class EditorToolBar extends JToolBar
 
 		 addSeparator();
 
-		 addNodeTemplate(" State ", MxCAState.nodestylevalue,						 
+		 addNodeTemplate(" State ", MxState.nodestylevalue,						 
 				 new ImageIcon(
 						 getClass().getResource("/io/github/davidebasile/catapp/images/ellipse.png")));
 

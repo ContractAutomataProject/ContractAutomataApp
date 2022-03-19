@@ -15,10 +15,12 @@ import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.ProductFrame;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.family.FMCA;
 import io.github.contractautomataproject.catlib.family.Family;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 @SuppressWarnings("serial")
 public class OrchestrationFamily extends AbstractAction {
@@ -39,13 +41,13 @@ public class OrchestrationFamily extends AbstractAction {
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
-		ModalAutomaton<CALabel> aut=editor.lastaut;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=editor.lastaut;
 
 		Family f=pf.getFamily();
 
 
 		Instant start = Instant.now();
-		ModalAutomaton<CALabel> controller = new FMCA(aut,f).getOrchestrationOfFamily();
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> controller = new FMCA(aut,f).getOrchestrationOfFamily();
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 	

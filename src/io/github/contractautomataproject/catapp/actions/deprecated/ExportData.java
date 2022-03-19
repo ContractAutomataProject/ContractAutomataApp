@@ -10,9 +10,11 @@ import com.mxgraph.util.mxResources;
 
 import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.converters.AutDataConverter;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 @SuppressWarnings("serial")
 public class ExportData extends AbstractAction {
@@ -23,7 +25,7 @@ public class ExportData extends AbstractAction {
 		
 		String filename =editor.getCurrentFile().getAbsolutePath();
 		filename = filename.substring(0,filename.length()-4);
-		ModalAutomaton<CALabel> aut=editor.lastaut;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=editor.lastaut;
 		//			try {
 		//				aut = new BasicMxeConverter().importMxe(filename);
 		//				editor.lastaut=aut;

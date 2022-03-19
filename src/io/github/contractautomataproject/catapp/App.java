@@ -33,9 +33,11 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
-import io.github.contractautomataproject.catapp.castate.MxCAState;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catapp.castate.MxState;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 
 
@@ -65,7 +67,7 @@ public class App extends BasicGraphEditor
 	 */
 	public static URL url = null;
 
-	public ModalAutomaton<CALabel> lastaut = null;
+	public Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> lastaut = null;
 
 	private ProductFrame pf=null;
 
@@ -74,7 +76,7 @@ public class App extends BasicGraphEditor
 	public App()
 	{
 		this("Contract Automata Tool (September 2021)", new CustomGraphComponent(new CustomGraph()));
-		MxCAState.setShapes();
+		MxState.setShapes();
 	}
 
 	/**
@@ -349,7 +351,7 @@ public class App extends BasicGraphEditor
 				Object source, Object target) {
 			if (target!=null)
 			{
-				((mxCell) target).setStyle(MxCAState.nodestylevalue+";");
+				((mxCell) target).setStyle(MxState.nodestylevalue+";");
 				mxCell n=(mxCell) target;
 				double x=n.getGeometry().getX();
 				double y=n.getGeometry().getY();

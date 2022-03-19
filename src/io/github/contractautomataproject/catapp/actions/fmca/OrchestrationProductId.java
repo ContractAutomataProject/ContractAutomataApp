@@ -15,11 +15,13 @@ import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.ProductFrame;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.family.Product;
 import io.github.contractautomataproject.catlib.operators.ProductOrchestrationSynthesisOperator;
 import io.github.contractautomataproject.catlib.requirements.Agreement;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 @SuppressWarnings("serial")
 public class OrchestrationProductId extends AbstractAction {
@@ -34,7 +36,7 @@ public class OrchestrationProductId extends AbstractAction {
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
-		ModalAutomaton<CALabel> aut=editor.lastaut;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=editor.lastaut;
 		//	MSCA backup = aut.clone();
 
 		ProductFrame pf=editor.getProductFrame();
@@ -56,7 +58,7 @@ public class OrchestrationProductId extends AbstractAction {
 		Product p=pf.getProductAt(Integer.parseInt(S));
 
 		Instant start = Instant.now();
-		ModalAutomaton<CALabel> controller = new ProductOrchestrationSynthesisOperator(new Agreement(),p).apply(aut);
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> controller = new ProductOrchestrationSynthesisOperator(new Agreement(),p).apply(aut);
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 	

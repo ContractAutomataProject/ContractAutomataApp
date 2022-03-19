@@ -13,12 +13,14 @@ import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.family.Product;
 import io.github.contractautomataproject.catlib.operators.OrchestrationSynthesisOperator;
 import io.github.contractautomataproject.catlib.operators.ProductOrchestrationSynthesisOperator;
 import io.github.contractautomataproject.catlib.requirements.Agreement;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 @SuppressWarnings("serial")
 public class OrchestrationProductType extends AbstractAction {
@@ -32,7 +34,7 @@ public class OrchestrationProductType extends AbstractAction {
 		String filename=editor.getCurrentFile().getName();
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
-		ModalAutomaton<CALabel> aut=editor.lastaut;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=editor.lastaut;
 		//	MSCA backup = aut.clone();//in case aut becomes null
 
 		String S= (String) JOptionPane.showInputDialog(null, 
@@ -56,7 +58,7 @@ public class OrchestrationProductType extends AbstractAction {
 
 		Product p=(R.length+F.length>0)?new Product(R,F):null;
 
-		ModalAutomaton<CALabel> controller=null;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> controller=null;
 		//	FMCA faut= new FMCA(aut,editor.getProductFrame().getFamily());
 		OrchestrationSynthesisOperator synth = (p!=null)?
 				new ProductOrchestrationSynthesisOperator(new Agreement(),p)

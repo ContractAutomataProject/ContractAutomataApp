@@ -18,11 +18,13 @@ import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.operators.MSCACompositionFunction;
 import io.github.contractautomataproject.catlib.requirements.Agreement;
 import io.github.contractautomataproject.catlib.requirements.StrongAgreement;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 @SuppressWarnings("serial")
 public class Composition extends AbstractAction {
@@ -44,7 +46,7 @@ public class Composition extends AbstractAction {
 
 		fc.setDialogTitle("Select an FMCA to be composed");
 
-		List<ModalAutomaton<CALabel>> aut = new ArrayList<>(3);
+		List<Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>> aut = new ArrayList<>(3);
 		List<String> names= new ArrayList<>(3);
 
 		boolean lastIteration=false;
@@ -101,7 +103,7 @@ public class Composition extends AbstractAction {
 		//				return;
 
 		Instant start = Instant.now();
-		ModalAutomaton<CALabel> composition = (ModalAutomaton<CALabel>) new MSCACompositionFunction(aut,
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> composition = (Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>) new MSCACompositionFunction(aut,
 				(pruningOption==JOptionPane.YES_OPTION)?null:
 					(pruningOption==JOptionPane.NO_OPTION)?new Agreement().negate():
 						new StrongAgreement().negate()).apply(Integer.MAX_VALUE); 

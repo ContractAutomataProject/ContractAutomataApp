@@ -12,10 +12,12 @@ import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.operators.ChoreographySynthesisOperator;
 import io.github.contractautomataproject.catlib.requirements.StrongAgreement;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 @SuppressWarnings("serial")
 public class Choreography extends AbstractAction {
@@ -28,10 +30,10 @@ public class Choreography extends AbstractAction {
 		String filename=editor.getCurrentFile().getName();
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
-		ModalAutomaton<CALabel> aut=editor.lastaut;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=editor.lastaut;
 		//	MSCA backup = aut.clone();
 
-		ModalAutomaton<CALabel> controller=null;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> controller=null;
 		Instant start = Instant.now();
 		try {
 			controller = new ChoreographySynthesisOperator(new StrongAgreement()).apply(aut);

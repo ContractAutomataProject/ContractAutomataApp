@@ -12,10 +12,12 @@ import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.ModalAutomaton;
+import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.operators.OrchestrationSynthesisOperator;
 import io.github.contractautomataproject.catlib.requirements.Agreement;
+import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 @SuppressWarnings("serial")
 public class Orchestration extends AbstractAction {
@@ -29,9 +31,9 @@ public class Orchestration extends AbstractAction {
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
 
-		ModalAutomaton<CALabel> aut=editor.lastaut;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=editor.lastaut;
 
-		ModalAutomaton<CALabel> controller=null;
+		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> controller=null;
 		Instant start = Instant.now();
 	
 		try {

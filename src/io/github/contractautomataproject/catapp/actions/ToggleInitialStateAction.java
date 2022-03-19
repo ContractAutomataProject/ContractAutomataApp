@@ -12,7 +12,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.shape.mxStencilShape;
 import com.mxgraph.swing.mxGraphComponent;
 
-import io.github.contractautomataproject.catapp.castate.MxCAState;
+import io.github.contractautomataproject.catapp.castate.MxState;
 
 public class ToggleInitialStateAction extends AbstractAction
 {
@@ -37,33 +37,33 @@ public class ToggleInitialStateAction extends AbstractAction
 		mxGraphComponent graphComponent = (mxGraphComponent) e.getSource();
 		
 		Consumer<mxCell> reset = n->{
-			if (MxCAState.isFinal.test(n))
-				n.setStyle(MxCAState.finalnodestylevalue);
+			if (MxState.isFinal.test(n))
+				n.setStyle(MxState.finalnodestylevalue);
 			else
-				n.setStyle(MxCAState.nodestylevalue);
+				n.setStyle(MxState.nodestylevalue);
 			
 			double x=n.getGeometry().getX();
 			double y=n.getGeometry().getY();
 			n.setGeometry(new mxGeometry(x, y, 40, 40));
 		};
 
-		if (MxCAState.isInitial.test(node))
+		if (MxState.isInitial.test(node))
 			reset.accept(node);//reset
 		else {
 			graphComponent.getGraph().selectAll();
 			Arrays.stream(graphComponent.getGraph().getSelectionCells())
 			.map(x->(mxCell)x)
-			.filter(x->x!=null && MxCAState.isInitial.test(x))
+			.filter(x->x!=null && MxState.isInitial.test(x))
 			.forEach(reset);
 
-			if (MxCAState.isFinal.test(node))
-				node.setStyle(MxCAState.initialfinalnodestylevalue); 
+			if (MxState.isFinal.test(node))
+				node.setStyle(MxState.initialfinalnodestylevalue); 
 			else
-				node.setStyle(MxCAState.initialnodestylevalue);
+				node.setStyle(MxState.initialnodestylevalue);
 	
 			double x=node.getGeometry().getX();
 			double y=node.getGeometry().getY();
-			node.setGeometry(new mxGeometry(x, y, 40+MxCAState.initialStateWidthIncrement, 40));
+			node.setGeometry(new mxGeometry(x, y, 40+MxState.initialStateWidthIncrement, 40));
 
 			graphComponent.getGraph().clearSelection();
 			graphComponent.getGraph().addSelectionCell(node);
