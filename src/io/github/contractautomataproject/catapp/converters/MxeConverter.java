@@ -2,14 +2,8 @@ package io.github.contractautomataproject.catapp.converters;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -28,6 +22,7 @@ import io.github.contractautomataproject.catlib.automaton.label.action.IdleActio
 import io.github.contractautomataproject.catlib.automaton.label.action.OfferAction;
 import io.github.contractautomataproject.catlib.automaton.label.action.RequestAction;
 import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
+import io.github.contractautomataproject.catlib.converters.AutDataConverter;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -175,7 +170,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 					if (labels.stream().anyMatch(item->!(item.startsWith(OfferAction.OFFER)||item.startsWith(RequestAction.REQUEST)||item.startsWith(IdleAction.IDLE))))
 						throw new IOException("Ill-formed action ");
 					transitions.add(new ModalTransition<>(id2castate.get(Integer.parseInt(eElement.getAttribute("source"))),
-							new CALabel(labels),//label
+							new CALabel(labels.stream().map(AutDataConverter::parseAction).collect(Collectors.toList())),//label
 							id2castate.get(Integer.parseInt(eElement.getAttribute("target"))), 
 							(eElement.getAttribute("style").contains("strokeColor=#FF0000"))? ModalTransition.Modality.URGENT: //red
 								(eElement.getAttribute("style").contains("strokeColor=#00FF00"))? ModalTransition.Modality.LAZY: //green

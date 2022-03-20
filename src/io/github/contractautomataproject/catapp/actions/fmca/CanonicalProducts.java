@@ -46,7 +46,7 @@ public class CanonicalProducts extends AbstractAction {
 		Instant start;
 		if (!aut.getForwardStar(aut.getInitial()).stream()
 				.map(ModalTransition<String,Action,State<String>,CALabel>::getLabel)
-				.allMatch(l->l.getUnsignedAction().equals("dummy")))
+				.allMatch(l->l.getPrincipalAction().getLabel().equals("dummy")))
 		{
 			start = Instant.now();
 			cp=new FMCA(aut,pf.getFamily()).getCanonicalProducts();
