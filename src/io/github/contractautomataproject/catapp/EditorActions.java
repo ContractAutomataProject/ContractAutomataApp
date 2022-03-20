@@ -26,7 +26,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.ParserConfigurationException;
 
+import io.github.contractautomataproject.catlib.automaton.label.action.Action;
 import org.w3c.dom.Document;
 
 import com.mxgraph.canvas.mxICanvas;
@@ -55,7 +57,7 @@ import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
 import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.converters.AutDataConverter;
-import io.github.contractautomataproject.catlib.transition.ModalTransition;
+import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
 
 /**
  *
@@ -545,15 +547,17 @@ public class EditorActions
 					else if (ext.equalsIgnoreCase("data")) 
 					{
 						try {
-							Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=((App) editor).lastaut;
+							Automaton<String,Action,State<String>,ModalTransition<String, Action,State<String>,CALabel>> aut=((App) editor).lastaut;
 							new AutDataConverter<CALabel>(CALabel::new).exportMSCA(filename,aut);
 							editor.setModified(false);
 							JOptionPane.showMessageDialog(editor.getGraphComponent(),"The automaton has been stored with filename "+filename,"Success!",JOptionPane.PLAIN_MESSAGE);
 						} catch (IOException e1) {
 							JOptionPane.showMessageDialog(editor.getGraphComponent(),"File not found"+e1.toString(),mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-						}	
+						} catch (ParserConfigurationException e1) {
+                            e1.printStackTrace();
+                        }
 
-					}
+                    }
 //					else if (ext.equalsIgnoreCase("txt"))
 //					{
 //						String content = mxGdCodec.encode(editor.graphComponent.getGraph());
@@ -841,7 +845,7 @@ public class EditorActions
 								{
 									EditorMenuBar menuBar = (EditorMenuBar) ((App) editor).getMenuFrame().getJMenuBar();
 									menuBar.lastDir = fc.getSelectedFile().getParent();	
-									Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut;
+									Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut;
 									try {
 										String filename = fc.getSelectedFile().toString();
 										aut = new AutDataConverter<CALabel>(CALabel::new).importMSCA(filename);

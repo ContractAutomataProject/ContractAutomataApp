@@ -1,33 +1,20 @@
 package io.github.contractautomataproject.catapp;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.LineBorder;
 
 import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.label.action.Action;
 import io.github.contractautomataproject.catlib.automaton.state.State;
+import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
 import io.github.contractautomataproject.catlib.family.Family;
 import io.github.contractautomataproject.catlib.family.Product;
-import io.github.contractautomataproject.catlib.transition.ModalTransition;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * This class represents a frame visualising the products of a feature model
@@ -44,7 +31,7 @@ public class ProductFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 
-	public ProductFrame(Family f, JPanel frame, Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut){
+	public ProductFrame(Family f, JPanel frame, Automaton<String,Action,State<String>, ModalTransition<String,Action,State<String>,CALabel>> aut){
 		this.fam=f;
 		JPanel panel=new JPanel();
 		this.setLocationRelativeTo(frame);

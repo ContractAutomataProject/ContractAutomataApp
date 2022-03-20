@@ -1,15 +1,6 @@
 package io.github.contractautomataproject.catapp.actions.fmca;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.time.Duration;
-import java.time.Instant;
-
-import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
-
 import com.mxgraph.util.mxResources;
-
 import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
@@ -17,10 +8,17 @@ import io.github.contractautomataproject.catapp.ProductFrame;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
 import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.label.action.Action;
 import io.github.contractautomataproject.catlib.automaton.state.State;
+import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
 import io.github.contractautomataproject.catlib.family.FMCA;
 import io.github.contractautomataproject.catlib.family.Family;
-import io.github.contractautomataproject.catlib.transition.ModalTransition;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 
 @SuppressWarnings("serial")
 public class OrchestrationFamilyEnumerative extends AbstractAction {
@@ -35,19 +33,19 @@ public class OrchestrationFamilyEnumerative extends AbstractAction {
 		ProductFrame pf=editor.getProductFrame();
 		if (pf==null)
 		{
-			JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Family loaded!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Family loaded!",mxResources.get("error"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
-		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut=editor.lastaut;
+		Automaton<String,Action,State<String>, ModalTransition<String, Action,State<String>,CALabel>> aut=editor.lastaut;
 		Family f=pf.getFamily();
 
 		JOptionPane.showMessageDialog(editor.getGraphComponent(),"Warning : the enumerative computation may require several minutes!","Warning",JOptionPane.WARNING_MESSAGE);
 
 
 		Instant start = Instant.now();
-		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> controller = new FMCA(aut,f).getOrchestrationOfFamilyEnumerative();
+		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> controller = new FMCA(aut,f).getOrchestrationOfFamilyEnumerative();
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 	

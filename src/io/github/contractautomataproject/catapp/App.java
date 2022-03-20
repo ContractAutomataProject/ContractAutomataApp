@@ -13,6 +13,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import io.github.contractautomataproject.catlib.automaton.label.action.Action;
+import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
 import org.w3c.dom.Document;
 
 import com.mxgraph.io.mxCodec;
@@ -37,7 +39,7 @@ import io.github.contractautomataproject.catapp.castate.MxState;
 import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
 import io.github.contractautomataproject.catlib.automaton.state.State;
-import io.github.contractautomataproject.catlib.transition.ModalTransition;
+import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
 
 
 
@@ -67,7 +69,7 @@ public class App extends BasicGraphEditor
 	 */
 	public static URL url = null;
 
-	public Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> lastaut = null;
+	public Automaton<String, Action,State<String>, ModalTransition<String,Action,State<String>,CALabel>> lastaut = null;
 
 	private ProductFrame pf=null;
 

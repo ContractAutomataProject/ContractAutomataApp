@@ -23,6 +23,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import io.github.contractautomataproject.catlib.automaton.label.action.Action;
+import io.github.contractautomataproject.catlib.automaton.label.action.IdleAction;
+import io.github.contractautomataproject.catlib.automaton.label.action.OfferAction;
+import io.github.contractautomataproject.catlib.automaton.label.action.RequestAction;
+import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -38,7 +43,6 @@ import io.github.contractautomataproject.catlib.automaton.label.CALabel;
 import io.github.contractautomataproject.catlib.automaton.state.BasicState;
 import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.converters.AutConverter;
-import io.github.contractautomataproject.catlib.transition.ModalTransition;
 
 /**
  * Import/export in xml (mxe) format. This is the format 
@@ -47,7 +51,7 @@ import io.github.contractautomataproject.catlib.transition.ModalTransition;
  * @author Davide Basile
  *
  */
-public class MxeConverter implements AutConverter<Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>,Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>> {
+public class MxeConverter implements AutConverter<Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>,Automaton<String, Action,State<String>, ModalTransition<String,Action,State<String>,CALabel>>> {
 
 	/**
 	 * Import the mxGraphModel XML description (used by the mxGraph) into an MSCA object
@@ -59,7 +63,7 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 	 * @throws SAXException 
 	 */
 	@Override
-	public Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> importMSCA(String filename) throws IOException, ParserConfigurationException, SAXException {
+	public Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> importMSCA(String filename) throws IOException, ParserConfigurationException, SAXException {
 		//TODO long function
 		File inputFile = new File(filename);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -70,7 +74,7 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 
 		Map<Integer,Set<BasicState<String>>> princ2bs = new HashMap<>();
 		Map<Integer, State<String>> id2castate = new HashMap<>();
-		Set<ModalTransition<String,String,State<String>,CALabel>> transitions= new HashSet<ModalTransition<String,String,State<String>,CALabel>>();
+		Set<ModalTransition<String,Action,State<String>,CALabel>> transitions= new HashSet<>();
 
 		//first read all basic states and castates, then all the edges.
 		for (int i = 0; i < nodeList.getLength(); i++) 
@@ -142,7 +146,7 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 										geom.hasAttribute("y")?Float.parseFloat(geom.getAttribute("y")):0);
 						//useful when not morphing (e.g. adding handles to edges)					
 
-						if (castate.isFinalstate()!= 
+						if (castate.isFinalState()!=
 								//eElement.getAttribute("style").contains("terminate.png"))
 								MxState.isFinal.test(cell))
 							throw new IOException("Problems with final states in .mxe "+cell.getStyle());
@@ -168,9 +172,9 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 
 				if (Integer.parseInt(eElement.getAttribute("id"))>1 && eElement.hasAttribute("edge")) {
 					List<String> labels = Arrays.asList(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(","));
-					if (labels.stream().anyMatch(item->!(item.startsWith(CALabel.OFFER)||item.startsWith(CALabel.REQUEST)||item.startsWith(CALabel.IDLE))))
-						throw new IOException("Ill-formed action");
-					transitions.add(new ModalTransition<String,String,State<String>,CALabel>(id2castate.get(Integer.parseInt(eElement.getAttribute("source"))),
+					if (labels.stream().anyMatch(item->!(item.startsWith(OfferAction.OFFER)||item.startsWith(RequestAction.REQUEST)||item.startsWith(IdleAction.IDLE))))
+						throw new IOException("Ill-formed action ");
+					transitions.add(new ModalTransition<>(id2castate.get(Integer.parseInt(eElement.getAttribute("source"))),
 							new CALabel(labels),//label
 							id2castate.get(Integer.parseInt(eElement.getAttribute("target"))), 
 							(eElement.getAttribute("style").contains("strokeColor=#FF0000"))? ModalTransition.Modality.URGENT: //red
@@ -180,7 +184,7 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 			}
 		}
 
-		return new Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>(transitions);
+		return new Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>(transitions);
 
 	}
 
@@ -214,8 +218,7 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 	 * @throws TransformerException  exception with transformer
 	 */
 	@Override
-	public  void exportMSCA(String fileName, Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut) throws ParserConfigurationException, TransformerException
-	{
+	public  void exportMSCA(String fileName, Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut) throws ParserConfigurationException, IOException, TransformerException {
 		DocumentBuilderFactory dbFactory =
 				DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = 
@@ -257,13 +260,13 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 			id+=1;
 		}
 
-		Set<? extends ModalTransition<String,String,State<String>,CALabel>> tr= aut.getTransition();
-		for (ModalTransition<String,String,State<String>,CALabel> t : tr)
+		Set<? extends ModalTransition<String,Action,State<String>,CALabel>> tr= aut.getTransition();
+		for (ModalTransition<String,Action,State<String>,CALabel> t : tr)
 		{
 			createElementEdge(doc,root,Integer.toString(id),
 					state2element.get(t.getSource()),
 					state2element.get(t.getTarget()),
-					Arrays.toString(t.getLabel().getAction().stream().toArray(String[]::new)),t.getModality());
+					Arrays.toString(t.getLabel().getAction().stream().map(Action::toString).toArray(String[]::new)),t.getModality());
 			id+=1;
 		}
 
@@ -359,28 +362,20 @@ public class MxeConverter implements AutConverter<Automaton<String,String,State<
 		mxcell1.setAttributeNode(id1);
 
 		mxcell1.setAttribute("value", "principal="+principal+
-				",label="+bs.getState()+((bs.isFinalstate())?",final=true":"")+((bs.isInitial())?",initial=true":""));
+				",label="+bs.getState()+((bs.isFinalState())?",final=true":"")+((bs.isInitial())?",initial=true":""));
 
 
 		root.appendChild(mxcell1);
 		return mxcell1;		
 	}
 
-	/**
-	 * @param doc
-	 * @param root
-	 * @param id
-	 * @param castates
-	 * @param arrintstate
-	 * @return
-	 */
 	private static Element createElementState(Document doc, Element root,String id, State<String> castate)
 	{
 		Attr parent=doc.createAttribute("parent");
 		parent.setValue("1");
 		Attr style=doc.createAttribute("style");
 		
-		if (castate.isFinalstate())
+		if (castate.isFinalState())
 		{
 			if (castate.isInitial())
 				style.setValue(MxState.initialfinalnodestylevalue);

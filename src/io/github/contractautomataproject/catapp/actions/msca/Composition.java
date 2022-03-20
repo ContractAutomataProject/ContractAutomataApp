@@ -1,30 +1,27 @@
 package io.github.contractautomataproject.catapp.actions.msca;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
-
 import io.github.contractautomataproject.catapp.App;
 import io.github.contractautomataproject.catapp.EditorActions;
 import io.github.contractautomataproject.catapp.EditorMenuBar;
 import io.github.contractautomataproject.catapp.converters.MxeConverter;
 import io.github.contractautomataproject.catlib.automaton.Automaton;
 import io.github.contractautomataproject.catlib.automaton.label.CALabel;
+import io.github.contractautomataproject.catlib.automaton.label.action.Action;
 import io.github.contractautomataproject.catlib.automaton.state.State;
+import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
 import io.github.contractautomataproject.catlib.operators.MSCACompositionFunction;
 import io.github.contractautomataproject.catlib.requirements.Agreement;
 import io.github.contractautomataproject.catlib.requirements.StrongAgreement;
-import io.github.contractautomataproject.catlib.transition.ModalTransition;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class Composition extends AbstractAction {
@@ -46,7 +43,7 @@ public class Composition extends AbstractAction {
 
 		fc.setDialogTitle("Select an FMCA to be composed");
 
-		List<Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>> aut = new ArrayList<>(3);
+		List<Automaton<String,Action,State<String>, ModalTransition<String, Action,State<String>,CALabel>>> aut = new ArrayList<>(3);
 		List<String> names= new ArrayList<>(3);
 
 		boolean lastIteration=false;
@@ -103,7 +100,7 @@ public class Composition extends AbstractAction {
 		//				return;
 
 		Instant start = Instant.now();
-		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> composition = (Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>) new MSCACompositionFunction(aut,
+		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> composition = (Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>) new MSCACompositionFunction(aut,
 				(pruningOption==JOptionPane.YES_OPTION)?null:
 					(pruningOption==JOptionPane.NO_OPTION)?new Agreement().negate():
 						new StrongAgreement().negate()).apply(Integer.MAX_VALUE); 

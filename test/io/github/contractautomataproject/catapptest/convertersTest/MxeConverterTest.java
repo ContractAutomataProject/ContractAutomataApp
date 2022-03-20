@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import io.github.contractautomataproject.catlib.automaton.label.action.Action;
+import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -24,7 +26,7 @@ import io.github.contractautomataproject.catlib.automaton.state.BasicState;
 import io.github.contractautomataproject.catlib.automaton.state.State;
 import io.github.contractautomataproject.catlib.converters.AutConverter;
 import io.github.contractautomataproject.catlib.converters.AutDataConverter;
-import io.github.contractautomataproject.catlib.transition.ModalTransition;
+import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
 
 public class MxeConverterTest {
 	
@@ -33,7 +35,7 @@ public class MxeConverterTest {
 		MxState.setShapes();
 	}
 	
-	private final AutConverter<Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>,Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>>> bmc = new MxeConverter();
+	private final AutConverter<Automaton<String, Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>,Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>> bmc = new MxeConverter();
 	private final String dir = System.getProperty("user.dir")+File.separator+"test"+File.separator
 			+"io"+File.separator+"github"+File.separator+"contractautomataproject"+File.separator+"catapptest"
 			+File.separator+"resources"+File.separator;
@@ -42,7 +44,7 @@ public class MxeConverterTest {
 	public void parseAndCheckBasicStatesTest_SCP2020_BusinessClientxHotelxEconomyClient() throws Exception {		
 		//check if there are different objects for the same basic state
 		
-		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut = bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");
+		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut = bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");
 
 		assertEquals(aut.getStates().stream()
 		.flatMap(cs->cs.getState().stream()
@@ -59,9 +61,13 @@ public class MxeConverterTest {
 	public void conversionXMLtestSCP2020_BusinessClientxHotel() throws Exception, TransformerException {
 		//check if by converting and parsing the automaton does not change
 		
-		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> comp= bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");			
-		bmc.exportMSCA(dir+"test.mxe",comp);
-		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> test=bmc.importMSCA(dir+"test.mxe");
+		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> comp= bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");
+        try {
+            bmc.exportMSCA(dir+"test.mxe",comp);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> test=bmc.importMSCA(dir+"test.mxe");
 
 		assertEquals(checkTransitions(comp,test),true);
 	}
@@ -70,26 +76,24 @@ public class MxeConverterTest {
 	public void parse_noxy() throws Exception, TransformerException {		
 		//check if by parsing and printing the automaton does not change
 		
-		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut = bmc.importMSCA(dir+"test_parse_noxy.mxe");
-		bmc.exportMSCA(dir+"test_parse_withxy.mxe",aut);
+		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut = bmc.importMSCA(dir+"test_parse_noxy.mxe");
+        bmc.exportMSCA(dir+"test_parse_withxy.mxe",aut);
 
-		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> test = bmc.importMSCA(dir+"test_parse_withxy.mxe");
+        Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> test = bmc.importMSCA(dir+"test_parse_withxy.mxe");
 		assertEquals(checkTransitions(aut,test),true);
 
 	}
 	
 	@Test
 	public void importProvola() throws Exception {
-		Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut = new AutDataConverter<CALabel>(CALabel::new).importMSCA(dir+"provola.data");
+		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut = new AutDataConverter<CALabel>(CALabel::new).importMSCA(dir+"provola.data");
 		bmc.exportMSCA(dir+"provola.mxe", aut);
-	}
+    }
 	
 	//****************************Exceptions**********************************
 	
 	@Test
 	public void importMXENewPrincipalNoBasicStates() throws Exception {
-		
-
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"test_newPrincipalWithNoBasicStates.mxe"))
 	    .isInstanceOf(IllegalArgumentException.class)
 	    .hasMessageContaining("source, label or target with different ranks");
@@ -153,7 +157,7 @@ public class MxeConverterTest {
 	}
 
 
-	public static boolean checkTransitions(Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> aut, Automaton<String,String,State<String>,ModalTransition<String,String,State<String>,CALabel>> test) {
+	public static boolean checkTransitions(Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut, Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> test) {
 		Set<String> autTr=aut.getTransition().parallelStream()
 				.map(t->t.toString())
 				.collect(Collectors.toSet());
