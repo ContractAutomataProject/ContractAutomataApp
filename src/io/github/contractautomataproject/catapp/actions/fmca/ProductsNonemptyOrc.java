@@ -44,7 +44,7 @@ public class ProductsNonemptyOrc extends AbstractAction {
 		Set<Product>  vpp;
 		if (!aut.getForwardStar(aut.getInitial()).stream()
 				.map(ModalTransition<String,Action,State<String>,CALabel>::getLabel)
-				.allMatch(l->l.getPrincipalAction().getLabel().equals("dummy")))
+				.allMatch(l->l.getAction().getLabel().equals("dummy")))
 			vpp=new FMCA(aut,pf.getFamily()).productsWithNonEmptyOrchestration();
 		else
 		{

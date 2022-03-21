@@ -167,7 +167,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 
 				if (Integer.parseInt(eElement.getAttribute("id"))>1 && eElement.hasAttribute("edge")) {
 					List<String> labels = Arrays.asList(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(","));
-					if (labels.stream().anyMatch(item->!(item.startsWith(OfferAction.OFFER)||item.startsWith(RequestAction.REQUEST)||item.startsWith(IdleAction.IDLE))))
+					if (labels.stream().anyMatch(item->!(OfferAction.isOffer(item)||RequestAction.isRequest(item)||IdleAction.isIdle(item))))
 						throw new IOException("Ill-formed action ");
 					transitions.add(new ModalTransition<>(id2castate.get(Integer.parseInt(eElement.getAttribute("source"))),
 							new CALabel(labels.stream().map(AutDataConverter::parseAction).collect(Collectors.toList())),//label
@@ -261,7 +261,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 			createElementEdge(doc,root,Integer.toString(id),
 					state2element.get(t.getSource()),
 					state2element.get(t.getTarget()),
-					Arrays.toString(t.getLabel().getAction().stream().map(Action::toString).toArray(String[]::new)),t.getModality());
+					Arrays.toString(t.getLabel().getLabel().stream().map(Action::toString).toArray(String[]::new)),t.getModality());
 			id+=1;
 		}
 
