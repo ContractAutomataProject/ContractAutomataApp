@@ -114,10 +114,9 @@ public class MxeConverterTest {
 	@Test
 	public void parseIllActions_exception() throws NumberFormatException, IOException, ParserConfigurationException, SAXException
 	{
-		
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"illformed2.mxe"))
 	    .isInstanceOf(IOException.class)
-	    .hasMessageContaining("Ill-formed action");
+	    .hasMessageContaining("The label is not well formed");
 	}
 	
 	@Test

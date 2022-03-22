@@ -17,6 +17,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import io.github.contractautomataproject.catlib.automaton.label.Label;
 import io.github.contractautomataproject.catlib.automaton.label.action.Action;
 import io.github.contractautomataproject.catlib.automaton.label.action.IdleAction;
 import io.github.contractautomataproject.catlib.automaton.label.action.OfferAction;
@@ -167,10 +168,17 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 
 				if (Integer.parseInt(eElement.getAttribute("id"))>1 && eElement.hasAttribute("edge")) {
 					List<String> labels = Arrays.asList(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(","));
-					if (labels.stream().anyMatch(item->!(OfferAction.isOffer(item)||RequestAction.isRequest(item)||IdleAction.isIdle(item))))
-						throw new IOException("Ill-formed action ");
+
+					CALabel lab;
+					try { 	lab = new CALabel(labels.stream().map(this::parseAction).collect(Collectors.toList()));}
+					catch (IllegalArgumentException e) {
+						//parsing failed
+						throw new IOException("The label is not well formed");
+					}
+
+
 					transitions.add(new ModalTransition<>(id2castate.get(Integer.parseInt(eElement.getAttribute("source"))),
-							new CALabel(labels.stream().map(AutDataConverter::parseAction).collect(Collectors.toList())),//label
+							lab,//label
 							id2castate.get(Integer.parseInt(eElement.getAttribute("target"))), 
 							(eElement.getAttribute("style").contains("strokeColor=#FF0000"))? ModalTransition.Modality.URGENT: //red
 								(eElement.getAttribute("style").contains("strokeColor=#00FF00"))? ModalTransition.Modality.LAZY: //green
