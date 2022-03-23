@@ -50,8 +50,6 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 	 * @param filename  the XML file name
 	 * @return the MSCA parsed from the XML
 	 * @throws IOException  exception problems when reading the file
-	 * @throws ParserConfigurationException 
-	 * @throws SAXException 
 	 */
 	@Override
 	public Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> importMSCA(String filename) throws IOException, ParserConfigurationException, SAXException {
@@ -61,7 +59,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(inputFile);
 		doc.getDocumentElement().normalize();
-		NodeList nodeList = (NodeList) doc.getElementsByTagName("mxCell");
+		NodeList nodeList = doc.getElementsByTagName("mxCell");
 
 		Map<Integer,Set<BasicState<String>>> princ2bs = new HashMap<>();
 		Map<Integer, State<String>> id2castate = new HashMap<>();
@@ -94,17 +92,17 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 								sbs.add(bs);
 						}
 						else 
-							princ2bs.put(principal, new HashSet<BasicState<String>>(Arrays.asList(bs)));
+							princ2bs.put(principal, new HashSet<>(List.of(bs)));
 					}
 					else {//castate
-						Element geom= (Element) (NodeList)eElement.getElementsByTagName("mxGeometry").item(0);
-						String[] st=Arrays.stream(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(","))
+						Element geom= (Element) eElement.getElementsByTagName("mxGeometry").item(0);
+						String[] st=Arrays.stream(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("]", "").replaceAll("\\s", "").split(","))
 								.toArray(String[]::new);
 						mxCell cell = new mxCell(null,null,eElement.getAttribute("style"));
 						
 						Function<String,BasicState<String>> convertToBs= s->{
 							//return new BasicState(s, s.equals("0"),eElement.getAttribute("style").contains("terminate.png"));
-							return new BasicState<String>(s, MxState.isInitial.test(cell),MxState.isFinal.test(cell));
+							return new BasicState<>(s, MxState.isInitial.test(cell), MxState.isFinal.test(cell));
 						};
 						
 						//\forall i. \exists bs \in princ2bs(i). bs==st[i]
@@ -127,7 +125,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 									else 
 									{
 										BasicState<String> bs =convertToBs.apply(st[ind]);
-										princ2bs.put(ind, new HashSet<BasicState<String>>(Arrays.asList(bs)));
+										princ2bs.put(ind, new HashSet<>(List.of(bs)));
 										return bs;  // this else branch is needed when those basicstates are not written in the xml, e.g. when 
 										// one is editing with mxGraph.
 									}})
@@ -162,7 +160,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 				Element eElement = (Element) nNode;	
 
 				if (Integer.parseInt(eElement.getAttribute("id"))>1 && eElement.hasAttribute("edge")) {
-					List<String> labels = Arrays.asList(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(","));
+					List<String> labels = Arrays.asList(eElement.getAttribute("value").replaceAll("\\[", "").replaceAll("]", "").replaceAll("\\s", "").split(","));
 
 					CALabel lab;
 					try { 	lab = new CALabel(labels.stream().map(this::parseAction).collect(Collectors.toList()));}
@@ -182,7 +180,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 			}
 		}
 
-		return new Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>(transitions);
+		return new Automaton<>(transitions);
 
 	}
 
@@ -216,7 +214,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 	 * @throws TransformerException  exception with transformer
 	 */
 	@Override
-	public  void exportMSCA(String fileName, Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut) throws ParserConfigurationException, IOException, TransformerException {
+	public  void exportMSCA(String fileName, Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut) throws ParserConfigurationException, TransformerException {
 		DocumentBuilderFactory dbFactory =
 				DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = 
@@ -243,14 +241,14 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 		for (Entry<Integer,BasicState<String>> e : 
 			aut.getBasicStates().entrySet().stream()
 			.flatMap(e-> e.getValue().stream()
-					.map(bs->new AbstractMap.SimpleEntry<Integer,BasicState<String>>(e.getKey(),bs)))
+					.map(bs-> new AbstractMap.SimpleEntry<>(e.getKey(), bs)))
 			.collect(Collectors.toSet()))
 		{
 			createElementBasicState(doc, root,Integer.toString(id), e.getKey(),e.getValue());
 			id+=1;
 		}
 
-		Map<State<String>,Element> state2element = new HashMap<State<String>, Element>();
+		Map<State<String>,Element> state2element = new HashMap<>();
 
 		for (State<String> s : aut.getStates())
 		{
@@ -282,7 +280,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 	//	return file;
 	}
 
-	private static Element createElementEdge(Document doc, Element root,String id, Element source, Element target,String label,ModalTransition.Modality type)
+	private static void createElementEdge(Document doc, Element root, String id, Element source, Element target, String label, ModalTransition.Modality type)
 	{
 		Attr parent=doc.createAttribute("parent");
 		parent.setValue("1");
@@ -343,10 +341,9 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 		mxGeometry1.appendChild(pointArray);
 		mxcell1.appendChild(mxGeometry1);
 		root.appendChild(mxcell1);
-		return mxcell1;		
 	}
 
-	private static Element createElementBasicState(Document doc, Element root, String id, Integer principal, BasicState<String> bs)
+	private static void createElementBasicState(Document doc, Element root, String id, Integer principal, BasicState<String> bs)
 	{
 		Attr parent=doc.createAttribute("parent");
 		parent.setValue("1");
@@ -364,7 +361,6 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 
 
 		root.appendChild(mxcell1);
-		return mxcell1;		
 	}
 
 	private static Element createElementState(Document doc, Element root,String id, State<String> castate)

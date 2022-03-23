@@ -17,11 +17,10 @@ public class ModalLabelAction extends AbstractAction
 	/**
 	 * 
 	 */
-	protected String name;
+	protected final String name;
 
 	/**
-	 * 
-	 * @param key
+	 *
 	 */
 	public ModalLabelAction(String name)
 	{
@@ -48,13 +47,13 @@ public class ModalLabelAction extends AbstractAction
 				{
 					graph.setCellStyles(key, mxUtils.hexString(newColor));
 				}*/
-				if (this.name=="Urgent")
+				if (this.name.equals("Urgent"))
 					graph.setCellStyles( mxConstants.STYLE_STROKECOLOR, "#FF0000");// mxUtils.hexString( newColor));
-				else if (this.name=="Greedy")
+				else if (this.name.equals("Greedy"))
 					graph.setCellStyles( mxConstants.STYLE_STROKECOLOR, "#FFA500");// mxUtils.hexString( newColor));
-				else if (this.name=="Lazy")
+				else if (this.name.equals("Lazy"))
 					graph.setCellStyles( mxConstants.STYLE_STROKECOLOR, "#00FF00");// mxUtils.hexString( newColor));
-				else if (this.name=="Permitted")
+				else if (this.name.equals("Permitted"))
 					graph.setCellStyles( mxConstants.STYLE_STROKECOLOR, "black");
 			}
 		}

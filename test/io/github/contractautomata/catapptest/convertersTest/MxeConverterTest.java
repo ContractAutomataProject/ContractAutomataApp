@@ -1,7 +1,7 @@
 package io.github.contractautomata.catapptest.convertersTest;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,19 +45,17 @@ public class MxeConverterTest {
 		
 		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut = bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");
 
-		assertEquals(aut.getStates().stream()
-		.flatMap(cs->cs.getState().stream()
-				.map(bs->new AbstractMap.SimpleEntry<Integer,BasicState<String>>(cs.getState().indexOf(bs),bs)))
-		.anyMatch(e1->aut.getStates()
-				.stream()
-				.map(cs->cs.getState().get(e1.getKey()))
-				.filter(bs->bs!=e1.getValue()&&bs.getState().equals(e1.getValue().getState()))
-				.count()>0),false);
+		assertFalse(aut.getStates().stream()
+				.flatMap(cs -> cs.getState().stream()
+						.map(bs -> new AbstractMap.SimpleEntry<>(cs.getState().indexOf(bs), bs)))
+				.anyMatch(e1 -> aut.getStates()
+						.stream()
+						.map(cs -> cs.getState().get(e1.getKey())).anyMatch(bs -> bs != e1.getValue() && bs.getState().equals(e1.getValue().getState()))));
 	}
 
 	
 	@Test
-	public void conversionXMLtestSCP2020_BusinessClientxHotel() throws Exception, TransformerException {
+	public void conversionXMLtestSCP2020_BusinessClientxHotel() throws Exception {
 		//check if by converting and parsing the automaton does not change
 		
 		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> comp= bmc.importMSCA(dir+"BusinessClientxHotelxEconomyClient.mxe");
@@ -68,31 +66,31 @@ public class MxeConverterTest {
         }
         Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> test=bmc.importMSCA(dir+"test.mxe");
 
-		assertEquals(checkTransitions(comp,test),true);
+		assertTrue(checkTransitions(comp, test));
 	}
 	
 	@Test
-	public void parse_noxy() throws Exception, TransformerException {		
+	public void parse_noxy() throws Exception {
 		//check if by parsing and printing the automaton does not change
 		
 		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut = bmc.importMSCA(dir+"test_parse_noxy.mxe");
         bmc.exportMSCA(dir+"test_parse_withxy.mxe",aut);
 
         Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> test = bmc.importMSCA(dir+"test_parse_withxy.mxe");
-		assertEquals(checkTransitions(aut,test),true);
+		assertTrue(checkTransitions(aut, test));
 
 	}
 	
 	@Test
 	public void importProvola() throws Exception {
-		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut = new AutDataConverter<CALabel>(CALabel::new).importMSCA(dir+"provola.data");
+		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut = new AutDataConverter<>(CALabel::new).importMSCA(dir+"provola.data");
 		bmc.exportMSCA(dir+"provola.mxe", aut);
     }
 	
 	//****************************Exceptions**********************************
 	
 	@Test
-	public void importMXENewPrincipalNoBasicStates() throws Exception {
+	public void importMXENewPrincipalNoBasicStates() {
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"test_newPrincipalWithNoBasicStates.mxe"))
 	    .isInstanceOf(IllegalArgumentException.class)
 	    .hasMessageContaining("source, label or target with different ranks");
@@ -102,8 +100,7 @@ public class MxeConverterTest {
 	
 	
 	@Test
-	public void parseDuplicateStates_exception() throws NumberFormatException, IOException, ParserConfigurationException, SAXException
-	{
+	public void parseDuplicateStates_exception() throws NumberFormatException {
 		
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"illformed.mxe"))
 	    .isInstanceOf(IOException.class)
@@ -111,16 +108,14 @@ public class MxeConverterTest {
 	}
 
 	@Test
-	public void parseIllActions_exception() throws NumberFormatException, IOException, ParserConfigurationException, SAXException
-	{
+	public void parseIllActions_exception() throws NumberFormatException {
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"illformed2.mxe"))
 	    .isInstanceOf(IOException.class)
 	    .hasMessageContaining("The label is not well formed");
 	}
 	
 	@Test
-	public void parseNoFinalStates_exception() throws NumberFormatException, IOException, ParserConfigurationException, SAXException
-	{
+	public void parseNoFinalStates_exception() throws NumberFormatException {
 		
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"illformed3.mxe"))
 	    .isInstanceOf(IllegalArgumentException.class) //IOException.class)
@@ -128,8 +123,7 @@ public class MxeConverterTest {
 	}
 	
 	@Test
-	public void parseEmptyElements_exception() throws NumberFormatException, IOException, ParserConfigurationException, SAXException
-	{
+	public void parseEmptyElements_exception() throws NumberFormatException {
 		
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"illformed4.mxe"))
 	    .isInstanceOf(IOException.class)
@@ -137,8 +131,7 @@ public class MxeConverterTest {
 	}
 	
 	@Test
-	public void parseWrongFinalStates_exception() throws NumberFormatException, IOException, ParserConfigurationException, SAXException
-	{
+	public void parseWrongFinalStates_exception() throws NumberFormatException {
 		
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"illformed5.mxe"))
 	    .isInstanceOf(IOException.class)
@@ -146,8 +139,7 @@ public class MxeConverterTest {
 	}
 
 	@Test
-	public void parseMxeDuplicateBasicStates() throws NumberFormatException, IOException, ParserConfigurationException, SAXException
-	{
+	public void parseMxeDuplicateBasicStates() throws NumberFormatException {
 		
 		assertThatThrownBy(() -> bmc.importMSCA(dir+"illformed_duplicatebasicstates.mxe"))
 	    .isInstanceOf(IOException.class)
@@ -157,16 +149,16 @@ public class MxeConverterTest {
 
 	public static boolean checkTransitions(Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut, Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> test) {
 		Set<String> autTr=aut.getTransition().parallelStream()
-				.map(t->t.toString())
+				.map(ModalTransition::toString)
 				.collect(Collectors.toSet());
 		Set<String> testTr=test.getTransition().parallelStream()
-				.map(t->t.toString())
+				.map(ModalTransition::toString)
 				.collect(Collectors.toSet());
 		return autTr.parallelStream()
-				.allMatch(t->testTr.contains(t))
+				.allMatch(testTr::contains)
 				&&
 				testTr.parallelStream()
-				.allMatch(t->autTr.contains(t));
+				.allMatch(autTr::contains);
 	}
 
 }

@@ -20,6 +20,7 @@ import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Objects;
 
 @SuppressWarnings("serial")
 public class OrchestrationProductType extends AbstractAction {
@@ -27,7 +28,7 @@ public class OrchestrationProductType extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
-		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		EditorMenuBar menuBar = (EditorMenuBar) Objects.requireNonNull(editor).getMenuFrame().getJMenuBar();
 
 		if (menuBar.checkAut(editor)) return;
 		String filename=editor.getCurrentFile().getName();
@@ -36,7 +37,7 @@ public class OrchestrationProductType extends AbstractAction {
 		Automaton<String,Action,State<String>, ModalTransition<String, Action,State<String>,CALabel>> aut=editor.lastaut;
 		//	MSCA backup = aut.clone();//in case aut becomes null
 
-		String S= (String) JOptionPane.showInputDialog(null, 
+		String S= JOptionPane.showInputDialog(null,
 				"Insert Required features separated by colon",
 				JOptionPane.PLAIN_MESSAGE);
 		if (S==null)
@@ -46,7 +47,7 @@ public class OrchestrationProductType extends AbstractAction {
 		if (R[0].equals(""))
 			R=new String[0];
 
-		S= (String) JOptionPane.showInputDialog(null, 
+		S= JOptionPane.showInputDialog(null,
 				"Insert Forbidden actions separated by semicolon",
 				JOptionPane.PLAIN_MESSAGE);
 		if (S==null)
@@ -59,9 +60,9 @@ public class OrchestrationProductType extends AbstractAction {
 
 		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> controller=null;
 		//	FMCA faut= new FMCA(aut,editor.getProductFrame().getFamily());
-		OrchestrationSynthesisOperator synth = (p!=null)?
-				new ProductOrchestrationSynthesisOperator(new Agreement(),p)
-				:new OrchestrationSynthesisOperator(new Agreement());
+		OrchestrationSynthesisOperator<String> synth = (p!=null)?
+				new ProductOrchestrationSynthesisOperator<>(new Agreement(),p)
+				:new OrchestrationSynthesisOperator<>(new Agreement());
 
 		Instant start = Instant.now();
 		controller=  synth.apply(aut); //(p!=null)?faut.orchestration(p):aut.orchestration(); 

@@ -126,13 +126,7 @@ public class EditorAboutFrame extends JDialog
 
 		// Adds OK button to close window
 		JButton closeButton = new JButton("Close");
-		closeButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				setVisible(false);
-			}
-		});
+		closeButton.addActionListener(e -> setVisible(false));
 
 		buttonPanel.add(closeButton);
 
@@ -151,13 +145,7 @@ public class EditorAboutFrame extends JDialog
 	{
 		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 		JRootPane rootPane = new JRootPane();
-		rootPane.registerKeyboardAction(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent actionEvent)
-			{
-				setVisible(false);
-			}
-		}, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		rootPane.registerKeyboardAction(actionEvent -> setVisible(false), stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		return rootPane;
 	}
 

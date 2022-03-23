@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 
 @SuppressWarnings("serial")
 public class Choreography extends AbstractAction {
@@ -24,7 +25,7 @@ public class Choreography extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
-		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		EditorMenuBar menuBar = (EditorMenuBar) Objects.requireNonNull(editor).getMenuFrame().getJMenuBar();
 		if (menuBar.checkAut(editor)) return;
 		String filename=editor.getCurrentFile().getName();
 
@@ -35,11 +36,11 @@ public class Choreography extends AbstractAction {
 		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> controller=null;
 		Instant start = Instant.now();
 		try {
-			controller = new ChoreographySynthesisOperator(new StrongAgreement()).apply(aut);
+			controller = new ChoreographySynthesisOperator<String>(new StrongAgreement()).apply(aut);
 		} catch(UnsupportedOperationException exc) {
 			Instant stop = Instant.now();
 			long elapsedTime = Duration.between(start, stop).toMillis();
-				if (exc.getMessage()=="The automaton contains necessary requests that are not allowed in the choreography synthesis")
+				if (exc.getMessage().equals("The automaton contains necessary requests that are not allowed in the choreography synthesis"))
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						exc.getMessage()+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds",
@@ -69,7 +70,7 @@ public class Choreography extends AbstractAction {
 					"Error",JOptionPane.ERROR_MESSAGE);
 
 			return;			
-		};
+		}
 		String message = "The choreography has been stored with filename "+menuBar.lastDir+File.separator+K
 				+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
 				+System.lineSeparator()+" Number of states : "+controller.getNumStates();

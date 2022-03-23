@@ -3,6 +3,7 @@ package io.github.contractautomata.catapp.actions;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -21,12 +22,8 @@ public class AddHandleAction extends AbstractAction
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Point pt;
+	private final Point pt;
 	
-	/**
-	 * 
-	 * @param key
-	 */
 	public AddHandleAction(Point pt)
 	{
 		this.pt=pt;
@@ -48,8 +45,8 @@ public class AddHandleAction extends AbstractAction
 				mxCell edge = (mxCell) graph.getSelectionCell();
 				mxGeometry eg = edge.getGeometry();				
 				List<mxPoint> l = eg.getPoints()!=null
-						?new ArrayList<mxPoint>(eg.getPoints())
-						:new ArrayList<mxPoint>();
+						? new ArrayList<>(eg.getPoints())
+						: new ArrayList<>();
 						
 //				System.out.println(eg.getSourcePoint());
 //				System.out.println(l);
@@ -69,18 +66,16 @@ public class AddHandleAction extends AbstractAction
 	}
 	
 	private int findIndex(List<mxPoint> l, mxPoint source, mxPoint target) {
-		int ind = IntStream.rangeClosed(0, l.size())
-				.mapToObj(i-> new Object() {int index=i; 
-				int d= (int) ((i==0)?liesIn(source,l.get(0))
+		return IntStream.rangeClosed(0, l.size())
+				.mapToObj(i-> new Object() {final int index=i;
+				final int d= (int) ((i==0)?liesIn(source,l.get(0))
 						:(i==l.size())?liesIn(l.get(l.size()-1),target)
 						:liesIn(l.get(i-1),l.get(i)));
 				})
-				.sorted((x,y)->x.d-y.d)
+				.sorted(Comparator.comparingInt(x -> x.d))
 				.mapToInt(o->o.index)
 				.findFirst().orElse(0);
-		return ind;
-				
-		
+
 	}
 	
 	//using the equation of a line passing from two points

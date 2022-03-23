@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -29,7 +30,7 @@ public class OrchestrationFamily extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
-		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		EditorMenuBar menuBar = (EditorMenuBar) Objects.requireNonNull(editor).getMenuFrame().getJMenuBar();
 		if (menuBar.checkAut(editor)) return;
 		String filename=editor.getCurrentFile().getName();
 
@@ -78,7 +79,6 @@ public class OrchestrationFamily extends AbstractAction {
 				+ K
 				+ System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
 				+ System.lineSeparator()+" Number of states : "+controller.getNumStates();
-		;
 
 		JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.WARNING_MESSAGE);
 

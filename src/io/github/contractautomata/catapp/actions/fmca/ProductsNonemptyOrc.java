@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings("serial")
@@ -26,7 +27,7 @@ public class ProductsNonemptyOrc extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
-		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		EditorMenuBar menuBar = (EditorMenuBar) Objects.requireNonNull(editor).getMenuFrame().getJMenuBar();
 		if (menuBar.checkAut(editor)) return;
 
 		menuBar.lastDir=editor.getCurrentFile().getParent();
@@ -62,13 +63,13 @@ public class ProductsNonemptyOrc extends AbstractAction {
 		}
 
 		pf.setColorButtonProducts(vpp, Color.BLUE);
-		String message=vpp.size( )+ " Products With non-empty orchestration Found:"+System.lineSeparator();
+		StringBuilder message= new StringBuilder(vpp.size() + " Products With non-empty orchestration Found:" + System.lineSeparator());
 		for (Product p : vpp)
-			message+= pf.indexOf(p)+" : "+System.lineSeparator()+p.toString()+System.lineSeparator();
+			message.append(pf.indexOf(p)).append(" : ").append(System.lineSeparator()).append(p.toString()).append(System.lineSeparator());
 
-		message += "Elapsed time : " + elapsedTime+ " milliseconds";
+		message.append("Elapsed time : ").append(elapsedTime).append(" milliseconds");
 		JTextArea textArea = new JTextArea(200,200);
-		textArea.setText(message);
+		textArea.setText(message.toString());
 		textArea.setEditable(true);
 
 		JScrollPane scrollPane = new JScrollPane(textArea);

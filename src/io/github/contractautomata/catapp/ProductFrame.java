@@ -25,9 +25,9 @@ public class ProductFrame extends JFrame{
 	/**
 	 * the family whose products are being displayed
 	 */
-	private Family fam;
-	private List<Product> prod;
-	JButton[] nodes;
+	private final Family fam;
+	private final List<Product> prod;
+	final JButton[] nodes;
 
 	private static final long serialVersionUID = 1L;
 
@@ -61,8 +61,8 @@ public class ProductFrame extends JFrame{
 				.max().orElse(0);
 		
 		List<Map.Entry<Integer, Set<Product>>> depthlist=
-				new ArrayList<Map.Entry<Integer, Set<Product>>>(depth.entrySet());
-		Collections.sort(depthlist,(x,y)->y.getKey()-x.getKey());
+				new ArrayList<>(depth.entrySet());
+		depthlist.sort((x, y) -> y.getKey() - x.getKey());
 	
 		
 		GridLayout gl = new GridLayout(rows,columns);
@@ -95,12 +95,12 @@ public class ProductFrame extends JFrame{
 						JButton source = (JButton)ae.getSource();
 
 						int index=Integer.parseInt((String)source.getClientProperty("index"));
-						String message="Subproducts of P"+index+" "+prod.get(index).toString()+" \n";
+						StringBuilder message= new StringBuilder("Subproducts of P" + index + " " + prod.get(index).toString() + " \n");
 						Set<Product> subprod = fam.getSubProductsofProduct(prod.get(index));
 						for (Product p2 : subprod)
 						{
 							int p2index = prod.indexOf(p2);
-							message+="P"+p2index+" "+p2.toString()+"\n";
+							message.append("P").append(p2index).append(" ").append(p2.toString()).append("\n");
 							if (!source.isBorderPainted())
 							{
 								try{
@@ -121,7 +121,7 @@ public class ProductFrame extends JFrame{
 							source.setBorderPainted(true);
 							source.setBorder(BorderFactory.createLineBorder(Color.red));
 							JTextArea textArea = new JTextArea(200,200);
-							textArea.setText(message);
+							textArea.setText(message.toString());
 							textArea.setEditable(true);
 
 							JScrollPane scrollPane = new JScrollPane(textArea);
@@ -168,10 +168,9 @@ public class ProductFrame extends JFrame{
 
 	public void resetColorButtonProducts()
 	{
-		for (int i=0;i<nodes.length;i++)
-		{
-			nodes[i].setBorder(BorderFactory.createLineBorder(Color.black));
-			nodes[i].setBorderPainted(false);
+		for (JButton node : nodes) {
+			node.setBorder(BorderFactory.createLineBorder(Color.black));
+			node.setBorderPainted(false);
 		}
 	}
 
@@ -191,28 +190,6 @@ public class ProductFrame extends JFrame{
 	}
 	
 	public void paint(Graphics g) {
-		super.paint(g);  // fixes the immediate problem.
-		/*Graphics2D g2 = (Graphics2D) g;
-        Product[] prod = fam.getProducts();
-        int[][] depth = fam.getDepth();
-        int[] ptl=fam.getPointerToLevel();
-        int[][] po=fam.getPartialOrder();
-
-        for (int i=0;i<po.length;i++)
-        {
-        	for (int j=0;j<po[i].length;j++)
-        	{
-        		if (po[i][j]==1)
-        		{
-        			Line2D lin = new Line2D.Float(
-	                	nodes[depth[prod[i].getForbiddenAndRequiredNumber()][ptl[i]]].getX()+25,
-		        		nodes[depth[prod[i].getForbiddenAndRequiredNumber()][ptl[i]]].getY()+50,
-		        		nodes[depth[prod[j].getForbiddenAndRequiredNumber()][ptl[j]]].getX()+25,
-		        		nodes[depth[prod[j].getForbiddenAndRequiredNumber()][ptl[j]]].getY()+60
-	        		);
-	        		g2.draw(lin);
-        		}
-        	}
-        }*/
-	}   
+		super.paint(g);
+	}
 }

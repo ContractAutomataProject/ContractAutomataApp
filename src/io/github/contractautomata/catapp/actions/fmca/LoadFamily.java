@@ -2,6 +2,7 @@ package io.github.contractautomata.catapp.actions.fmca;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
@@ -24,7 +25,7 @@ public class LoadFamily extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
-		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		EditorMenuBar menuBar = (EditorMenuBar) Objects.requireNonNull(editor).getMenuFrame().getJMenuBar();
 		
 		if (!menuBar.loseChanges.test(editor)) return;
 
@@ -52,12 +53,11 @@ public class LoadFamily extends AbstractAction {
 			String fileName =fc.getSelectedFile().toString();
 			try {
 				Family fam=new Family(new ProdFamilyConverter().importProducts(fileName));
-				pf= new ProductFrame(fam, (JPanel)editor,null);
+				pf= new ProductFrame(fam, editor,null);
 				editor.setProductFrame(pf);
 			} catch (IOException ex) {
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),"IOException "+ex.getMessage(),
 						mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-				return;
 			}
 		}
 	}

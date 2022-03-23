@@ -16,11 +16,10 @@ public class ToggleFinalStateAction extends AbstractAction
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private mxCell node;
+	private final mxCell node;
 	
 	/**
-	 * 
-	 * @param key
+	 *
 	 */
 	public ToggleFinalStateAction(mxCell node)
 	{
@@ -40,7 +39,7 @@ public class ToggleFinalStateAction extends AbstractAction
 				node.setStyle(MxState.initialfinalnodestylevalue);			
 			else
 				node.setStyle(MxState.finalnodestylevalue);				
-		};
+		}
 		mxGraphComponent graphComponent = (mxGraphComponent) e.getSource();
 		graphComponent.refresh();
 	}

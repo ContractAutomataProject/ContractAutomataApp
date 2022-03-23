@@ -28,7 +28,7 @@ public class DefaultFileFilter extends FileFilter
 	/**
 	 * Description of accepted files.
 	 */
-	protected String desc;
+	protected final String desc;
 
 	/**
 	 * Constructs a new filter for the specified extension and descpription.
@@ -99,12 +99,12 @@ public class DefaultFileFilter extends FileFilter
 		/**
 		 * Holds the accepted file format extensions for images.
 		 */
-		protected static String[] imageFormats = ImageIO.getReaderFormatNames();
+		protected static final String[] imageFormats = ImageIO.getReaderFormatNames();
 
 		/**
 		 * Description of the filter.
 		 */
-		protected String desc;
+		protected final String desc;
 
 		/**
 		 * Constructs a new file filter for all supported image formats using
@@ -135,10 +135,8 @@ public class DefaultFileFilter extends FileFilter
 
 			String filename = file.toString().toLowerCase();
 
-			for (int j = 0; j < imageFormats.length; j++)
-			{
-				if (filename.endsWith("." + imageFormats[j].toLowerCase()))
-				{
+			for (String imageFormat : imageFormats) {
+				if (filename.endsWith("." + imageFormat.toLowerCase())) {
 					return true;
 				}
 			}
@@ -170,7 +168,7 @@ public class DefaultFileFilter extends FileFilter
 		/**
 		 * Description of the File format
 		 */
-		protected String desc;
+		protected final String desc;
 
 		/**
 		 * Constructs a new editor file filter using the specified description.

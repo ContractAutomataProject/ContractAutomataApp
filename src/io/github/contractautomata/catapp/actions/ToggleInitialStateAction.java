@@ -21,11 +21,10 @@ public class ToggleInitialStateAction extends AbstractAction
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private mxCell node;
+	private final mxCell node;
 
 	/**
-	 * 
-	 * @param key
+	 *
 	 */
 	public ToggleInitialStateAction(mxCell node)
 	{

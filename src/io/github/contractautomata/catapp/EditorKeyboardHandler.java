@@ -20,9 +20,8 @@ public class EditorKeyboardHandler extends mxKeyboardHandler
 {
 
 	/**
-	 * 
-	 * @param graphComponent
-	 */
+	 *
+     */
 	public EditorKeyboardHandler(mxGraphComponent graphComponent)
 	{
 		super(graphComponent);

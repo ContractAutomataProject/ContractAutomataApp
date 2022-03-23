@@ -28,9 +28,9 @@ public class ShadowBorder implements Border, Serializable
 	 */
 	private static final long serialVersionUID = 6854989457150641240L;
 
-	private Insets insets;
+	private final Insets insets;
 
-	public static ShadowBorder sharedInstance = new ShadowBorder();
+	public static final ShadowBorder sharedInstance = new ShadowBorder();
 
 	private ShadowBorder()
 	{

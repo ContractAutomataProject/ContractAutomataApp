@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 
 @SuppressWarnings("serial")
 public class Orchestration extends AbstractAction {
@@ -24,7 +25,7 @@ public class Orchestration extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
-		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		EditorMenuBar menuBar = (EditorMenuBar) Objects.requireNonNull(editor).getMenuFrame().getJMenuBar();
 		if (menuBar.checkAut(editor)) return;
 		String filename=editor.getCurrentFile().getName();
 
@@ -36,11 +37,11 @@ public class Orchestration extends AbstractAction {
 		Instant start = Instant.now();
 	
 		try {
-			controller = new OrchestrationSynthesisOperator(new Agreement()).apply(aut);
+			controller = new OrchestrationSynthesisOperator<String>(new Agreement()).apply(aut);
 		} catch(UnsupportedOperationException exc) {
 			Instant stop = Instant.now();
 			long elapsedTime = Duration.between(start, stop).toMillis();
-			if (exc.getMessage()=="The automaton contains necessary offers that are not allowed in the orchestration synthesis")
+			if (exc.getMessage().equals("The automaton contains necessary offers that are not allowed in the orchestration synthesis"))
 			{
 				JOptionPane.showMessageDialog(editor.getGraphComponent(),
 						exc.getMessage()+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds",

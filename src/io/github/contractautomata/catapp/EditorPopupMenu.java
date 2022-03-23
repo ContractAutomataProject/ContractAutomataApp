@@ -37,7 +37,7 @@ public class EditorPopupMenu extends JPopupMenu
 
 
 
-		mxCell edge = this.cellSelected(editor, pt, x->x.isEdge());
+		mxCell edge = this.cellSelected(editor, pt, mxCell::isEdge);
 		if (edge!=null) {
 
 		
@@ -46,12 +46,10 @@ public class EditorPopupMenu extends JPopupMenu
 			List<mxPoint> l = edge.getGeometry().getPoints(); 
 			if (l!=null)
 			{
-				mxPoint sp = l.stream()
-						.filter(p->pt.distance(p.getX(), p.getY())<4)
-						.findFirst().orElse(null);
+				l.stream()
+						.filter(p -> pt.distance(p.getX(), p.getY()) < 4)
+						.findFirst().ifPresent(sp -> add(editor.bind("Delete handle", new DeleteHandleAction(sp), "/io/github/davidebasile/catapp/images/delete.gif")));
 
-				if (sp!=null)
-					add(editor.bind("Delete handle", new DeleteHandleAction(sp),"/io/github/davidebasile/catapp/images/delete.gif"));
 			}
 
 			//JMenu submenu = (JMenu) menu.add(new JMenu(mxResources.get("line")));
@@ -66,7 +64,7 @@ public class EditorPopupMenu extends JPopupMenu
 
 		}
 		
-		mxCell node = this.cellSelected(editor, pt, x->x.isVertex());
+		mxCell node = this.cellSelected(editor, pt, mxCell::isVertex);
 	
 		if (node!=null) {
 			add(editor.bind("Toggle Initial state", new ToggleInitialStateAction(node),"/io/github/davidebasile/catapp/images/sstate.png"));
@@ -78,18 +76,18 @@ public class EditorPopupMenu extends JPopupMenu
 					editor.bind(mxResources.get("delete"), mxGraphActions
 							.getDeleteAction(),
 							"/io/github/davidebasile/catapp/images/delete.gif"))
-			.setEnabled(selected);
+			.setEnabled(true);
 
 			add(
 					editor.bind(mxResources.get("cut"), TransferHandler
 							.getCutAction(),
 							"/io/github/davidebasile/catapp/images/cut.gif"))
-			.setEnabled(selected);
+			.setEnabled(true);
 			add(
 					editor.bind(mxResources.get("copy"), TransferHandler
 							.getCopyAction(),
 							"/io/github/davidebasile/catapp/images/copy.gif"))
-			.setEnabled(selected);
+			.setEnabled(true);
 		}
 
 		if (!selected) {
@@ -141,7 +139,7 @@ public class EditorPopupMenu extends JPopupMenu
 			if (pred.test(c)) return c;
 		}
 		Object o=editor.getGraphComponent().getCellAt(pt.x,pt.y);
-		if(o!=null && o instanceof mxCell) {
+		if(o instanceof mxCell) {
 			mxCell c=(mxCell)o;
 			if (pred.test(c))
 				return c;

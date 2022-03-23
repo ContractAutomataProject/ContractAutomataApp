@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("serial")
 public class Composition extends AbstractAction {
@@ -29,7 +30,7 @@ public class Composition extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
-		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		EditorMenuBar menuBar = (EditorMenuBar) Objects.requireNonNull(editor).getMenuFrame().getJMenuBar();
 
 		if (!menuBar.loseChanges.test(editor)) return;
 
@@ -72,38 +73,40 @@ public class Composition extends AbstractAction {
 			if (rc == JFileChooser.APPROVE_OPTION)
 			{
 				String fileName =fc.getSelectedFile().toString();
-				reply=JOptionPane.showOptionDialog(editor.getGraphComponent(), 
+				reply=JOptionPane.showOptionDialog(editor.getGraphComponent(),
 						"You have selected: "+names.toString().substring(0, names.toString().length()-1)
-						+","+fileName.substring(fileName.lastIndexOf(File.separator)+1, fileName.indexOf("."))+"]", 
-						"Composition", 
-						JOptionPane.YES_NO_CANCEL_OPTION, 
-						JOptionPane.INFORMATION_MESSAGE, 
-						null, 
-						new String[]{"Compute Composition", "Load other automata","Cancel"}, 
+						+","+fileName.substring(fileName.lastIndexOf(File.separator)+1, fileName.indexOf("."))+"]",
+						"Composition",
+						JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.INFORMATION_MESSAGE,
+						null,
+						new String[]{"Compute Composition", "Load other automata","Cancel"},
 						"default");
 				lastIteration=(reply != JOptionPane.NO_OPTION);
 				if (reply== JOptionPane.CANCEL_OPTION)
 					return;
 			}
-			else 
+			else
 				return;
 		}
 
-		int pruningOption=JOptionPane.showOptionDialog(editor.getGraphComponent(), 
-				"", "Composition Type", 
-				JOptionPane.YES_NO_CANCEL_OPTION, 
-				JOptionPane.INFORMATION_MESSAGE, 
-				null, 
-				new String[]{"Open", "Close for Agreement","Close for Strong Agreement"}, 
+		int pruningOption=JOptionPane.showOptionDialog(editor.getGraphComponent(),
+				"", "Composition Type",
+				JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.INFORMATION_MESSAGE,
+				null,
+				new String[]{"Open", "Close for Agreement","Close for Strong Agreement"},
 				"default");
 		//			if (pruningOption== JOptionPane.CANCEL_OPTION)
 		//				return;
 
 		Instant start = Instant.now();
-		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> composition = (Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>) new MSCACompositionFunction(aut,
+		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> composition =
+		//		(Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>)
+						new MSCACompositionFunction<>(aut,
 				(pruningOption==JOptionPane.YES_OPTION)?null:
 					(pruningOption==JOptionPane.NO_OPTION)?new Agreement().negate():
-						new StrongAgreement().negate()).apply(Integer.MAX_VALUE); 
+						new StrongAgreement().negate()).apply(Integer.MAX_VALUE);
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 
@@ -125,14 +128,14 @@ public class Composition extends AbstractAction {
 					"Error in saving the file "+e1.getMessage(),
 					"Error",JOptionPane.ERROR_MESSAGE);
 
-			return;			
+			return;
 		}
 
 		editor.lastaut=composition;
 		String message = "The composition has been stored with filename "+menuBar.lastDir+File.separator+compositionname
 				+System.lineSeparator()+" Elapsed time : "+elapsedTime + " milliseconds"
 				+System.lineSeparator()+" Number of states : "+composition.getNumStates();
-		;
+
 		JOptionPane.showMessageDialog(editor.getGraphComponent(),message,"Success!",JOptionPane.PLAIN_MESSAGE);
 
 		menuBar.loadMorphStore(compositionname, editor, file);

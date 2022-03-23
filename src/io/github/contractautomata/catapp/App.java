@@ -1,6 +1,4 @@
 package io.github.contractautomata.catapp;
-/**
- * Copyright (c) 2006-2012, JGraph Ltd */
 
 
 import java.awt.Color;
@@ -9,6 +7,7 @@ import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -61,13 +60,7 @@ public class App extends BasicGraphEditor
 	 */
 	public static final NumberFormat numberFormat = NumberFormat.getInstance();
 
-	/**
-	 * Holds the URL for the icon to be used as a handle for creating new
-	 * connections. This is currently unused.
-	 */
-	public static URL url = null;
-
-	public Automaton<String, Action,State<String>, ModalTransition<String,Action,State<String>,CALabel>> lastaut = null;
+    public Automaton<String, Action,State<String>, ModalTransition<String,Action,State<String>,CALabel>> lastaut = null;
 
 	private ProductFrame pf=null;
 
@@ -81,7 +74,6 @@ public class App extends BasicGraphEditor
 
 	/**
 	 * the application used a frame for visualising the products of the feature model
-	 * @param pf
 	 */
 	public void setProductFrame(ProductFrame pf)
 	{
@@ -118,8 +110,7 @@ public class App extends BasicGraphEditor
 		private static final long serialVersionUID = -6833603133512882012L;
 
 		/**
-		 * 
-		 * @param graph
+		 *
 		 */
 		public CustomGraphComponent(mxGraph graph)
 		{
@@ -138,8 +129,8 @@ public class App extends BasicGraphEditor
 
 			// Loads the defalt stylesheet from an external file
 			mxCodec codec = new mxCodec();
-			Document doc = mxUtils.loadDocument(App.class.getResource(
-                            "/io/github/contractautomata/catapp/resources/default-style.xml")
+			Document doc = mxUtils.loadDocument(Objects.requireNonNull(App.class.getResource(
+							"/io/github/contractautomata/catapp/resources/default-style.xml"))
 					.toString());
 			codec.decode(doc.getDocumentElement(), graph.getStylesheet());
 
@@ -229,13 +220,13 @@ public class App extends BasicGraphEditor
 		 */
 		public String getToolTipForCell(Object cell)
 		{
-			String tip = "<html>";
+			StringBuilder tip = new StringBuilder("<html>");
 			mxGeometry geo = getModel().getGeometry(cell);
 			mxCellState state = getView().getState(cell);
 
 			if (getModel().isEdge(cell))
 			{
-				tip += "points={";
+				tip.append("points={");
 
 				if (geo != null)
 				{
@@ -243,23 +234,18 @@ public class App extends BasicGraphEditor
 
 					if (points != null)
 					{
-						Iterator<mxPoint> it = points.iterator();
 
-						while (it.hasNext())
-						{
-							mxPoint point = it.next();
-							tip += "[x=" + numberFormat.format(point.getX())
-							+ ",y=" + numberFormat.format(point.getY())
-							+ "],";
+						for (mxPoint point : points) {
+							tip.append("[x=").append(numberFormat.format(point.getX())).append(",y=").append(numberFormat.format(point.getY())).append("],");
 						}
 
-						tip = tip.substring(0, tip.length() - 1);
+						tip = new StringBuilder(tip.substring(0, tip.length() - 1));
 					}
 				}
 
-				tip += "}<br>";
-				tip += ((mxCell) cell).getStyle()+" qui ";
-				tip += "absPoints={";
+				tip.append("}<br>");
+				tip.append(((mxCell) cell).getStyle()).append(" qui ");
+				tip.append("absPoints={");
 
 				if (state != null)
 				{
@@ -267,65 +253,46 @@ public class App extends BasicGraphEditor
 					for (int i = 0; i < state.getAbsolutePointCount(); i++)
 					{
 						mxPoint point = state.getAbsolutePoint(i);
-						tip += "[x=" + numberFormat.format(point.getX())
-						+ ",y=" + numberFormat.format(point.getY())
-						+ "],";
+						tip.append("[x=").append(numberFormat.format(point.getX())).append(",y=").append(numberFormat.format(point.getY())).append("],");
 					}
 
-					tip = tip.substring(0, tip.length() - 1);
+					tip = new StringBuilder(tip.substring(0, tip.length() - 1));
 				}
 
-				tip += "}";
+				tip.append("}");
 			}
 			else
 			{
-				tip += "geo=[";
+				tip.append("geo=[");
 
 				if (geo != null)
 				{
-					tip += "x=" + numberFormat.format(geo.getX()) + ",y="
-							+ numberFormat.format(geo.getY()) + ",width="
-							+ numberFormat.format(geo.getWidth()) + ",height="
-							+ numberFormat.format(geo.getHeight());
+					tip.append("x=").append(numberFormat.format(geo.getX())).append(",y=").append(numberFormat.format(geo.getY())).append(",width=").append(numberFormat.format(geo.getWidth())).append(",height=").append(numberFormat.format(geo.getHeight()));
 				}
 
-				tip += "]<br>";
-				tip += "state=[";
+				tip.append("]<br>");
+				tip.append("state=[");
 
 				if (state != null)
 				{
-					tip += "x=" + numberFormat.format(state.getX()) + ",y="
-							+ numberFormat.format(state.getY()) + ",width="
-							+ numberFormat.format(state.getWidth())
-							+ ",height="
-							+ numberFormat.format(state.getHeight());
+					tip.append("x=").append(numberFormat.format(state.getX())).append(",y=").append(numberFormat.format(state.getY())).append(",width=").append(numberFormat.format(state.getWidth())).append(",height=").append(numberFormat.format(state.getHeight()));
 				}
 
-				tip += "]";
+				tip.append("]");
 			}
 
 			mxPoint trans = getView().getTranslate();
 
-			tip += "<br>scale=" + numberFormat.format(getView().getScale())
-			+ ", translate=[x=" + numberFormat.format(trans.getX())
-			+ ",y=" + numberFormat.format(trans.getY()) + "]";
-			tip += "</html>";
+			tip.append("<br>scale=").append(numberFormat.format(getView().getScale())).append(", translate=[x=").append(numberFormat.format(trans.getX())).append(",y=").append(numberFormat.format(trans.getY())).append("]");
+			tip.append("</html>");
 
-			return tip;
+			return tip.toString();
 		}
 
 		/**
 		 * Overrides the method to use the currently selected edge template for
 		 * new edges.
-		 * 
-		 * @param graph
-		 * @param parent
-		 * @param id
-		 * @param value
-		 * @param source
-		 * @param target
-		 * @param style
-		 * @return
+		 *
 		 */
 		@Override
 		public Object createEdge(Object parent, String id, Object value,
@@ -366,7 +333,6 @@ public class App extends BasicGraphEditor
 
 	/**
 	 * Entry point for running FMCAT
-	 * @param args
 	 */
 	public static void main(String[] args)
 	{
@@ -389,17 +355,15 @@ public class App extends BasicGraphEditor
 
 	/**
 	 * utility for rearranging the graphical display of the automaton
-	 * @param graph
-	 * @param graphComponent
 	 */
 	public static void morphGraph(final mxGraph graph,
 			mxGraphComponent graphComponent) 
 	{
 		// define layout
-		mxIGraphLayout layout = new mxFastOrganicLayout(graph);
+		mxFastOrganicLayout layout = new mxFastOrganicLayout(graph);
 
-		((mxFastOrganicLayout) layout).setForceConstant(100);
-		((mxFastOrganicLayout) layout).setDisableEdgeStyle( false); 
+		layout.setForceConstant(100);
+		layout.setDisableEdgeStyle( false);
 		//mxGraphModel mg=(mxGraphModel) graph.getModel();
 		//mxCell cell = (mxCell) ((mxGraphModel)mg).getCell("3");
 

@@ -18,11 +18,10 @@ public class DeleteHandleAction extends AbstractAction
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private mxPoint pt;
+	private final mxPoint pt;
 
 	/**
-	 * 
-	 * @param key
+	 *
 	 */
 	public DeleteHandleAction(mxPoint pt)
 	{

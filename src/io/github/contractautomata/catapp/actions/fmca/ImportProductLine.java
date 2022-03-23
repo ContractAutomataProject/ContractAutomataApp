@@ -1,6 +1,7 @@
 package io.github.contractautomata.catapp.actions.fmca;
 
 import java.awt.event.ActionEvent;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -116,7 +117,7 @@ public class ImportProductLine extends AbstractAction {
 						else
 						{
 							FMCA fa = new FMCA(editor.lastaut,prod);
-							pf= new ProductFrame(fa.getFamily(), (JPanel)editor,editor.lastaut);
+							pf= new ProductFrame(fa.getFamily(), editor,editor.lastaut);
 							editor.setProductFrame(pf);
 						}
 					}
@@ -124,11 +125,11 @@ public class ImportProductLine extends AbstractAction {
 						return;
 					else 	{
 						Family fam = new Family(prod); //(fc.getSelectedFile().getPath(),fileName);
-						pf= new ProductFrame(fam, (JPanel)editor,null);
+						pf= new ProductFrame(fam, editor,null);
 						editor.setProductFrame(pf);
 					}
 				
-					pf.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+					Objects.requireNonNull(pf).setExtendedState(JFrame.MAXIMIZED_BOTH);
 					//pf.setAlwaysOnTop(true);
 					pf.setLocation(editor.getX() + editor.getWidth(), editor.getY());
 					pf.setVisible(true);

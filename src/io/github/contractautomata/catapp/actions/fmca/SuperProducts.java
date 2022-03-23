@@ -2,6 +2,7 @@ package io.github.contractautomata.catapp.actions.fmca;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -25,7 +26,7 @@ public class SuperProducts extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
 	//	EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
-		ProductFrame pf=editor.getProductFrame();
+		ProductFrame pf= Objects.requireNonNull(editor).getProductFrame();
 
 		if (pf==null)
 		{
@@ -35,7 +36,7 @@ public class SuperProducts extends AbstractAction {
 
 		Family f=pf.getFamily();
 
-		String S= (String) JOptionPane.showInputDialog(null, 
+		String S= JOptionPane.showInputDialog(null,
 				"Insert Product id",
 				JOptionPane.PLAIN_MESSAGE);
 		if (S==null)
@@ -48,11 +49,11 @@ public class SuperProducts extends AbstractAction {
 
 		pf.setColorButtonProducts(supind, Color.RED);
 
-		String message=supind.size()+ " Super-Products of Product "+pindex+System.lineSeparator()+p.toString()+System.lineSeparator();
+		StringBuilder message= new StringBuilder(supind.size() + " Super-Products of Product " + pindex + System.lineSeparator() + p.toString() + System.lineSeparator());
 		for (Product p2 : supind)
-			message+= pf.indexOf(p2)+" : "+System.lineSeparator()+p2.toString()+System.lineSeparator();
+			message.append(pf.indexOf(p2)).append(" : ").append(System.lineSeparator()).append(p2.toString()).append(System.lineSeparator());
 		JTextArea textArea = new JTextArea(200,200);
-		textArea.setText(message);
+		textArea.setText(message.toString());
 		textArea.setEditable(true);
 
 		JScrollPane scrollPane = new JScrollPane(textArea);

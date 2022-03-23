@@ -66,10 +66,9 @@ public class EditorActions
 {
 	/**
 	 * 
-	 * @param e
 	 * @return Returns the graph for the given action event.
 	 */
-	public static final BasicGraphEditor getEditor(ActionEvent e)
+	public static BasicGraphEditor getEditor(ActionEvent e)
 	{
 		if (e.getSource() instanceof Component)
 		{
@@ -116,7 +115,7 @@ public class EditorActions
 		/**
 		 * 
 		 */
-		protected double scale;
+		protected final double scale;
 
 		/**
 		 * 
@@ -220,7 +219,8 @@ public class EditorActions
 					}
 					catch (PrinterException e2)
 					{
-						System.out.println(e2);
+						e2.printStackTrace();
+						System.out.println(e2.toString());
 					}
 				}
 			}
@@ -236,7 +236,7 @@ public class EditorActions
 		/**
 		 * 
 		 */
-		protected boolean showDialog;
+		protected final boolean showDialog;
 
 		/**
 		 * 
@@ -274,27 +274,18 @@ public class EditorActions
 			param.setCompressedText(new String[] { "mxGraphModel", xml });
 
 			// Saves as a PNG file
-			FileOutputStream outputStream = new FileOutputStream(new File(filename));
-			try
-			{
+			try (FileOutputStream outputStream = new FileOutputStream(new File(filename))) {
 				mxPngImageEncoder encoder = new mxPngImageEncoder(outputStream,
 						param);
 
-				if (image != null)
-				{
+				if (image != null) {
 					encoder.encode(image);
 					editor.setModified(false);
 					editor.setCurrentFile(new File(filename));
-				}
-				else
-				{
+				} else {
 					JOptionPane.showMessageDialog(graphComponent,
 							mxResources.get("noImageData"));
 				}
-			}
-			finally
-			{
-				outputStream.close();
 			}
 		}
 
@@ -548,16 +539,14 @@ public class EditorActions
 					{
 						try {
 							Automaton<String,Action,State<String>,ModalTransition<String, Action,State<String>,CALabel>> aut=((App) editor).lastaut;
-							new AutDataConverter<CALabel>(CALabel::new).exportMSCA(filename,aut);
+							new AutDataConverter<>(CALabel::new).exportMSCA(filename,aut);
 							editor.setModified(false);
 							JOptionPane.showMessageDialog(editor.getGraphComponent(),"The automaton has been stored with filename "+filename,"Success!",JOptionPane.PLAIN_MESSAGE);
 						} catch (IOException e1) {
-							JOptionPane.showMessageDialog(editor.getGraphComponent(),"File not found"+e1.toString(),mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-						} catch (ParserConfigurationException e1) {
-                            e1.printStackTrace();
-                        }
+							JOptionPane.showMessageDialog(editor.getGraphComponent(),"File not found"+e1,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+						}
 
-                    }
+					}
 //					else if (ext.equalsIgnoreCase("txt"))
 //					{
 //						String content = mxGdCodec.encode(editor.graphComponent.getGraph());
@@ -621,7 +610,7 @@ public class EditorActions
 		/**
 		 * 
 		 */
-		protected boolean undo;
+		protected final boolean undo;
 
 		/**
 		 * 
@@ -740,7 +729,6 @@ public class EditorActions
 		}
 
 		/**
-		 * @throws IOException
 		 *
 		 */
 		protected void openGD(BasicGraphEditor editor, File file,
@@ -848,7 +836,7 @@ public class EditorActions
 									Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> aut;
 									try {
 										String filename = fc.getSelectedFile().toString();
-										aut = new AutDataConverter<CALabel>(CALabel::new).importMSCA(filename);
+										aut = new AutDataConverter<>(CALabel::new).importMSCA(filename);
 										filename = filename.substring(0,filename.lastIndexOf("."));
 										new MxeConverter().exportMSCA(filename,aut); //when importing it also exports
 

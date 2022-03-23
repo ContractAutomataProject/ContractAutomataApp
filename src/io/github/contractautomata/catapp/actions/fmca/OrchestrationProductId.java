@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 
 @SuppressWarnings("serial")
 public class OrchestrationProductId extends AbstractAction {
@@ -27,7 +28,7 @@ public class OrchestrationProductId extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
-		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		EditorMenuBar menuBar = (EditorMenuBar) Objects.requireNonNull(editor).getMenuFrame().getJMenuBar();
 		
 		if (menuBar.checkAut(editor)) return;
 		String filename=editor.getCurrentFile().getName();
@@ -46,7 +47,7 @@ public class OrchestrationProductId extends AbstractAction {
 
 		//FMCA faut= new FMCA(aut,pf.getFamily());
 
-		String S= (String) JOptionPane.showInputDialog(editor.getGraphComponent(), 
+		String S= JOptionPane.showInputDialog(editor.getGraphComponent(),
 				"Insert Product id",
 				JOptionPane.PLAIN_MESSAGE);
 		if (S==null)
@@ -56,7 +57,7 @@ public class OrchestrationProductId extends AbstractAction {
 		Product p=pf.getProductAt(Integer.parseInt(S));
 
 		Instant start = Instant.now();
-		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> controller = new ProductOrchestrationSynthesisOperator(new Agreement(),p).apply(aut);
+		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> controller = new ProductOrchestrationSynthesisOperator<String>(new Agreement(),p).apply(aut);
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 	

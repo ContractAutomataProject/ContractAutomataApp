@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -28,7 +29,7 @@ public class MaximalProducts extends AbstractAction {
 		App editor = (App) EditorActions.getEditor(e);
 	//	EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
 		
-		ProductFrame pf=editor.getProductFrame();
+		ProductFrame pf= Objects.requireNonNull(editor).getProductFrame();
 		if (pf==null)
 		{
 			JOptionPane.showMessageDialog(editor.getGraphComponent(),"No Family loaded!",mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
@@ -50,14 +51,14 @@ public class MaximalProducts extends AbstractAction {
 		}
 		
 		pf.setColorButtonProducts(cp, Color.GREEN);
-		String message=cp.size() + " Maximal Products Found:"+System.lineSeparator()+"";
+		StringBuilder message= new StringBuilder(cp.size() + " Maximal Products Found:" + System.lineSeparator() + "");
 		for (Product p : cp)
-			message+= pf.indexOf(p)+" : "+System.lineSeparator()+""+p.toString()+""+System.lineSeparator()+"";
+			message.append(pf.indexOf(p)).append(" : ").append(System.lineSeparator()).append(p.toString()).append(System.lineSeparator());
 
-		message += "Elapsed time : "+elapsedTime+ " milliseconds";
+		message.append("Elapsed time : ").append(elapsedTime).append(" milliseconds");
 
 		JTextArea textArea = new JTextArea(200,200);
-		textArea.setText(message);
+		textArea.setText(message.toString());
 		textArea.setEditable(true);
 
 		JScrollPane scrollPane = new JScrollPane(textArea);

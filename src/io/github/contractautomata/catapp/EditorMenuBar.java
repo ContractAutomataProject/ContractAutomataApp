@@ -3,6 +3,7 @@ package io.github.contractautomata.catapp;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractAction;
@@ -63,7 +64,7 @@ public class EditorMenuBar extends JMenuBar
 {
 	public String lastDir;
 
-	public Predicate<App> loseChanges = x->((x != null)&&(!x.isModified()
+	public final Predicate<App> loseChanges = x->((x != null)&&(!x.isModified()
 			|| JOptionPane.showConfirmDialog(x,	mxResources.get("loseChanges")) == JOptionPane.YES_OPTION));
 
 	private final String errorMsg = "States or transitions contain syntax errors."+System.lineSeparator()+" "
@@ -81,7 +82,6 @@ public class EditorMenuBar extends JMenuBar
 	private static final long serialVersionUID = 4060203894740766714L;
 
 	/**
-	 * @param editor
 	 */
 	public EditorMenuBar(final App editor)
 	{
@@ -390,19 +390,15 @@ public class EditorMenuBar extends JMenuBar
 		}
 	}
 
-	public DefaultFileFilter setDefaultFilter(JFileChooser fc,String type, String title, String type2) {
+	public void setDefaultFilter(JFileChooser fc, String type, String title, String type2) {
 		DefaultFileFilter defaultFilter = new DefaultFileFilter(type, "")//mxResources.get("allSupportedFormats")
 				//+ " (.mxe, .png, .vdx)")
 				{
 			public boolean accept(File file)
 			{
 				String lcase = file.getName().toLowerCase();
-				if (type2==null)
-					return super.accept(file)
-							|| lcase.endsWith(type);
-				else
-					return super.accept(file)
-							|| lcase.endsWith(type2);
+				return super.accept(file)
+						|| lcase.endsWith(Objects.requireNonNullElse(type2, type));
 			}
 				};
 				fc.addChoosableFileFilter(defaultFilter);
@@ -411,7 +407,6 @@ public class EditorMenuBar extends JMenuBar
 						+ " ("+type+")"));
 
 				fc.setFileFilter(defaultFilter);
-				return defaultFilter;
 	}
 
 }
@@ -678,9 +673,6 @@ menu.add(editor.bind("Get sinks", new AnalyzeGraph(AnalyzeType.GET_SINKS, aGraph
 menu.add(editor.bind("Is biconnected", new AnalyzeGraph(AnalyzeType.IS_BICONNECTED, aGraph)));
  */
 
-/**
- *
- */
 //	public static class AnalyzeGraph extends AbstractAction
 //	{
 //		/**

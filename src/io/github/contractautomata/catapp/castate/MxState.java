@@ -107,13 +107,10 @@ public class MxState extends State<String> {
 		mxGraphics2DCanvas.putShape((String) mxStyleRegistry.getValue("SHAPE_INITIALFINALSTATE"), newShape);
 		
 
-		mxStyleRegistry.putValue("InitialStatePerimeter", new mxPerimeterFunction() {
-			@Override
-			public mxPoint apply(mxRectangle bounds, mxCellState vertex, mxPoint next, boolean orthogonal) {
-				mxRectangle rect =new mxRectangle(bounds.getX()+initialStateWidthIncrement,bounds.getY(),bounds.getWidth()-initialStateWidthIncrement,bounds.getHeight());
-				return mxPerimeter.EllipsePerimeter.apply(rect, vertex, next, orthogonal) ;
-			}
-		});
+		mxStyleRegistry.putValue("InitialStatePerimeter", (mxPerimeterFunction) (bounds, vertex, next, orthogonal) -> {
+            mxRectangle rect =new mxRectangle(bounds.getX()+initialStateWidthIncrement,bounds.getY(),bounds.getWidth()-initialStateWidthIncrement,bounds.getHeight());
+            return mxPerimeter.EllipsePerimeter.apply(rect, vertex, next, orthogonal) ;
+        });
 	}
 	
 }

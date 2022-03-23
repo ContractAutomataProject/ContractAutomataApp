@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 
 @SuppressWarnings("serial")
 public class OrchestrationFamilyEnumerative extends AbstractAction {
@@ -26,7 +27,7 @@ public class OrchestrationFamilyEnumerative extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);
-		EditorMenuBar menuBar = (EditorMenuBar) editor.getMenuFrame().getJMenuBar();
+		EditorMenuBar menuBar = (EditorMenuBar) Objects.requireNonNull(editor).getMenuFrame().getJMenuBar();
 		if (menuBar.checkAut(editor)) return;
 		String filename=editor.getCurrentFile().getName();
 

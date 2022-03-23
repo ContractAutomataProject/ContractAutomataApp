@@ -45,8 +45,7 @@ public class SaveFamily extends AbstractAction {
 						System.getProperty("user.dir"));
 
 			// Adds the default file format
-			FileFilter defaultFilter = prodFilter;
-			fc.addChoosableFileFilter(defaultFilter);
+			fc.addChoosableFileFilter(prodFilter);
 
 			int rc = fc.showDialog(null, mxResources.get("save"));
 			if (rc != JFileChooser.APPROVE_OPTION)

@@ -11,6 +11,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -60,9 +61,6 @@ public class BasicGraphEditor extends JPanel
 	 */
 	private static final long serialVersionUID = -6561623072112577140L;
 
-	/**
-	 * Adds required resources for i18n
-	 */
 	static
 	{
 		try
@@ -128,7 +126,7 @@ public class BasicGraphEditor extends JPanel
 	/**
 	 * 
 	 */
-	protected mxIEventListener undoHandler = new mxIEventListener()
+	protected final mxIEventListener undoHandler = new mxIEventListener()
 	{
 		public void invoke(Object source, mxEventObject evt)
 		{
@@ -140,13 +138,7 @@ public class BasicGraphEditor extends JPanel
 	/**
 	 * 
 	 */
-	protected mxIEventListener changeTracker = new mxIEventListener()
-	{
-		public void invoke(Object source, mxEventObject evt)
-		{
-			setModified(true);
-		}
-	};
+	protected final mxIEventListener changeTracker = (source, evt) -> setModified(true);
 
 	/**
 	 * 
@@ -172,15 +164,11 @@ public class BasicGraphEditor extends JPanel
 		graph.getView().addListener(mxEvent.UNDO, undoHandler);
 
 		// Keeps the selection in sync with the command history
-		mxIEventListener undoHandler = new mxIEventListener()
-		{
-			public void invoke(Object source, mxEventObject evt)
-			{
-				List<mxUndoableChange> changes = ((mxUndoableEdit) evt
-						.getProperty("edit")).getChanges();
-				graph.setSelectionCells(graph
-						.getSelectionCellsForChanges(changes));
-			}
+		mxIEventListener undoHandler = (source, evt) -> {
+			List<mxUndoableChange> changes = ((mxUndoableEdit) evt
+					.getProperty("edit")).getChanges();
+			graph.setSelectionCells(graph
+					.getSelectionCellsForChanges(changes));
 		};
 
 		undoManager.addListener(mxEvent.UNDO, undoHandler);
@@ -275,34 +263,27 @@ public class BasicGraphEditor extends JPanel
 	protected void installRepaintListener()
 	{
 		graphComponent.getGraph().addListener(mxEvent.REPAINT,
-				new mxIEventListener()
-		{
-			public void invoke(Object source, mxEventObject evt)
-			{
-				String buffer = (graphComponent.getTripleBuffer() != null) ? ""
-						: " (unbuffered)";
-				mxRectangle dirty = (mxRectangle) evt
-						.getProperty("region");
+				(source, evt) -> {
+					String buffer = (graphComponent.getTripleBuffer() != null) ? ""
+							: " (unbuffered)";
+					mxRectangle dirty = (mxRectangle) evt
+							.getProperty("region");
 
-				if (dirty == null)
-				{
-					status("Repaint all" + buffer);
-				}
-				else
-				{
-					status("Repaint: x=" + (int) (dirty.getX()) + " y="
-							+ (int) (dirty.getY()) + " w="
-							+ (int) (dirty.getWidth()) + " h="
-							+ (int) (dirty.getHeight()) + buffer);
-				}
-			}
-		});
+					if (dirty == null)
+					{
+						status("Repaint all" + buffer);
+					}
+					else
+					{
+						status("Repaint: x=" + (int) (dirty.getX()) + " y="
+								+ (int) (dirty.getY()) + " w="
+								+ (int) (dirty.getWidth()) + " h="
+								+ (int) (dirty.getHeight()) + buffer);
+					}
+				});
 	}
 
-	/**
-	 * 
-	 */
-//	public EditorPalette insertPalette(String title)
+	//	public EditorPalette insertPalette(String title)
 //	{
 //		final EditorPalette palette = new EditorPalette();
 //		final JScrollPane scrollPane = new JScrollPane(palette);
@@ -589,8 +570,7 @@ public class BasicGraphEditor extends JPanel
 	}
 
 	/**
-	 * 
-	 * @param modified
+	 *
 	 */
 	public void setModified(boolean modified)
 	{
@@ -648,8 +628,6 @@ public class BasicGraphEditor extends JPanel
 
 	/**
 	 * 
-	 * @param name
-	 * @param Modality
 	 * @return a new Action bound to the specified string name
 	 */
 	public Action bind(String name, final Action action)
@@ -659,15 +637,13 @@ public class BasicGraphEditor extends JPanel
 
 	/**
 	 * 
-	 * @param name
-	 * @param Modality
 	 * @return a new Action bound to the specified string name and icon
 	 */
 	@SuppressWarnings("serial")
 	public Action bind(String name, final Action action, String iconUrl)
 	{
 		AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? new ImageIcon(
-				BasicGraphEditor.class.getResource(iconUrl)) : null)
+				Objects.requireNonNull(BasicGraphEditor.class.getResource(iconUrl))) : null)
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -682,8 +658,7 @@ public class BasicGraphEditor extends JPanel
 	}
 
 	/**
-	 * 
-	 * @param msg
+	 *
 	 */
 	public void status(String msg)
 	{
@@ -797,7 +772,7 @@ public class BasicGraphEditor extends JPanel
 	@SuppressWarnings("serial")
 	public Action graphLayout(final String key, boolean animate)
 	{
-		final mxIGraphLayout layout = createLayout(key, animate);
+		final mxIGraphLayout layout = createLayout(key);
 
 		if (layout != null)
 		{
@@ -827,15 +802,7 @@ public class BasicGraphEditor extends JPanel
 						mxMorphing morph = new mxMorphing(graphComponent, 20,
 								1.2, 20);
 
-						morph.addListener(mxEvent.DONE, new mxIEventListener()
-						{
-
-							public void invoke(Object sender, mxEventObject evt)
-							{
-								graph.getModel().endUpdate();
-							}
-
-						});
+						morph.addListener(mxEvent.DONE, (sender, evt) -> graph.getModel().endUpdate());
 
 						morph.startAnimation();
 					}
@@ -862,7 +829,7 @@ public class BasicGraphEditor extends JPanel
 	/**
 	 * Creates a layout instance for the given identifier.
 	 */
-	protected mxIGraphLayout createLayout(String ident, boolean animate)
+	protected mxIGraphLayout createLayout(String ident)
 	{
 		mxIGraphLayout layout = null;
 
@@ -870,93 +837,77 @@ public class BasicGraphEditor extends JPanel
 		{
 			mxGraph graph = graphComponent.getGraph();
 
-			if (ident.equals("verticalHierarchical"))
-			{
-				layout = new mxHierarchicalLayout(graph);
+			switch (ident) {
+				case "verticalHierarchical":
+					layout = new mxHierarchicalLayout(graph);
+					break;
+				case "horizontalHierarchical":
+					layout = new mxHierarchicalLayout(graph, JLabel.WEST);
+					break;
+				case "verticalTree":
+					layout = new mxCompactTreeLayout(graph, false);
+					break;
+				case "horizontalTree":
+					layout = new mxCompactTreeLayout(graph, true);
+					break;
+				case "parallelEdges":
+					layout = new mxParallelEdgeLayout(graph);
+					break;
+				case "placeEdgeLabels":
+					layout = new mxEdgeLabelLayout(graph);
+					break;
+				case "organicLayout":
+					layout = new mxOrganicLayout(graph);
+					break;
 			}
-			else if (ident.equals("horizontalHierarchical"))
-			{
-				layout = new mxHierarchicalLayout(graph, JLabel.WEST);
-			}
-			else if (ident.equals("verticalTree"))
-			{
-				layout = new mxCompactTreeLayout(graph, false);
-			}
-			else if (ident.equals("horizontalTree"))
-			{
-				layout = new mxCompactTreeLayout(graph, true);
-			}
-			else if (ident.equals("parallelEdges"))
-			{
-				layout = new mxParallelEdgeLayout(graph);
-			}
-			else if (ident.equals("placeEdgeLabels"))
-			{
-				layout = new mxEdgeLabelLayout(graph);
-			}
-			else if (ident.equals("organicLayout"))
-			{
-				layout = new mxOrganicLayout(graph);
-			}
-			if (ident.equals("verticalPartition"))
-			{
-				layout = new mxPartitionLayout(graph, false)
-				{
-					/**
-					 * Overrides the empty implementation to return the size of the
-					 * graph control.
-					 */
-					public mxRectangle getContainerSize()
-					{
-						return graphComponent.getLayoutAreaSize();
-					}
-				};
-			}
-			else if (ident.equals("horizontalPartition"))
-			{
-				layout = new mxPartitionLayout(graph, true)
-				{
-					/**
-					 * Overrides the empty implementation to return the size of the
-					 * graph control.
-					 */
-					public mxRectangle getContainerSize()
-					{
-						return graphComponent.getLayoutAreaSize();
-					}
-				};
-			}
-			else if (ident.equals("verticalStack"))
-			{
-				layout = new mxStackLayout(graph, false)
-				{
-					/**
-					 * Overrides the empty implementation to return the size of the
-					 * graph control.
-					 */
-					public mxRectangle getContainerSize()
-					{
-						return graphComponent.getLayoutAreaSize();
-					}
-				};
-			}
-			else if (ident.equals("horizontalStack"))
-			{
-				layout = new mxStackLayout(graph, true)
-				{
-					/**
-					 * Overrides the empty implementation to return the size of the
-					 * graph control.
-					 */
-					public mxRectangle getContainerSize()
-					{
-						return graphComponent.getLayoutAreaSize();
-					}
-				};
-			}
-			else if (ident.equals("circleLayout"))
-			{
-				layout = new mxCircleLayout(graph);
+			switch (ident) {
+				case "verticalPartition":
+					layout = new mxPartitionLayout(graph, false) {
+						/**
+						 * Overrides the empty implementation to return the size of the
+						 * graph control.
+						 */
+						public mxRectangle getContainerSize() {
+							return graphComponent.getLayoutAreaSize();
+						}
+					};
+					break;
+				case "horizontalPartition":
+					layout = new mxPartitionLayout(graph, true) {
+						/**
+						 * Overrides the empty implementation to return the size of the
+						 * graph control.
+						 */
+						public mxRectangle getContainerSize() {
+							return graphComponent.getLayoutAreaSize();
+						}
+					};
+					break;
+				case "verticalStack":
+					layout = new mxStackLayout(graph, false) {
+						/**
+						 * Overrides the empty implementation to return the size of the
+						 * graph control.
+						 */
+						public mxRectangle getContainerSize() {
+							return graphComponent.getLayoutAreaSize();
+						}
+					};
+					break;
+				case "horizontalStack":
+					layout = new mxStackLayout(graph, true) {
+						/**
+						 * Overrides the empty implementation to return the size of the
+						 * graph control.
+						 */
+						public mxRectangle getContainerSize() {
+							return graphComponent.getLayoutAreaSize();
+						}
+					};
+					break;
+				case "circleLayout":
+					layout = new mxCircleLayout(graph);
+					break;
 			}
 		}
 

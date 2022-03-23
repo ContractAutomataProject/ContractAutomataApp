@@ -9,6 +9,7 @@ import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -50,11 +51,6 @@ public class EditorToolBar extends JToolBar
 
 	public static int incrementalStateLabel=0;
 
-	/**
-	 * 
-	 * @param frame
-	 * @param orientation
-	 */
 	//private boolean ignoreZoomChange = false;
 
 	//////////////////////////////////////////////
@@ -68,7 +64,7 @@ public class EditorToolBar extends JToolBar
 	/**
 	 * 
 	 */
-	protected mxEventSource eventSource = new mxEventSource(this);
+	protected final mxEventSource eventSource = new mxEventSource(this);
 
 
 	/**
@@ -96,10 +92,7 @@ public class EditorToolBar extends JToolBar
 	}
 
 	/**
-	 * 
-	 * @param name
-	 * @param icon
-	 * @param cell
+	 *
 	 */
 	public void addTemplate(final String name, ImageIcon icon, mxCell cell)
 	{
@@ -121,7 +114,7 @@ public class EditorToolBar extends JToolBar
 		final JLabel entry = new JLabel(icon);
 		entry.setPreferredSize(new Dimension(50, 50));
 		entry.setBackground(entry.getBackground().brighter());
-		entry.setFont(new Font(entry.getFont().getFamily(), 0, 10));
+		entry.setFont(new Font(entry.getFont().getFamily(), Font.PLAIN, 10));
 
 		entry.setVerticalTextPosition(JLabel.BOTTOM);
 		entry.setHorizontalTextPosition(JLabel.CENTER);
@@ -280,7 +273,7 @@ public class EditorToolBar extends JToolBar
 
 		 addNodeTemplate(" State ", MxState.nodestylevalue,						 
 				 new ImageIcon(
-						 getClass().getResource("/io/github/davidebasile/catapp/images/ellipse.png")));
+						 Objects.requireNonNull(getClass().getResource("/io/github/davidebasile/catapp/images/ellipse.png"))));
 
 //		 addNodeTemplate(" FinalState ",nodestylevalue
 //						 +mxConstants.STYLE_SHAPE+"="+mxConstants.SHAPE_DOUBLE_ELLIPSE+";"
@@ -291,8 +284,8 @@ public class EditorToolBar extends JToolBar
 		 addEdgeTemplate(
 				 " Edge ",//"Horizontal Edge",
 				 new ImageIcon(
-						 App.class
-						 .getResource("/io/github/davidebasile/catapp/images/arrow.png")),
+						 Objects.requireNonNull(App.class
+								 .getResource("/io/github/davidebasile/catapp/images/arrow.png"))),
 				edgestylevalue, 100, 100, "[]");
 
 		 //		addEdgeTemplate(
@@ -411,8 +404,6 @@ public class EditorToolBar extends JToolBar
 
 		fontCombo.addActionListener(new ActionListener()
 		{
-		  *//**
-		  * 
 		  *//*
 			public void actionPerformed(ActionEvent e)
 			{
@@ -437,8 +428,6 @@ public class EditorToolBar extends JToolBar
 
 		sizeCombo.addActionListener(new ActionListener()
 		{
-		   *//**
-		   * 
 		   *//*
 			public void actionPerformed(ActionEvent e)
 			{
@@ -496,8 +485,6 @@ public class EditorToolBar extends JToolBar
 		// Sets the zoom in the zoom combo the current value
 		mxIEventListener scaleTracker = new mxIEventListener()
 		{
-		    *//**
-		    * 
 		    *//*
 			public void invoke(Object sender, mxEventObject evt)
 			{
@@ -527,8 +514,6 @@ public class EditorToolBar extends JToolBar
 
 		zoomCombo.addActionListener(new ActionListener()
 		{
-		     *//**
-		     * 
 		     *//*
 			public void actionPerformed(ActionEvent e)
 			{
