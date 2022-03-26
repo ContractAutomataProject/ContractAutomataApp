@@ -8,15 +8,13 @@ import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.shape.mxStencilShape;
 import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
-import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxPerimeter;
 import com.mxgraph.view.mxPerimeter.mxPerimeterFunction;
 
-import io.github.contractautomataproject.catlib.automaton.state.BasicState;
-import io.github.contractautomataproject.catlib.automaton.state.State;
+import io.github.contractautomata.catlib.automaton.state.BasicState;
+import io.github.contractautomata.catlib.automaton.state.State;
 
 import com.mxgraph.view.mxStyleRegistry;
 

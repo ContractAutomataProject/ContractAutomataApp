@@ -10,11 +10,11 @@
 	<description>Contract Automata Application</description>
 	<url>https://github.com/davidebasile/ContractAutomataApp/</url>
 	<dependencies>
-		<!-- dependency>
-			<groupId>io.github.davidebasile</groupId>
-			<artifactId>ContractAutomataLib</artifactId>
-			<version>0.0.1</version>
-		</dependency-->
+		<dependency>
+			<groupId>io.github.contractautomata</groupId>
+			<artifactId>catlib</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.mxgraph/jgraphx -->
 		<dependency>
 			<groupId>com.github.vlsi.mxgraph</groupId>

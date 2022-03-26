@@ -3,22 +3,19 @@ package io.github.contractautomata.catapp;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.net.URL;
 import java.text.NumberFormat;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import io.github.contractautomataproject.catlib.automaton.label.action.Action;
-import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
+import io.github.contractautomata.catlib.automaton.label.action.Action;
+import io.github.contractautomata.catlib.automaton.transition.ModalTransition;
 import org.w3c.dom.Document;
 
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.layout.mxFastOrganicLayout;
-import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxICell;
@@ -35,9 +32,9 @@ import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
 import io.github.contractautomata.catapp.castate.MxState;
-import io.github.contractautomataproject.catlib.automaton.Automaton;
-import io.github.contractautomataproject.catlib.automaton.label.CALabel;
-import io.github.contractautomataproject.catlib.automaton.state.State;
+import io.github.contractautomata.catlib.automaton.Automaton;
+import io.github.contractautomata.catlib.automaton.label.CALabel;
+import io.github.contractautomata.catlib.automaton.state.State;
 
 
 /**

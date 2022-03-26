@@ -17,8 +17,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import io.github.contractautomataproject.catlib.automaton.label.action.Action;
-import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
+import io.github.contractautomata.catlib.automaton.label.action.Action;
+import io.github.contractautomata.catlib.automaton.transition.ModalTransition;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,11 +29,11 @@ import org.xml.sax.SAXException;
 import com.mxgraph.model.mxCell;
 
 import io.github.contractautomata.catapp.castate.MxState;
-import io.github.contractautomataproject.catlib.automaton.Automaton;
-import io.github.contractautomataproject.catlib.automaton.label.CALabel;
-import io.github.contractautomataproject.catlib.automaton.state.BasicState;
-import io.github.contractautomataproject.catlib.automaton.state.State;
-import io.github.contractautomataproject.catlib.converters.AutConverter;
+import io.github.contractautomata.catlib.automaton.Automaton;
+import io.github.contractautomata.catlib.automaton.label.CALabel;
+import io.github.contractautomata.catlib.automaton.state.BasicState;
+import io.github.contractautomata.catlib.automaton.state.State;
+import io.github.contractautomata.catlib.converters.AutConverter;
 
 /**
  * Import/export in xml (mxe) format. This is the format 

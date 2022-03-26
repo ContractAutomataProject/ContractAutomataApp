@@ -18,8 +18,8 @@ import com.mxgraph.util.mxResources;
 import io.github.contractautomata.catapp.App;
 import io.github.contractautomata.catapp.EditorActions;
 import io.github.contractautomata.catapp.ProductFrame;
-import io.github.contractautomataproject.catlib.family.Family;
-import io.github.contractautomataproject.catlib.family.Product;
+import io.github.contractautomata.catlib.family.Family;
+import io.github.contractautomata.catlib.family.Product;
 
 @SuppressWarnings("serial")
 public class MaximalProducts extends AbstractAction {

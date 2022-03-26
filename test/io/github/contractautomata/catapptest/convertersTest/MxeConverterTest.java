@@ -10,22 +10,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
-import io.github.contractautomataproject.catlib.automaton.label.action.Action;
-import io.github.contractautomataproject.catlib.automaton.transition.ModalTransition;
+import io.github.contractautomata.catlib.automaton.label.action.Action;
+import io.github.contractautomata.catlib.automaton.transition.ModalTransition;
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 import io.github.contractautomata.catapp.castate.MxState;
 import io.github.contractautomata.catapp.converters.MxeConverter;
-import io.github.contractautomataproject.catlib.automaton.Automaton;
-import io.github.contractautomataproject.catlib.automaton.label.CALabel;
-import io.github.contractautomataproject.catlib.automaton.state.BasicState;
-import io.github.contractautomataproject.catlib.automaton.state.State;
-import io.github.contractautomataproject.catlib.converters.AutConverter;
-import io.github.contractautomataproject.catlib.converters.AutDataConverter;
+import io.github.contractautomata.catlib.automaton.Automaton;
+import io.github.contractautomata.catlib.automaton.label.CALabel;
+import io.github.contractautomata.catlib.automaton.state.State;
+import io.github.contractautomata.catlib.converters.AutConverter;
+import io.github.contractautomata.catlib.converters.AutDataConverter;
 
 public class MxeConverterTest {
 	

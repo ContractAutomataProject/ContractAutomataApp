@@ -7,7 +7,6 @@ import java.util.Objects;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
@@ -16,8 +15,8 @@ import io.github.contractautomata.catapp.App;
 import io.github.contractautomata.catapp.EditorActions;
 import io.github.contractautomata.catapp.EditorMenuBar;
 import io.github.contractautomata.catapp.ProductFrame;
-import io.github.contractautomataproject.catlib.family.Family;
-import io.github.contractautomataproject.catlib.family.converters.ProdFamilyConverter;
+import io.github.contractautomata.catlib.family.Family;
+import io.github.contractautomata.catlib.family.converters.ProdFamilyConverter;
 
 @SuppressWarnings("serial")
 public class LoadFamily extends AbstractAction {

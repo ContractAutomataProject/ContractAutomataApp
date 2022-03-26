@@ -8,7 +8,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import com.mxgraph.util.mxResources;
 import com.mxgraph.view.mxGraph;
@@ -17,12 +16,12 @@ import io.github.contractautomata.catapp.App;
 import io.github.contractautomata.catapp.EditorActions;
 import io.github.contractautomata.catapp.EditorMenuBar;
 import io.github.contractautomata.catapp.ProductFrame;
-import io.github.contractautomataproject.catlib.family.FMCA;
-import io.github.contractautomataproject.catlib.family.Family;
-import io.github.contractautomataproject.catlib.family.PartialProductGenerator;
-import io.github.contractautomataproject.catlib.family.Product;
-import io.github.contractautomataproject.catlib.family.converters.DimacFamilyConverter;
-import io.github.contractautomataproject.catlib.family.converters.FeatureIDEfamilyConverter;
+import io.github.contractautomata.catlib.family.FMCA;
+import io.github.contractautomata.catlib.family.Family;
+import io.github.contractautomata.catlib.family.PartialProductGenerator;
+import io.github.contractautomata.catlib.family.Product;
+import io.github.contractautomata.catlib.family.converters.DimacFamilyConverter;
+import io.github.contractautomata.catlib.family.converters.FeatureIDEfamilyConverter;
 
 @SuppressWarnings("serial")
 public class ImportProductLine extends AbstractAction {
