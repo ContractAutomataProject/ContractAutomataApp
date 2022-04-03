@@ -46,7 +46,7 @@ public class SubProducts extends AbstractAction {
 		Product p = pf.getProductAt(pindex);
 		//			int[] subind = f.getSubProductsofProduct(pindex);
 		//			Product[] subprod = f.subsetOfProductsFromIndex(subind);
-		Set<Product> subprod = f.getSubProductsofProduct(p);
+		Set<Product> subprod = f.getSubProductsOfProduct(p);
 		pf.setColorButtonProducts(subprod, Color.RED);
 
 		StringBuilder message= new StringBuilder(subprod.size() + " Sub-Products of Product " + pindex + System.lineSeparator() + p.toString() + System.lineSeparator());

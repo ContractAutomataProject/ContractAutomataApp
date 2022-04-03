@@ -96,7 +96,7 @@ public class ProductFrame extends JFrame{
 
 						int index=Integer.parseInt((String)source.getClientProperty("index"));
 						StringBuilder message= new StringBuilder("Subproducts of P" + index + " " + prod.get(index).toString() + " \n");
-						Set<Product> subprod = fam.getSubProductsofProduct(prod.get(index));
+						Set<Product> subprod = fam.getSubProductsOfProduct(prod.get(index));
 						for (Product p2 : subprod)
 						{
 							int p2index = prod.indexOf(p2);
