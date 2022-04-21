@@ -262,7 +262,7 @@ public class MxeConverter implements AutConverter<Automaton<String,Action,State<
 			createElementEdge(doc,root,Integer.toString(id),
 					state2element.get(t.getSource()),
 					state2element.get(t.getTarget()),
-					Arrays.toString(t.getLabel().getLabel().stream().map(Action::toString).toArray(String[]::new)),t.getModality());
+					Arrays.toString(t.getLabel().getContent().stream().map(Action::toString).toArray(String[]::new)),t.getModality());
 			id+=1;
 		}
 
