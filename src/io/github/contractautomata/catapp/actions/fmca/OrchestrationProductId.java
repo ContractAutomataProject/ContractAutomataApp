@@ -12,7 +12,7 @@ import io.github.contractautomata.catlib.automaton.label.action.Action;
 import io.github.contractautomata.catlib.automaton.state.State;
 import io.github.contractautomata.catlib.automaton.transition.ModalTransition;
 import io.github.contractautomata.catlib.family.Product;
-import io.github.contractautomata.catlib.operators.ProductOrchestrationSynthesisOperator;
+import io.github.contractautomata.catlib.operations.ProductOrchestrationSynthesisOperator;
 import io.github.contractautomata.catlib.requirements.Agreement;
 
 import javax.swing.*;

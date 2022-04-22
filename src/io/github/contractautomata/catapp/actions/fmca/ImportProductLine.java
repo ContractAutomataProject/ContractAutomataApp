@@ -20,7 +20,7 @@ import io.github.contractautomata.catlib.family.FMCA;
 import io.github.contractautomata.catlib.family.Family;
 import io.github.contractautomata.catlib.family.PartialProductGenerator;
 import io.github.contractautomata.catlib.family.Product;
-import io.github.contractautomata.catlib.family.converters.DimacFamilyConverter;
+import io.github.contractautomata.catlib.family.converters.DimacsFamilyConverter;
 import io.github.contractautomata.catlib.family.converters.FeatureIDEfamilyConverter;
 
 @SuppressWarnings("serial")
@@ -78,7 +78,7 @@ public class ImportProductLine extends AbstractAction {
 						if (reply==JOptionPane.CLOSED_OPTION)
 							return;
 						else 
-							prod=new DimacFamilyConverter(reply==JOptionPane.YES_OPTION).importProducts(fileName);
+							prod=new DimacsFamilyConverter(reply==JOptionPane.YES_OPTION).importProducts(fileName);
 						
 					}
 

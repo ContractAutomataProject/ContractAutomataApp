@@ -87,7 +87,7 @@ public class ProductFrame extends JFrame{
 					nodes[pindex] = new JButton();
 					nodes[pindex].setBorder(BorderFactory.createLineBorder(Color.black));
 					nodes[pindex].setBorderPainted(false);
-					nodes[pindex].setText(p.toHTMLString("P"+pindex));
+					nodes[pindex].setText(toHTMLString(p,"P"+pindex));
 					nodes[pindex].putClientProperty("index", pindex+"");
 					nodes[pindex].setSize(new Dimension(200,300));
 					nodes[pindex].addActionListener(ae -> 
@@ -154,6 +154,19 @@ public class ProductFrame extends JFrame{
 		getContentPane().add(scrollpanel);
 		this.pack();
 		setVisible(true);
+	}
+
+	/**
+	 * Returns a description of this product as a String containing HTML, for graphical viewing.
+	 *
+	 * @param p the product to print.
+	 * @param s  the string prefixing the description of the product.
+	 * @return  a description of this product as a String containing HTML, for graphical viewing.
+	 */
+	private String toHTMLString(Product p, String s)
+	{
+		return "<html>"+s+" R:"+p.getRequired().toString()+"<br />F:"+p.getForbidden().toString()+"</html>";
+
 	}
 
 	public void setColorButtonProducts(Set<Product> sprod, Color c)
