@@ -1,7 +1,8 @@
 package io.github.contractautomata.catapptest.convertersTest;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +12,6 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import io.github.contractautomata.catlib.automaton.label.action.Action;
-import io.github.contractautomata.catlib.automaton.transition.ModalTransition;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +19,9 @@ import io.github.contractautomata.catapp.castate.MxState;
 import io.github.contractautomata.catapp.converters.MxeConverter;
 import io.github.contractautomata.catlib.automaton.Automaton;
 import io.github.contractautomata.catlib.automaton.label.CALabel;
+import io.github.contractautomata.catlib.automaton.label.action.Action;
 import io.github.contractautomata.catlib.automaton.state.State;
+import io.github.contractautomata.catlib.automaton.transition.ModalTransition;
 import io.github.contractautomata.catlib.converters.AutConverter;
 import io.github.contractautomata.catlib.converters.AutDataConverter;
 

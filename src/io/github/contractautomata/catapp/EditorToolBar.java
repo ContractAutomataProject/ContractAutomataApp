@@ -232,79 +232,79 @@ public class EditorToolBar extends JToolBar
 		setFloatable(false);
 
 		add(editor.bind("New", new NewAction(),
-				"/io/github/davidebasile/catapp/images/new.gif"));
+				"/io/github/contractautomata/catapp/images/new.gif"));
 		add(editor.bind("Open", new OpenAction(),
-				"/io/github/davidebasile/catapp/images/open.gif"));
+				"/io/github/contractautomata/catapp/images/open.gif"));
 
 		/*add(editor.bind("Import", new ImportAction(),
-				"/io/github/davidebasile/catapp/images/open.gif"));
+				"/io/github/contractautomata/catapp/images/open.gif"));
 		 */add(editor.bind("Save", new SaveAction(false),
-				 "/io/github/davidebasile/catapp/images/save.gif"));
+				 "/io/github/contractautomata/catapp/images/save.gif"));
 
 
 		 //	addSeparator();
 
 		 add(editor.bind("Print", new PrintAction(),
-				 "/io/github/davidebasile/catapp/images/print.gif"));
+				 "/io/github/contractautomata/catapp/images/print.gif"));
 
 		 //	addSeparator();
 
 		 add(editor.bind("Cut", TransferHandler.getCutAction(),
-				 "/io/github/davidebasile/catapp/images/cut.gif"));
+				 "/io/github/contractautomata/catapp/images/cut.gif"));
 		 add(editor.bind("Copy", TransferHandler.getCopyAction(),
-				 "/io/github/davidebasile/catapp/images/copy.gif"));
+				 "/io/github/contractautomata/catapp/images/copy.gif"));
 		 add(editor.bind("Paste", TransferHandler.getPasteAction(),
-				 "/io/github/davidebasile/catapp/images/paste.gif"));
+				 "/io/github/contractautomata/catapp/images/paste.gif"));
 
 		 //	addSeparator();
 
 		 add(editor.bind("Delete", mxGraphActions.getDeleteAction(),
-				 "/io/github/davidebasile/catapp/images/delete.gif"));
+				 "/io/github/contractautomata/catapp/images/delete.gif"));
 
 		 //	addSeparator();
 
 		 add(editor.bind("Undo", new HistoryAction(true),
-				 "/io/github/davidebasile/catapp/images/undo.gif"));
+				 "/io/github/contractautomata/catapp/images/undo.gif"));
 		 add(editor.bind("Redo", new HistoryAction(false),
-				 "/io/github/davidebasile/catapp/images/redo.gif"));
+				 "/io/github/contractautomata/catapp/images/redo.gif"));
 
 
 		 addSeparator();
 
 		 addNodeTemplate(" State ", MxState.nodestylevalue,						 
 				 new ImageIcon(
-						 Objects.requireNonNull(getClass().getResource("/io/github/davidebasile/catapp/images/ellipse.png"))));
+						 Objects.requireNonNull(getClass().getResource("/io/github/contractautomata/catapp/images/ellipse.png"))));
 
 //		 addNodeTemplate(" FinalState ",nodestylevalue
 //						 +mxConstants.STYLE_SHAPE+"="+mxConstants.SHAPE_DOUBLE_ELLIPSE+";"
 //						 +mxConstants.STYLE_PERIMETER+"="+mxConstants.PERIMETER_ELLIPSE+";",						 
 //						 new ImageIcon(
-//								 getClass().getResource("/io/github/davidebasile/catapp/images/doubleellipse.png")));
+//								 getClass().getResource("/io/github/contractautomata/catapp/images/doubleellipse.png")));
 
 		 addEdgeTemplate(
 				 " Edge ",//"Horizontal Edge",
 				 new ImageIcon(
 						 Objects.requireNonNull(App.class
-								 .getResource("/io/github/davidebasile/catapp/images/arrow.png"))),
+								 .getResource("/io/github/contractautomata/catapp/images/arrow.png"))),
 				edgestylevalue, 100, 100, "[]");
 
 		 //		addEdgeTemplate(
 		 //				" Vertical Edge ",
 		 //				new ImageIcon(
 		 //						App.class
-		 //								.getResource("/io/github/davidebasile/catapp/images/vertical.png")),
+		 //								.getResource("/io/github/contractautomata/catapp/images/vertical.png")),
 		 //				"vertical", 100, 100, "[]");
 		 //		addEdgeTemplate(
 		 //				" Rounded Edge ",
 		 //				new ImageIcon(
 		 //						App.class
-		 //								.getResource("/io/github/davidebasile/catapp/images/entity.png")),
+		 //								.getResource("/io/github/contractautomata/catapp/images/entity.png")),
 		 //				"entity"
 		 //				, 100, 100, "[]");
 
 
 		 //		
-		 //		JLabel entry = new JLabel(new ImageIcon(getClass().getResource("/io/github/davidebasile/catapp/images/ellipse.png")));
+		 //		JLabel entry = new JLabel(new ImageIcon(getClass().getResource("/io/github/contractautomata/catapp/images/ellipse.png")));
 		 //
 		 //		add(entry);
 		 //		
@@ -312,7 +312,7 @@ public class EditorToolBar extends JToolBar
 		 //		//entry.setText("state");
 		 //				
 		 //		mxCell cell = new mxCell("State", new mxGeometry(0, 0, 40, 40),
-		 //				"roundImage;image=/io/github/davidebasile/catapp/images/event.png");
+		 //				"roundImage;image=/io/github/contractautomata/catapp/images/event.png");
 		 //		cell.setVertex(true);
 		 //
 		 //		mxRectangle bounds = (mxGeometry) cell.getGeometry().clone();
@@ -440,33 +440,33 @@ public class EditorToolBar extends JToolBar
 		addSeparator();
 
 		add(editor.bind("Bold", new FontStyleAction(true),
-				"/io/github/davidebasile/catapp/images/bold.gif"));
+				"/io/github/contractautomata/catapp/images/bold.gif"));
 		add(editor.bind("Italic", new FontStyleAction(false),
-				"/io/github/davidebasile/catapp/images/italic.gif"));
+				"/io/github/contractautomata/catapp/images/italic.gif"));
 
 		addSeparator();
 
 		add(editor.bind("Left", new KeyValueAction(mxConstants.STYLE_ALIGN,
 				mxConstants.ALIGN_LEFT),
-				"/io/github/davidebasile/catapp/images/left.gif"));
+				"/io/github/contractautomata/catapp/images/left.gif"));
 		add(editor.bind("Center", new KeyValueAction(mxConstants.STYLE_ALIGN,
 				mxConstants.ALIGN_CENTER),
-				"/io/github/davidebasile/catapp/images/center.gif"));
+				"/io/github/contractautomata/catapp/images/center.gif"));
 		add(editor.bind("Right", new KeyValueAction(mxConstants.STYLE_ALIGN,
 				mxConstants.ALIGN_RIGHT),
-				"/io/github/davidebasile/catapp/images/right.gif"));
+				"/io/github/contractautomata/catapp/images/right.gif"));
 
 		addSeparator();
 
 		add(editor.bind("Font", new ColorAction("Font",
 				mxConstants.STYLE_FONTCOLOR),
-				"/io/github/davidebasile/catapp/images/fontcolor.gif"));
+				"/io/github/contractautomata/catapp/images/fontcolor.gif"));
 		add(editor.bind("Stroke", new ColorAction("Stroke",
 				mxConstants.STYLE_STROKECOLOR),
-				"/io/github/davidebasile/catapp/images/linecolor.gif"));
+				"/io/github/contractautomata/catapp/images/linecolor.gif"));
 		add(editor.bind("Fill", new ColorAction("Fill",
 				mxConstants.STYLE_FILLCOLOR),
-				"/io/github/davidebasile/catapp/images/fillcolor.gif"));
+				"/io/github/contractautomata/catapp/images/fillcolor.gif"));
 
 		addSeparator();
 

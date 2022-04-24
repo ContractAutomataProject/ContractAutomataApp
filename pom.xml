@@ -8,10 +8,10 @@
 	<packaging>jar</packaging>
 	<name>CAT_App</name>
 	<description>Contract Automata Application</description>
-	<url>https://github.com/davidebasile/ContractAutomataApp/</url>
+	<url>https://github.com/contractautomataproject/ContractAutomataApp/</url>
 	<dependencies>
 		<dependency>
-			<groupId>io.github.contractautomata</groupId>
+			<groupId>io.github.contractautomataproject</groupId>
 			<artifactId>catlib</artifactId>
 			<version>1.0.0</version>
 		</dependency>
@@ -20,12 +20,6 @@
 			<groupId>com.github.vlsi.mxgraph</groupId>
 			<artifactId>jgraphx</artifactId>
 			<version>4.2.2</version>
-		</dependency>
-		<!-- https://www.sat4j.org/products.php -->
-		<dependency>
-			<groupId>org.ow2.sat4j</groupId>
-			<artifactId>org.ow2.sat4j.core</artifactId>
-			<version>2.3.6</version>
 		</dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -56,7 +50,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
-					<release>9</release>
+					<release>11</release>
 				</configuration>
 			</plugin>
 			<plugin>

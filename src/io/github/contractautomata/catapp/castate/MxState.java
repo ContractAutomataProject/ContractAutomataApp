@@ -84,7 +84,7 @@ public class MxState extends State<String> {
 		//inserting entries for initial and initial final state
 		String initialStateShape="";
 		try {
-			initialStateShape = mxUtils.readFile(System.getProperty("user.dir")+"/src/io/github/davidebasile/catapp/images/startstate.shape");
+			initialStateShape = mxUtils.readFile(System.getProperty("user.dir")+"/src/io/github/contractautomata/catapp/images/startstate.shape");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -97,7 +97,7 @@ public class MxState extends State<String> {
 
 		String initialFinalStateShape="";
 		try {
-			initialFinalStateShape = mxUtils.readFile(System.getProperty("user.dir")+"/src/io/github/davidebasile/catapp/images/startfinalstate.shape");
+			initialFinalStateShape = mxUtils.readFile(System.getProperty("user.dir")+"/src/io/github/contractautomata/catapp/images/startfinalstate.shape");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

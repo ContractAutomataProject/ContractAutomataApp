@@ -23,6 +23,11 @@ import java.util.Objects;
 
 public class CanonicalProducts extends AbstractAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		App editor = (App) EditorActions.getEditor(e);

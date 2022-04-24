@@ -31,7 +31,7 @@ public class EditorPopupMenu extends JPopupMenu
 				.isSelectionEmpty();
 
 		//		add(editor.bind(mxResources.get("undo"), new HistoryAction(true),
-		//				"/io/github/davidebasile/catapp/images/undo.gif"));
+		//				"/io/github/contractautomata/catapp/images/undo.gif"));
 		//
 		//		addSeparator();
 
@@ -41,24 +41,24 @@ public class EditorPopupMenu extends JPopupMenu
 		if (edge!=null) {
 
 		
-			add(editor.bind("Add handle", new AddHandleAction(pt),"/io/github/davidebasile/catapp/images/diamond_end.gif"));
+			add(editor.bind("Add handle", new AddHandleAction(pt),"/io/github/contractautomata/catapp/images/diamond_end.gif"));
 
 			List<mxPoint> l = edge.getGeometry().getPoints(); 
 			if (l!=null)
 			{
 				l.stream()
 						.filter(p -> pt.distance(p.getX(), p.getY()) < 4)
-						.findFirst().ifPresent(sp -> add(editor.bind("Delete handle", new DeleteHandleAction(sp), "/io/github/davidebasile/catapp/images/delete.gif")));
+						.findFirst().ifPresent(sp -> add(editor.bind("Delete handle", new DeleteHandleAction(sp), "/io/github/contractautomata/catapp/images/delete.gif")));
 
 			}
 
 			//JMenu submenu = (JMenu) menu.add(new JMenu(mxResources.get("line")));
 
-			add(editor.bind("Urgent", new ModalLabelAction("Urgent"),"/io/github/davidebasile/catapp/images/arrow.gif"));
-			//"/io/github/davidebasile/catapp/images/linecolor.gif"));
+			add(editor.bind("Urgent", new ModalLabelAction("Urgent"),"/io/github/contractautomata/catapp/images/arrow.gif"));
+			//"/io/github/contractautomata/catapp/images/linecolor.gif"));
 			//add(editor.bind("Greedy", new FMCAAction("Greedy", mxConstants.STYLE_STROKECOLOR),""));  REMOVED!!
-			add(editor.bind("Lazy", new ModalLabelAction("Lazy"),"/io/github/davidebasile/catapp/images/arrow.gif"));
-			add(editor.bind("Permitted", new ModalLabelAction("Permitted"),"/io/github/davidebasile/catapp/images/arrow.gif"));
+			add(editor.bind("Lazy", new ModalLabelAction("Lazy"),"/io/github/contractautomata/catapp/images/arrow.gif"));
+			add(editor.bind("Permitted", new ModalLabelAction("Permitted"),"/io/github/contractautomata/catapp/images/arrow.gif"));
 
 			addSeparator();
 
@@ -67,33 +67,33 @@ public class EditorPopupMenu extends JPopupMenu
 		mxCell node = this.cellSelected(editor, pt, mxCell::isVertex);
 	
 		if (node!=null) {
-			add(editor.bind("Toggle Initial state", new ToggleInitialStateAction(node),"/io/github/davidebasile/catapp/images/sstate.png"));
-			add(editor.bind("Toggle Final state", new ToggleFinalStateAction(node),"/io/github/davidebasile/catapp/images/fstate.png"));
+			add(editor.bind("Toggle Initial state", new ToggleInitialStateAction(node),"/io/github/contractautomata/catapp/images/sstate.png"));
+			add(editor.bind("Toggle Final state", new ToggleFinalStateAction(node),"/io/github/contractautomata/catapp/images/fstate.png"));
 			addSeparator();
 		}
 		if (selected) {			
 			add(
 					editor.bind(mxResources.get("delete"), mxGraphActions
 							.getDeleteAction(),
-							"/io/github/davidebasile/catapp/images/delete.gif"))
+							"/io/github/contractautomata/catapp/images/delete.gif"))
 			.setEnabled(true);
 
 			add(
 					editor.bind(mxResources.get("cut"), TransferHandler
 							.getCutAction(),
-							"/io/github/davidebasile/catapp/images/cut.gif"))
+							"/io/github/contractautomata/catapp/images/cut.gif"))
 			.setEnabled(true);
 			add(
 					editor.bind(mxResources.get("copy"), TransferHandler
 							.getCopyAction(),
-							"/io/github/davidebasile/catapp/images/copy.gif"))
+							"/io/github/contractautomata/catapp/images/copy.gif"))
 			.setEnabled(true);
 		}
 
 		if (!selected) {
 			add(editor.bind(mxResources.get("paste"), TransferHandler
 					.getPasteAction(),
-					"/io/github/davidebasile/catapp/images/paste.gif"));
+					"/io/github/contractautomata/catapp/images/paste.gif"));
 		}
 
 

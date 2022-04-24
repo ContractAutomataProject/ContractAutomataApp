@@ -1,5 +1,5 @@
 <mxStylesheet>
-	<include name="/io/github/davidebasile/catapp/resources/basic-style.xml"/>
+	<include name="/io/github/contractautomata/catapp/resources/basic-style.xml"/>
 	<add as="defaultVertex" extend="defaultVertex">
 		<add as="fillColor" value="#adc5ff"/>
 		<add as="gradientColor" value="#7d85df"/>

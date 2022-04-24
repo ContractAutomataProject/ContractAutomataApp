@@ -4,8 +4,8 @@
 <h1>Contract Automata App</h1>
 
 This is the GUI application of CAT, and represents an example of usage of the CAT Library
- (https://github.com/ContractAutomataProject/ContractAutomataLib) to build a tool for visualizing 
-  the automata, edit them, and use the main operations (e.g., composition, synthesise).
+ (https://github.com/contractautomataproject/ContractAutomataLib) to build a tool for visualizing 
+  the automata, edit them, and use the main operations (e.g., composition, synthesis).
 
 The main application is in the file App.java, under io.github.contractautomata.catapp package. 
 Check the release for a runnable jar.

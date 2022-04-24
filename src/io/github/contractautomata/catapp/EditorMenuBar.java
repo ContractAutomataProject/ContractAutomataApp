@@ -102,22 +102,22 @@ public class EditorMenuBar extends JMenuBar
 
 		EditorMenuBar menuBar = this;
 
-		menu.add(editor.bind(mxResources.get("new"), new NewAction(), "/io/github/davidebasile/catapp/images/new.gif"));
-		menu.add(editor.bind(mxResources.get("openFile"), new OpenAction(), "/io/github/davidebasile/catapp/images/open.gif"));
-		//menu.add(editor.bind(mxResources.get("importStencil"), new ImportAction(), "/io/github/davidebasile/catapp/images/open.gif"));
+		menu.add(editor.bind(mxResources.get("new"), new NewAction(), "/io/github/contractautomata/catapp/images/new.gif"));
+		menu.add(editor.bind(mxResources.get("openFile"), new OpenAction(), "/io/github/contractautomata/catapp/images/open.gif"));
+		//menu.add(editor.bind(mxResources.get("importStencil"), new ImportAction(), "/io/github/contractautomata/catapp/images/open.gif"));
 		
 		menu.addSeparator();
 
 
-		//menu.add(editor.bind("Import Automaton", new ImportAction(), "/io/github/davidebasile/catapp/images/save.gif"));
-		menu.add(editor.bind(mxResources.get("save"), new SaveAction(false), "/io/github/davidebasile/catapp/images/save.gif"));
-		menu.add(editor.bind(mxResources.get("saveAs"), new SaveAction(true), "/io/github/davidebasile/catapp/images/saveas.gif"));
+		//menu.add(editor.bind("Import Automaton", new ImportAction(), "/io/github/contractautomata/catapp/images/save.gif"));
+		menu.add(editor.bind(mxResources.get("save"), new SaveAction(false), "/io/github/contractautomata/catapp/images/save.gif"));
+		menu.add(editor.bind(mxResources.get("saveAs"), new SaveAction(true), "/io/github/contractautomata/catapp/images/saveas.gif"));
 
 
 		menu.addSeparator();
 		
-//		menu.add(editor.bind("Import .data", new ImportData(),"/io/github/davidebasile/catapp/images/import.gif"));//mxResources.get("aboutGraphEditor")));
-//		menu.add(editor.bind("Export .data", new ExportData(),"/io/github/davidebasile/catapp/images/export.gif"));//mxResources.get("aboutGraphEditor")));
+//		menu.add(editor.bind("Import .data", new ImportData(),"/io/github/contractautomata/catapp/images/import.gif"));//mxResources.get("aboutGraphEditor")));
+//		menu.add(editor.bind("Export .data", new ExportData(),"/io/github/contractautomata/catapp/images/export.gif"));//mxResources.get("aboutGraphEditor")));
 		menu.add(editor.bind("Open New Window", 	
 		new AbstractAction() {
 			private static final long serialVersionUID = 1L;
@@ -142,7 +142,7 @@ public class EditorMenuBar extends JMenuBar
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		},"/io/github/davidebasile/catapp/images/new.gif"));
+		},"/io/github/contractautomata/catapp/images/new.gif"));
 		
 //		item = menu.add("Open New Instance of CAT");
 //		item.addActionListener(e->
@@ -165,8 +165,8 @@ public class EditorMenuBar extends JMenuBar
 		
 
 		menu.addSeparator();
-		menu.add(editor.bind(mxResources.get("pageSetup"), new PageSetupAction(), "/io/github/davidebasile/catapp/images/pagesetup.gif"));
-		menu.add(editor.bind(mxResources.get("print"), new PrintAction(), "/io/github/davidebasile/catapp/images/print.gif"));
+		menu.add(editor.bind(mxResources.get("pageSetup"), new PageSetupAction(), "/io/github/contractautomata/catapp/images/pagesetup.gif"));
+		menu.add(editor.bind(mxResources.get("print"), new PrintAction(), "/io/github/contractautomata/catapp/images/print.gif"));
 
 		menu.addSeparator();
 
@@ -175,18 +175,18 @@ public class EditorMenuBar extends JMenuBar
 		// Creates the edit menu
 		menu = add(new JMenu(mxResources.get("edit")));
 
-		menu.add(editor.bind(mxResources.get("undo"), new HistoryAction(true), "/io/github/davidebasile/catapp/images/undo.gif"));
-		menu.add(editor.bind(mxResources.get("redo"), new HistoryAction(false), "/io/github/davidebasile/catapp/images/redo.gif"));
+		menu.add(editor.bind(mxResources.get("undo"), new HistoryAction(true), "/io/github/contractautomata/catapp/images/undo.gif"));
+		menu.add(editor.bind(mxResources.get("redo"), new HistoryAction(false), "/io/github/contractautomata/catapp/images/redo.gif"));
 
 		menu.addSeparator();
 
-		menu.add(editor.bind(mxResources.get("cut"), TransferHandler.getCutAction(), "/io/github/davidebasile/catapp/images/cut.gif"));
-		menu.add(editor.bind(mxResources.get("copy"), TransferHandler.getCopyAction(), "/io/github/davidebasile/catapp/images/copy.gif"));
-		menu.add(editor.bind(mxResources.get("paste"), TransferHandler.getPasteAction(), "/io/github/davidebasile/catapp/images/paste.gif"));
+		menu.add(editor.bind(mxResources.get("cut"), TransferHandler.getCutAction(), "/io/github/contractautomata/catapp/images/cut.gif"));
+		menu.add(editor.bind(mxResources.get("copy"), TransferHandler.getCopyAction(), "/io/github/contractautomata/catapp/images/copy.gif"));
+		menu.add(editor.bind(mxResources.get("paste"), TransferHandler.getPasteAction(), "/io/github/contractautomata/catapp/images/paste.gif"));
 
 		menu.addSeparator();
 
-		menu.add(editor.bind(mxResources.get("delete"), mxGraphActions.getDeleteAction(), "/io/github/davidebasile/catapp/images/delete.gif"));
+		menu.add(editor.bind(mxResources.get("delete"), mxGraphActions.getDeleteAction(), "/io/github/contractautomata/catapp/images/delete.gif"));
 
 		menu.addSeparator();
 
@@ -195,7 +195,7 @@ public class EditorMenuBar extends JMenuBar
 
 //		menu.addSeparator();
 //
-//		menu.add(editor.bind("Add handles to edges", new AddHandlesToEdges(),"/io/github/davidebasile/catapp/images/straight.gif"));//mxResources.get("aboutGraphEditor")));
+//		menu.add(editor.bind("Add handles to edges", new AddHandlesToEdges(),"/io/github/contractautomata/catapp/images/straight.gif"));//mxResources.get("aboutGraphEditor")));
 
 		//menu.add(editor.bind(mxResources.get("warning"), new WarningAction()));
 		//menu.add(editor.bind(mxResources.get("edit"), mxGraphActions.getEditAction()));
@@ -225,7 +225,7 @@ public class EditorMenuBar extends JMenuBar
 
 		menu = add(new JMenu("MSCA"));
 
-		menu.add(editor.bind("Composition", new Composition()));//"/io/github/davidebasile/catapp/images/straight.gif"));
+		menu.add(editor.bind("Composition", new Composition()));//"/io/github/contractautomata/catapp/images/straight.gif"));
 		
 		menu.add(editor.bind("Most Permissive Controller", new MostPermissiveController()));
 	

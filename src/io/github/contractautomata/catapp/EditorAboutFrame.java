@@ -8,8 +8,6 @@ import java.awt.Frame;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
@@ -77,9 +75,9 @@ public class EditorAboutFrame extends JDialog
 
 		// Adds optional subtitle
 		JLabel subtitleLabel = new JLabel(
-				"<html> Contract Automata Tool (2021),  <br />"
-				+ "info at https://github.com/davidebasile/ContractAutomataLib,  <br />"
-				+ "developed by Davide Basile (https://github.com/davidebasile),  <br />"
+				"<html> Contract Automata Tool (2022),  <br />"
+				+ "info at https://github.com/contractautomataproject/ContractAutomataLib,  <br />"
+				+ "developed by Davide Basile (https://github.com/contractautomataproject),  <br />"
 				+ "GUI adapted from mxGraph BasicGraphEditor (https://jgraph.github.io/mxgraph/) </html>");
 		subtitleLabel.setBorder(BorderFactory.createEmptyBorder(4, 18, 0, 0));
 		subtitleLabel.setOpaque(false);
