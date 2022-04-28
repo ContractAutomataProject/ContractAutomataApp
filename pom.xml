@@ -83,7 +83,7 @@
 							<archive>
 								<manifest>
 									<mainClass>
-										com.mxgraph.examples.swing.editor.App
+										io.github.contractautomata.catapp.App
 									</mainClass>
 								</manifest>
 							</archive>

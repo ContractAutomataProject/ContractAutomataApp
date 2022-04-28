@@ -34,7 +34,7 @@ public class MxeConverterTest {
 	
 	private final AutConverter<Automaton<String, Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>,Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>> bmc = new MxeConverter();
 	private final String dir = System.getProperty("user.dir")+File.separator+"test"+File.separator
-			+"io"+File.separator+"github"+File.separator+"contractautomataproject"+File.separator+"catapptest"
+			+"io"+File.separator+"github"+File.separator+"contractautomata"+File.separator+"catapptest"
 			+File.separator+"resources"+File.separator;
 	
 	@Test
