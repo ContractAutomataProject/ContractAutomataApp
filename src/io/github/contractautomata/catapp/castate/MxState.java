@@ -1,8 +1,12 @@
 package io.github.contractautomata.catapp.castate;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.model.mxICell;
@@ -13,6 +17,7 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxPerimeter;
 import com.mxgraph.view.mxPerimeter.mxPerimeterFunction;
 
+import io.github.contractautomata.catapp.App;
 import io.github.contractautomata.catlib.automaton.state.BasicState;
 import io.github.contractautomata.catlib.automaton.state.State;
 
@@ -84,7 +89,12 @@ public class MxState extends State<String> {
 		//inserting entries for initial and initial final state
 		String initialStateShape="";
 		try {
-			initialStateShape = mxUtils.readFile(System.getProperty("user.dir")+"/src/io/github/contractautomata/catapp/images/startstate.shape");
+			URL url = App.class.getClassLoader().getResource("io/github/contractautomata/catapp/images/startstate.shape");
+			InputStream is = url.openStream();
+			initialStateShape = new BufferedReader(
+					new InputStreamReader(is, StandardCharsets.UTF_8))
+					.lines()
+					.collect(Collectors.joining(System.lineSeparator()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -97,7 +107,12 @@ public class MxState extends State<String> {
 
 		String initialFinalStateShape="";
 		try {
-			initialFinalStateShape = mxUtils.readFile(System.getProperty("user.dir")+"/src/io/github/contractautomata/catapp/images/startfinalstate.shape");
+			URL url = App.class.getClassLoader().getResource("io/github/contractautomata/catapp/images/startfinalstate.shape");
+			InputStream is = url.openStream();
+			initialFinalStateShape = new BufferedReader(
+					new InputStreamReader(is, StandardCharsets.UTF_8))
+					.lines()
+					.collect(Collectors.joining(System.lineSeparator()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

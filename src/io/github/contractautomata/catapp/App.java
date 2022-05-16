@@ -3,6 +3,10 @@ package io.github.contractautomata.catapp;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Objects;
@@ -65,7 +69,7 @@ public class App extends BasicGraphEditor
 
 	public App()
 	{
-		this("Contract Automata Tool (September 2021)", new CustomGraphComponent(new CustomGraph()));
+		this("Contract Automata Tool (May 2022)", new CustomGraphComponent(new CustomGraph()));
 		MxState.setShapes();
 	}
 
@@ -124,7 +128,7 @@ public class App extends BasicGraphEditor
 
 			getConnectionHandler().setCreateTarget(true);
 
-			// Loads the defalt stylesheet from an external file
+			// Loads the default stylesheet from an external file
 			mxCodec codec = new mxCodec();
 			Document doc = mxUtils.loadDocument(Objects.requireNonNull(App.class.getResource(
 							"/io/github/contractautomata/catapp/resources/default-style.xml"))
