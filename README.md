@@ -21,6 +21,15 @@ For more info check https://jgraph.github.io/mxgraph/docs/manual_javavis.html.
 
 The App has been developed using Eclipse/IntelliJ and tested on Windows machines. 
 
+<h2>Getting Started</h2>
+
+The release in the right column features an executable jar. 
+Download and run it by typing from a terminal
+
+``java -jar <jarfile>``
+
+where <jarfile> is to be substituted with the name of the downloaded jar file.
+
 <h2>License</h2>
 
 The tool is available under this license,
