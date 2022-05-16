@@ -28,7 +28,7 @@ Download and run it by typing from a terminal
 
 ``java -jar <jarfile>``
 
-where <jarfile> is to be substituted with the name of the downloaded jar file.
+where ``<jarfile>`` is to be substituted with the name of the downloaded jar file.
 
 <h2>License</h2>
 
