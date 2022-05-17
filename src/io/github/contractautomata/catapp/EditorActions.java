@@ -541,6 +541,7 @@ public class EditorActions
 					app.lastaut=new MxeConverter().importMSCA(filename);
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(editor.getGraphComponent(),menuBar.getErrorMsg()+System.lineSeparator()+ex.getMessage(), mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+					throw new IOException(ex);
 				}
 			}
 			editor.setModified(false);
