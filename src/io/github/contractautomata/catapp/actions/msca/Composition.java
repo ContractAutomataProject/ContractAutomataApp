@@ -105,8 +105,8 @@ public class Composition extends AbstractAction {
 		//		(Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>>)
 						new MSCACompositionFunction<>(aut,
 				(pruningOption==JOptionPane.YES_OPTION)?null:
-					(pruningOption==JOptionPane.NO_OPTION)?new Agreement().negate():
-						new StrongAgreement().negate()).apply(Integer.MAX_VALUE);
+					(pruningOption==JOptionPane.NO_OPTION)?(t->t.getLabel().isRequest()):
+						t->!t.getLabel().isMatch()).apply(Integer.MAX_VALUE);
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
 

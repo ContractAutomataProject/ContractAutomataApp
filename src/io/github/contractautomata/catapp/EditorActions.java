@@ -256,6 +256,10 @@ public class EditorActions
 		protected void saveXmlPng(BasicGraphEditor editor, String filename,
 				Color bg) throws IOException
 		{
+
+			saveMxe(editor,filename+".mxe"); //necessary for instantiating lastaut
+			new File(filename+".mxe").delete();
+
 			mxGraphComponent graphComponent = editor.getGraphComponent();
 			mxGraph graph = graphComponent.getGraph();
 
@@ -328,10 +332,6 @@ public class EditorActions
 							+ " (.mxe)");
 
 					fc.setFileFilter(defaultFilter);
-					//				FileFilter vmlFileFilter = new DefaultFileFilter(".html",
-					//						"VML " + mxResources.get("file") + " (.html)");
-
-					
 					// Adds the default file format
 					fc.addChoosableFileFilter(defaultFilter);
 					
@@ -342,41 +342,10 @@ public class EditorActions
 					fc.addChoosableFileFilter(new DefaultFileFilter(".png",
 							"PNG " + mxResources.get("file") + " (.png)"));
 
-					// Adds special vector graphics formats and HTML
-//					fc.addChoosableFileFilter(new DefaultFileFilter(".txt",
-//							"Graph Drawing " + mxResources.get("file")
-//							+ " (.txt)"));
+					// Adds special vector graphics formats
 					fc.addChoosableFileFilter(new DefaultFileFilter(".svg",
 							"SVG " + mxResources.get("file") + " (.svg)"));
-					
 
-					
-					
-					//fc.addChoosableFileFilter(vmlFileFilter);
-//					fc.addChoosableFileFilter(new DefaultFileFilter(".html",
-//							"HTML " + mxResources.get("file") + " (.html)"));
-//
-					// Adds a filter for each supported image format
-//					Object[] imageFormats = ImageIO.getReaderFormatNames();
-
-					// Finds all distinct extensions
-//					HashSet<String> formats = new HashSet<String>();
-//
-//					for (int i = 0; i < imageFormats.length; i++)
-//					{
-//						String ext = imageFormats[i].toString().toLowerCase();
-//						formats.add(ext);
-//					}
-//
-//					imageFormats = formats.toArray();
-//
-//					for (int i = 0; i < imageFormats.length; i++)
-//					{
-//						String ext = imageFormats[i].toString();
-//						fc.addChoosableFileFilter(new DefaultFileFilter("."
-//								+ ext, ext.toUpperCase() + " "
-//										+ mxResources.get("file") + " (." + ext + ")"));
-//					}
 
 					// Adds filter that accepts all supported image formats
 					//					fc.addChoosableFileFilter(new DefaultFileFilter.ImageFileFilter(
@@ -425,7 +394,10 @@ public class EditorActions
 					if (ext.equalsIgnoreCase("svg"))
 					{
 						mxGraph graph = editor.getGraphComponent().getGraph();
-						graph.selectAll();						
+						graph.selectAll();
+
+						saveMxe(editor,filename+".mxe"); //necessary for instantiating lastaut
+
 						//cannot draw custom shapes in SVG, so it draws a small arrow to the initial state
 						
 						Consumer<mxCell> resetGeometry = c -> c.setGeometry(new mxGeometry(c.getGeometry().getX()+MxState.initialStateWidthIncrement,c.getGeometry().getY(),
@@ -496,46 +468,21 @@ public class EditorActions
 						graph.clearSelection();
 						graph.refresh();
 						editor.setModified(false);
+
+						//deleting the temporary mxe file
+						File f = new File(filename+".mxe");
+						f.delete();
+						editor.setCurrentFile(new File(filename));
+
 					}
-					
-//					else if (selectedFilter == vmlFileFilter)
-//					{
-//						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
-//								.createVmlDocument(graph, null, 1, null, null)
-//								.getDocumentElement()), filename);
-//					}
-//					else if (ext.equalsIgnoreCase("html"))
-//					{
-//						mxUtils.writeFile(mxXmlUtils.getXml(mxCellRenderer
-//								.createHtmlDocument(editor.getGraphComponent().getGraph(), null, 1, null, null)
-//								.getDocumentElement()), filename);
-//					}
 					else if (ext.equalsIgnoreCase("mxe")
 							|| ext.equalsIgnoreCase("xml"))
 					{
-						mxCodec codec = new mxCodec();
-						mxGraph graph = editor.getGraphComponent().getGraph();
-
-						String xml = mxXmlUtils.getXml(codec.encode(graph
-								.getModel()));
-
-						mxUtils.writeFile(xml, filename);
-
-						if (editor instanceof App)
-						{
-							App app = ((App)editor);
-							EditorMenuBar menuBar = (EditorMenuBar) app.getMenuFrame().getJMenuBar();
-							try {
-								app.lastaut=new MxeConverter().importMSCA(filename);
-							} catch (Exception ex) {
-								JOptionPane.showMessageDialog(editor.getGraphComponent(),menuBar.getErrorMsg()+System.lineSeparator()+ex.getMessage(), mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
-							}
-						}
-						editor.setModified(false);
-						editor.setCurrentFile(new File(filename));
+						saveMxe(editor,filename);
 					}
 					else if (ext.equalsIgnoreCase("data")) 
 					{
+						saveMxe(editor,filename+".mxe"); //necessary for instantiating lastaut
 						try {
 							Automaton<String,Action,State<String>,ModalTransition<String, Action,State<String>,CALabel>> aut=((App) editor).lastaut;
 							new AutDataConverter<>(CALabel::new).exportMSCA(filename,aut);
@@ -544,13 +491,11 @@ public class EditorActions
 						} catch (IOException e1) {
 							JOptionPane.showMessageDialog(editor.getGraphComponent(),"File not found"+e1,mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
 						}
-
+						//deleting the temporary mxe file
+						File f = new File(filename+".mxe");
+						f.delete();
+						editor.setCurrentFile(new File(filename));
 					}
-//					else if (ext.equalsIgnoreCase("txt"))
-//					{
-//						String content = mxGdCodec.encode(editor.graphComponent.getGraph());
-//						mxUtils.writeFile(content, filename);
-//					}
 					Color bg = null;
 
 					if ((!ext.equalsIgnoreCase("gif") && !ext
@@ -568,26 +513,6 @@ public class EditorActions
 					{
 						saveXmlPng(editor, filename, bg);
 					}
-					
-					//						else
-					//						{
-					//							BufferedImage image = mxCellRenderer
-					//									.createBufferedImage(graph, null, 1, bg,
-					//											false, null, //:check
-					//											//graphComponent.isAntiAlias(), null,
-					//											graphComponent.getCanvas());
-					//
-					//							if (image != null)
-					//							{
-					//								ImageIO.write(image, ext, new File(filename));
-					//							}
-					//							else
-					//							{
-					//								JOptionPane.showMessageDialog(graphComponent,
-					//										mxResources.get("noImageData"));
-					//							}
-					//						}
-					//					}
 				}
 				catch (Throwable ex)
 				{
@@ -597,6 +522,29 @@ public class EditorActions
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
+		}
+
+		private void saveMxe(BasicGraphEditor editor, String filename) throws IOException {
+			mxCodec codec = new mxCodec();
+			mxGraph graph = editor.getGraphComponent().getGraph();
+
+			String xml = mxXmlUtils.getXml(codec.encode(graph
+					.getModel()));
+
+			mxUtils.writeFile(xml, filename);
+
+			if (editor instanceof App)
+			{
+				App app = ((App)editor);
+				EditorMenuBar menuBar = (EditorMenuBar) app.getMenuFrame().getJMenuBar();
+				try {
+					app.lastaut=new MxeConverter().importMSCA(filename);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(editor.getGraphComponent(),menuBar.getErrorMsg()+System.lineSeparator()+ex.getMessage(), mxResources.get("error"),JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			editor.setModified(false);
+			editor.setCurrentFile(new File(filename));
 		}
 	}
 
@@ -700,32 +648,32 @@ public class EditorActions
 		/**
 		 * Reads XML+PNG format.
 		 */
-		protected void openXmlPng(BasicGraphEditor editor, File file)
-				throws IOException
-		{
-			Map<String, String> text = mxPngTextDecoder
-					.decodeCompressedText(new FileInputStream(file));
-
-			if (text != null)
-			{
-				String value = text.get("mxGraphModel");
-
-				if (value != null)
-				{
-					Document document = mxXmlUtils.parseXml(URLDecoder.decode(
-							value, "UTF-8"));
-					mxCodec codec = new mxCodec(document);
-					codec.decode(document.getDocumentElement(), editor
-							.getGraphComponent().getGraph().getModel());
-					editor.setCurrentFile(file);
-					resetEditor(editor);
-					return;
-				}
-			}
-
-			JOptionPane.showMessageDialog(editor,
-					mxResources.get("imageContainsNoDiagramData"));
-		}
+//		protected void openXmlPng(BasicGraphEditor editor, File file)
+//				throws IOException
+//		{
+//			Map<String, String> text = mxPngTextDecoder
+//					.decodeCompressedText(new FileInputStream(file));
+//
+//			if (text != null)
+//			{
+//				String value = text.get("mxGraphModel");
+//
+//				if (value != null)
+//				{
+//					Document document = mxXmlUtils.parseXml(URLDecoder.decode(
+//							value, "UTF-8"));
+//					mxCodec codec = new mxCodec(document);
+//					codec.decode(document.getDocumentElement(), editor
+//							.getGraphComponent().getGraph().getModel());
+//					editor.setCurrentFile(file);
+//					resetEditor(editor);
+//					return;
+//				}
+//			}
+//
+//			JOptionPane.showMessageDialog(editor,
+//					mxResources.get("imageContainsNoDiagramData"));
+//		}
 
 		/**
 		 *
@@ -797,9 +745,9 @@ public class EditorActions
 						fc.addChoosableFileFilter(new DefaultFileFilter(".data",
 								"Contract Automata Textual Representation " + mxResources.get("file")
 								+ " (.data)"));
-						fc.addChoosableFileFilter(new DefaultFileFilter(".png",
-								"PNG+XML  " + mxResources.get("file")
-								+ " (.png)"));
+//						fc.addChoosableFileFilter(new DefaultFileFilter(".png",
+//								"PNG+XML  " + mxResources.get("file")
+//								+ " (.png)"));
 
 						// Adds file filter for VDX import
 //						fc.addChoosableFileFilter(new DefaultFileFilter(".vdx",
@@ -822,12 +770,13 @@ public class EditorActions
 
 							try
 							{
-								if (fc.getSelectedFile().getAbsolutePath()
-										.toLowerCase().endsWith(".png"))
-								{
-									openXmlPng(editor, fc.getSelectedFile());
-								}
-								else if (fc.getSelectedFile().getAbsolutePath()
+//								if (fc.getSelectedFile().getAbsolutePath()
+//										.toLowerCase().endsWith(".png"))
+//								{
+//									openXmlPng(editor, fc.getSelectedFile());
+//								}
+								//else
+									if (fc.getSelectedFile().getAbsolutePath()
 								.toLowerCase().endsWith(".data"))
 								{
 									EditorMenuBar menuBar = (EditorMenuBar) ((App) editor).getMenuFrame().getJMenuBar();

@@ -21,7 +21,6 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
 
-@SuppressWarnings("serial")
 public class ProductsRespectingValidity extends AbstractAction {
 
 	@Override
