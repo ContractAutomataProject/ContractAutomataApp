@@ -34,6 +34,18 @@ public class Orchestration extends AbstractAction {
 		Automaton<String,Action,State<String>, ModalTransition<String, Action,State<String>,CALabel>> aut=editor.lastaut;
 
 		Automaton<String,Action,State<String>,ModalTransition<String,Action,State<String>,CALabel>> controller=null;
+
+		int reachabilityOption=JOptionPane.showOptionDialog(editor.getGraphComponent(),
+				"", "Semi-Controllability Type",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.INFORMATION_MESSAGE,
+				null,
+				new String[]{"Reachability", "No Reachability"},
+				"default");
+
+		if (reachabilityOption==JOptionPane.YES_OPTION)
+			OrchestrationSynthesisOperator.setReachabilityLazy();
+
 		Instant start = Instant.now();
 	
 		try {
@@ -53,6 +65,7 @@ public class Orchestration extends AbstractAction {
 
 		Instant stop = Instant.now();
 		long elapsedTime = Duration.between(start, stop).toMillis();
+		OrchestrationSynthesisOperator.resetReachabilityLazy();
 	
 		if (controller==null)
 		{
